@@ -1,0 +1,35 @@
+﻿## Interface: 50300
+## X-Compatible-With: 40000
+## Title: Gladius
+## Notes: Arena enemy unit frames
+## Version: 3.0.1
+## Author: Resike and Firebunny. Original author: Proditor
+## SavedVariables: Gladius2DB
+## OptionalDeps: Ace3, LibStub, LibSharedMedia-3.0
+
+#@no-lib-strip@
+Embeds.xml
+#@end-no-lib-strip@
+
+Gladius.lua
+
+Localizations.lua
+
+Options.lua
+Speclist.lua
+
+Modules\Healthbar.lua
+Modules\Powerbar.lua
+Modules\Castbar.lua
+Modules\Auras.lua
+Modules\Classicon.lua
+Modules\Trinket.lua
+Modules\Highlight.lua
+Modules\Clicks.lua
+Modules\Targetbar.lua
+Modules\Tags.lua
+Modules\Announcements.lua
+Modules\DRTracker.lua
+Modules\Timer.lua
+Modules\Tayout.lua
+Modules\Dispell.lua
