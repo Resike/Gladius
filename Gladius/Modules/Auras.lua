@@ -991,7 +991,7 @@ function Auras:GetOptions()
 								Auras.newAuraPriority = value
 							end,
 							min=0,
-							max=10,
+							max=20,
 							step=1,
 							order=2,
 						},
@@ -1062,7 +1062,7 @@ function Auras:SetupAura(aura, priority)
 				name = L["Priority"],
 				desc = L["Select what priority the aura should have - higher equals more priority"],
 				min=0,
-				max=10,
+				max=20,
 				step=1,
 				order=2,
 			},
@@ -1088,7 +1088,7 @@ end
 function Auras:GetAuraList()
 	local auraTable = setmetatable({
 		-- Higher Number is More Priority
-		-- Priority List by P0rkz
+		-- Priority List by P0rkz, edited by Resike
 		-- Mobility Auras (0)
 		[GetSpellInfo(108843)]	= 0,	-- Blazing Speed
 		[GetSpellInfo(65081)]	= 0,	-- Body and Soul
@@ -1100,19 +1100,29 @@ function Auras:GetAuraList()
 		[GetSpellInfo(118922)]	= 0,	-- Pothaste
 		[GetSpellInfo(85499)]	= 0,	-- Speed of Light
 		[GetSpellInfo(2983)]	= 0,	-- Sprint
-		[GetSpellInfo(116841)]	= 0,	-- Tiger's Lust
+		[GetSpellInfo(06898)]	= 0,	-- Stampeding Roar
+		[GetSpellInfo(116841)]	= 0, 	-- Tiger's Lust
 		-- Movement Reduction Auras (1)
 		[GetSpellInfo(5116)]	= 1,	-- Concussive Shot
 		[GetSpellInfo(120)]		= 1,	-- Cone of Cold
 		[GetSpellInfo(13809)]	= 1,	-- Frost Trap
-		-- Buffs - Minor and Low Priority (2)
+		-- Purgable Buffs  (2)
 		[GetSpellInfo(16188)]	= 2,	-- Ancestral Swiftness
 		[GetSpellInfo(54428)]	= 2,	-- Divine Plea
+		[GetSpellInfo(31842)]	= 3,	-- Divine Favor
 		[GetSpellInfo(6346)]	= 2,	-- Fear Ward
-		[GetSpellInfo(112965)]	= 4,	-- Fingers of Frost
+		[GetSpellInfo(112965)]	= 2,	-- Fingers of Frost
+		[GetSpellInfo(1044)]	= 2,	-- Hand of Freedom
+		[GetSpellInfo(1022)]	= 2,	-- Hand of Protection
+		[GetSpellInfo(114039)]	= 2,	-- Hand of Purity
+		[GetSpellInfo(6940)]	= 2,	-- Hand of Sacrifice
 		[GetSpellInfo(11426)]	= 2,	-- Ice Barrier
 		[GetSpellInfo(29166)]	= 2,	-- Innervate
+		[GetSpellInfo(53271)]	= 2,	-- Master's Call
 		[GetSpellInfo(132158)]	= 2,	-- Nature's Swiftness
+		[GetSpellInfo(69369)]	= 2,	-- Predatory Swiftness
+		[GetSpellInfo(12043)]	= 2,	-- Presence of Mind
+		[GetSpellInfo(48108)]	= 2,	-- Pyroblast!
 		-- Defensive - Damage Redution Auras (3)
 		[GetSpellInfo(108978)]	= 3,	-- Alter Time
 		[GetSpellInfo(108271)]	= 3,	-- Astral Shift
@@ -1123,33 +1133,29 @@ function Auras:GetAuraList()
 		[GetSpellInfo(31224)]	= 3,	-- Cloak of Shadows
 		[GetSpellInfo(108359)]	= 3,	-- Dark Regeneration
 		[GetSpellInfo(118038)]	= 3,	-- Die by the Sword
-		[GetSpellInfo(31842)]	= 3,	-- Divine Favor
 		[GetSpellInfo(498)]		= 3,	-- Divine Protection
 		[GetSpellInfo(5277)]	= 3,	-- Evasion
-		[GetSpellInfo(8177)]	= 3,	-- Grounding Totem
 		[GetSpellInfo(113613)]	= 3,	-- Growl (Rogue Symbiosis)
-		[GetSpellInfo(1044)]	= 3,	-- Hand of Freedom
-		[GetSpellInfo(1022)]	= 3,	-- Hand of Protection
-		[GetSpellInfo(114039)]	= 3,	-- Hand of Purity
-		[GetSpellInfo(6940)]	= 3,	-- Hand of Sacrifice
+		[GetSpellInfo(47788)]	= 3,	-- Guardian Spirit
 		[GetSpellInfo(48792)]	= 3,	-- Icebound Fortitude
+		[GetSpellInfo(1463)]	= 3,	-- Incanter's Ward
+		[GetSpellInfo(116267)]	= 3,	-- Incanter's Absorption
 		[GetSpellInfo(66)]		= 3,	-- Invisibility
 		[GetSpellInfo(102342)]	= 3,	-- Ironbark
 		[GetSpellInfo(12975)]	= 3,	-- Last Stand
 		[GetSpellInfo(49039)]	= 3,	-- Lichborne
 		[GetSpellInfo(116849)]	= 3,	-- Life Cocoon
 		[GetSpellInfo(114028)]	= 3,	-- Mass Spell Reflection
-		[GetSpellInfo(53271)]	= 3,	-- Master's Call
 		[GetSpellInfo(106922)]	= 3,	-- Might of Ursoc
 		[GetSpellInfo(30884)]	= 3,	-- Nature's Guardian
 		[GetSpellInfo(124974)]	= 3,	-- Nature's Vigil
+		[GetSpellInfo(137562)]	= 3,	-- Nimble Brew
 		[GetSpellInfo(33206)]	= 3,	-- Pain Suppression
-		[GetSpellInfo(69369)]	= 3,	-- Predatory Swiftness
-		[GetSpellInfo(12043)]	= 3,	-- Presence of Mind
 		[GetSpellInfo(53480)]	= 3,	-- Roar of Sacrifice
 		[GetSpellInfo(122286)]	= 3,	-- Savage Defense (Protection Warrior Symbiosis)
 		[GetSpellInfo(30823)]	= 3,	-- Shamanistic Rage
 		[GetSpellInfo(871)]		= 3,	-- Shield Wall
+		[GetSpellInfo(112833)]	= 3,	-- Spectral Guise
 		[GetSpellInfo(23920)]	= 3,	-- Spell Reflection
 		[GetSpellInfo(113306)]	= 3,	-- Survival Instincts (Brewmaster Monk Symbiosis)
 		-- Offensive - Melee Auras (4)
@@ -1164,10 +1170,14 @@ function Auras:GetAuraList()
 		[GetSpellInfo(51713)]	= 4,	-- Shadow Dance
 		[GetSpellInfo(49016)]	= 4,	-- Unholy Frenzy
 		-- Roots and Disarms Auras (5)
+		[GetSpellInfo(676)]		= 5,	-- Disarm
+		[GetSpellInfo(51722)]	= 5,	-- Dismantle
+		[GetSpellInfo(64695)]	= 5,	-- Earthgrab
 		[GetSpellInfo(339)]		= 5,	-- Entangling Roots
 		[GetSpellInfo(33395)]	= 5,	-- Freeze (Pet Nova)
 		[GetSpellInfo(122)]		= 5,	-- Frost Nova
 		[GetSpellInfo(102051)]	= 5,	-- Frostjaw
+		[GetSpellInfo(126458)]	= 5,	-- Grapple Weapon
 		[GetSpellInfo(102359)]	= 5,	-- Mass Entanglement
 		[GetSpellInfo(136634)]	= 5,	-- Narrow Escape
 		[GetSpellInfo(115197)]	= 5,	-- Partial Paralysis
@@ -1178,118 +1188,118 @@ function Auras:GetAuraList()
 		[GetSpellInfo(113858)]	= 6,	-- Dark Soul: Instability
 		[GetSpellInfo(113861)]	= 6,	-- Dark Soul: Knowledge
 		[GetSpellInfo(113860)]	= 6,	-- Dark Soul: Misery
-		[GetSpellInfo(676)]		= 7,	-- Disarm
-		[GetSpellInfo(51722)]	= 7,	-- Dismantle
 		[GetSpellInfo(16166)]	= 6,	-- Elemental Mastery
 		[GetSpellInfo(108288)]	= 6,	-- Heart of the Wild
 		[GetSpellInfo(12472)]	= 6,	-- Icy Veins
-		[GetSpellInfo(1463)]	= 6,	-- Incanter's Ward
 		[GetSpellInfo(106731)]	= 6,	-- Incarnation
 		[GetSpellInfo(10060)]	= 6,	-- Power Infusion
-		[GetSpellInfo(48108)]	= 6,	-- Pyroblast!
 		[GetSpellInfo(3045)]	= 6,	-- Rapid Fire
 		[GetSpellInfo(48505)]	= 6,	-- Starfall
 		[GetSpellInfo(34692)]	= 6,	-- The Beast Within
-		-- Silence Immunities Auras (7)
+		-- Silence and Spell Immunities Auras (7)
 		[GetSpellInfo(31821)]	= 7,	-- Devotion Aura
 		[GetSpellInfo(115723)]	= 7,	-- Glyph of Ice Block
+		[GetSpellInfo(8178)]	= 7,	-- Grounding Totem Effect
 		[GetSpellInfo(131558)]	= 7,	-- Spiritwalker's Aegis
 		[GetSpellInfo(104773)]	= 7,	-- Unending Resolve
 		[GetSpellInfo(124488)]	= 7,	-- Zen Focus
 		-- Silence Auras (8)
 		[GetSpellInfo(1330)]	= 8,	-- Garrote - Silence
 		[GetSpellInfo(114237)]	= 8,	-- Glyph of Fae Silence
-		[GetSpellInfo(126458)]	= 8,	-- Grapple Weapon
 		[GetSpellInfo(111340)]	= 8,	-- Ice Ward (Root)
 		[GetSpellInfo(55021)]	= 8,	-- Improved Counterspell
 		[GetSpellInfo(115782)]	= 8,	-- Optical Blast
 		[GetSpellInfo(15487)]	= 8,	-- Silence
 		[GetSpellInfo(34490)]	= 8,	-- Silencing Shot
+		[GetSpellInfo(116709)]	= 8,	-- Spear Hand Strike
 		[GetSpellInfo(19647)]	= 8,	-- Spell Lock
 		[GetSpellInfo(47476)]	= 8,	-- Strangulate
-		-- Crowd Controls and Stuns Auras (8)
+		-- Disorients & Stuns Auras (9)
 		[GetSpellInfo(108194)]	= 9,	-- Asphyxiate
 		[GetSpellInfo(89766)]	= 9,	-- Axe Toss
 		[GetSpellInfo(90337)]	= 9,	-- Bad Manner
-		[GetSpellInfo(710)]		= 9,	-- Banish
 		[GetSpellInfo(127361)]	= 9,	-- Bear Hug (Windwalker Monk Symbiosis)
-		[GetSpellInfo(2094)]	= 9,	-- Blind
 		[GetSpellInfo(105421)]	= 9,	-- Blinding Light
 		[GetSpellInfo(100)]		= 9,	-- Charge
 		[GetSpellInfo(119392)]	= 9,	-- Charging Ox Wave
 		[GetSpellInfo(1833)]	= 9,	-- Cheap Shot
-		[GetSpellInfo(33786)]	= 9,	-- Cyclone
 		[GetSpellInfo(122283)]	= 9,	-- Death Coil (Druid Symbiosis)
 		[GetSpellInfo(44572)]	= 9,	-- Deep Freeze
 		[GetSpellInfo(99)]		= 9,	-- Disorienting Roar
-		[GetSpellInfo(605)]		= 9,	-- Dominate Mind
 		[GetSpellInfo(31661)]	= 9,	-- Dragon's Breath
-		[GetSpellInfo(5782)]	= 9,	-- Fear
 		[GetSpellInfo(105593)]	= 9,	-- Fist of Justice
-		[GetSpellInfo(55041)]	= 9,	-- Freezing Trap Effect
-		[GetSpellInfo(1499)]	= 9,	-- Freezing Trap Effect
-		[GetSpellInfo(3355)]	= 9,	-- Freezing Trap (Trap Launcher)
-		[GetSpellInfo(60192)]	= 9,	-- Freezing Trap (Trap Launcher)
 		[GetSpellInfo(47481)]	= 9,	-- Gnaw
 		[GetSpellInfo(1776)]	= 9,	-- Gouge
 		[GetSpellInfo(853)]		= 9,	-- Hammer of Justice
-		[GetSpellInfo(51514)]	= 9,	-- Hex
-		[GetSpellInfo(2637)]	= 9,	-- Hibernate
 		[GetSpellInfo(88625)]	= 9,	-- Holy Word: Chastise
-		[GetSpellInfo(5484)]	= 9,	-- Howl of Terror
-		[GetSpellInfo(5246)]	= 9,	-- Intimidating Shout
-		[GetSpellInfo(113004)]	= 9,	-- Intimidating Roar (Druid Symbiosis)
 		[GetSpellInfo(19577)]	= 9,	-- Intimidation
 		[GetSpellInfo(408)]		= 9,	-- Kidney Shot
 		[GetSpellInfo(119381)]	= 9,	-- Leg Sweep
 		[GetSpellInfo(126246)]	= 9,	-- Lullaby
 		[GetSpellInfo(22570)]	= 9,	-- Maim
-		[GetSpellInfo(115268)]	= 9,	-- Mesmerize
 		[GetSpellInfo(5211)]	= 9,	-- Mighty Bash
 		[GetSpellInfo(6789)]	= 9,	-- Mortal Coil
-		[GetSpellInfo(115078)]	= 9,	-- Paralysis
-		[GetSpellInfo(126355)]	= 9,	-- Paralyzing Quill
 		[GetSpellInfo(50245)]	= 9,	-- Pin
-		[GetSpellInfo(118)]		= 9,	-- Polymorph
-		[GetSpellInfo(61305)]	= 9,	-- Polymorph (Black Cat)
-		[GetSpellInfo(28272)]	= 9,	-- Polymorph (Pig)
-		[GetSpellInfo(61025)]	= 9,	-- Polymorph (Serpent)
-		[GetSpellInfo(28271)]	= 9,	-- Polymorph (Turtle)
+		[GetSpellInfo(126355)]	= 9,	-- Paralyzing Quill
 		[GetSpellInfo(9005)]	= 9,	-- Pounce
 		[GetSpellInfo(64044)]	= 9,	-- Psychic Horror
-		[GetSpellInfo(8122)]	= 9,	-- Psychic Scream
-		[GetSpellInfo(113792)]	= 9,	-- Psychic Terror
-		[GetSpellInfo(20066)]	= 9,	-- Repentance
 		[GetSpellInfo(115001)]	= 9,	-- Remorseless Winter
-		[GetSpellInfo(113724)]	= 9,	-- Ring of Frost
-		[GetSpellInfo(6770)]	= 9,	-- Sap
-		[GetSpellInfo(1513)]	= 9,	-- Scare Beast
 		[GetSpellInfo(19503)]	= 9,	-- Scatter Shot
-		[GetSpellInfo(6358)]	= 9,	-- Seduction
-		[GetSpellInfo(9484)]	= 9,	-- Shackle Undead
 		[GetSpellInfo(46968)]	= 9,	-- Shockwave
 		[GetSpellInfo(50519)]	= 9,	-- Sonic Blast
 		[GetSpellInfo(118905)]	= 9,	-- Static Charge (Capacitor Totem Stun)
 		[GetSpellInfo(107570)]	= 9,	-- Storm Bolt
 		[GetSpellInfo(16979)]	= 9,	-- Wild Charge
-		[GetSpellInfo(19386)]	= 9,	-- Wyvern Sting
-		-- Immunity Auras (10)
-		[GetSpellInfo(48707)]	= 10,	-- Anti-Magic Shell
-		[GetSpellInfo(46924)]	= 10,	-- Bladestorm
-		[GetSpellInfo(110913)]	= 10,	-- Dark Bargain
-		[GetSpellInfo(19263)]	= 10,	-- Deterrence
-		[GetSpellInfo(47585)]	= 10,	-- Dispersion
-		[GetSpellInfo(642)]		= 10,	-- Divine Shield
-		[GetSpellInfo(45438)]	= 10,	-- Ice Block
+		-- Crowd Controls Auras (10)
+		[GetSpellInfo(710)]		= 10,	-- Banish
+		[GetSpellInfo(2094)]	= 10,	-- Blind
+		[GetSpellInfo(33786)]	= 10,	-- Cyclone
+		[GetSpellInfo(605)]		= 10,	-- Dominate Mind
+		[GetSpellInfo(5782)]	= 10,	-- Fear
+		[GetSpellInfo(55041)]	= 10,	-- Freezing Trap Effect
+		[GetSpellInfo(1499)]	= 10,	-- Freezing Trap Effect
+		[GetSpellInfo(3355)]	= 10,	-- Freezing Trap (Trap Launcher)
+		[GetSpellInfo(60192)]	= 10,	-- Freezing Trap (Trap Launcher)
+		[GetSpellInfo(51514)]	= 10,	-- Hex
+		[GetSpellInfo(2637)]	= 10,	-- Hibernate
+		[GetSpellInfo(5484)]	= 10,	-- Howl of Terror
+		[GetSpellInfo(5246)]	= 10,	-- Intimidating Shout
+		[GetSpellInfo(113004)]	= 10,	-- Intimidating Roar (Druid Symbiosis)
+		[GetSpellInfo(115268)]	= 10,	-- Mesmerize
+		[GetSpellInfo(115078)]	= 10,	-- Paralysis
+		[GetSpellInfo(118)]		= 10,	-- Polymorph
+		[GetSpellInfo(61305)]	= 10,	-- Polymorph (Black Cat)
+		[GetSpellInfo(28272)]	= 10,	-- Polymorph (Pig)
+		[GetSpellInfo(61025)]	= 10,	-- Polymorph (Serpent)
+		[GetSpellInfo(28271)]	= 10,	-- Polymorph (Turtle)
+		[GetSpellInfo(8122)]	= 10,	-- Psychic Scream
+		[GetSpellInfo(113792)]	= 10,	-- Psychic Terror
+		[GetSpellInfo(20066)]	= 10,	-- Repentance
+		[GetSpellInfo(113724)]	= 10,	-- Ring of Frost
+		[GetSpellInfo(6770)]	= 10,	-- Sap
+		[GetSpellInfo(1513)]	= 10,	-- Scare Beast
+		[GetSpellInfo(6358)]	= 10,	-- Seduction
+		[GetSpellInfo(9484)]	= 10,	-- Shackle Undead
+		[GetSpellInfo(19386)]	= 10,	-- Wyvern Sting
+		-- Immunity Auras (11)
+		[GetSpellInfo(48707)]	= 11,	-- Anti-Magic Shell
+		[GetSpellInfo(46924)]	= 11,	-- Bladestorm
+		[GetSpellInfo(110913)]	= 11,	-- Dark Bargain
+		[GetSpellInfo(19263)]	= 11,	-- Deterrence
+		[GetSpellInfo(47585)]	= 11,	-- Dispersion
+		[GetSpellInfo(642)]		= 11,	-- Divine Shield
+		[GetSpellInfo(45438)]	= 11,	-- Ice Block
+		-- Drink (12)
+		[GetSpellInfo(118358)]	= 12,	-- Drink
 	},
 	{
-		__index = function(t, index)
-			if (index ~= nil) then
-				return rawget(t, index)
-			else
-				return nil
-			end
+	__index = function(t, index)
+		if (index ~= nil) then
+			return rawget(t, index)
+		else
+			return nil
 		end
+	end
 	})
 	return auraTable
 end
