@@ -1088,7 +1088,7 @@ end
 function Auras:GetAuraList()
 	local auraTable = setmetatable({
 		-- Higher Number is More Priority
-		-- Priority List by P0rkz, edited by Resike
+		-- Priority List by P0rkz
 		-- Mobility Auras (0)
 		[GetSpellInfo(108843)]	= 0,	-- Blazing Speed
 		[GetSpellInfo(65081)]	= 0,	-- Body and Soul
