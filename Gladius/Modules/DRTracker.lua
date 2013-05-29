@@ -152,7 +152,7 @@ function DRTracker:SortIcons(unit)
 		frame:ClearAllPoints()
 		frame:SetAlpha(0)
 		if (frame.active) then
-			frame:SetPoint(Gladius.db.drTrackerAnchor, lastFrame, lastFrame == self.frame[unit] and Gladius.db.drTrackerAnchor or Gladius.db.drTrackerRelativePoint, strfind(Gladius.db.drTrackerAnchor,"LEFT") and Gladius.db.drTrackerMargin or Gladius.db.drTrackerMargin, 0)
+			frame:SetPoint(Gladius.db.drTrackerAnchor, lastFrame, lastFrame == self.frame[unit] and Gladius.db.drTrackerAnchor or Gladius.db.drTrackerRelativePoint, strfind(Gladius.db.drTrackerAnchor,"LEFT") and Gladius.db.drTrackerMargin or - Gladius.db.drTrackerMargin, 0)
 			lastFrame = frame
 			frame:SetAlpha(1)
 		end

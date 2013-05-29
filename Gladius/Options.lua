@@ -142,7 +142,7 @@ function Gladius:GetColorOption(info)
 	return self.dbi.profile[key].r, self.dbi.profile[key].g, self.dbi.profile[key].b, self.dbi.profile[key].a
 end
 
-function Gladius:SetColorOption(info, r, g, b, a) 
+function Gladius:SetColorOption(info, r, g, b, a)
 	local key = info.arg or info[#info]
 	self.dbi.profile[key].r, self.dbi.profile[key].g, self.dbi.profile[key].b, self.dbi.profile[key].a = r, g, b, a
 	if (info[1] == "general") then
@@ -181,7 +181,7 @@ function Gladius:SetupModule(key, module, order)
 	self.options.args[key].args.enable = {
 		type="toggle",
 		name=L["Enable Module"],
-		set=function(info, v) 
+		set=function(info, v)
 			local module = info[1]
 			self.dbi.profile.modules[module] = v
 			
@@ -293,8 +293,8 @@ function Gladius:SetupOptions()
 										self.dbi.profile.growLeft=false
 										self.dbi.profile.growRight=true
 									end
-									growT = value 
-								end
+									growT = value
+								end,
 							},
 							sep = {
 								type = "description",
@@ -336,7 +336,7 @@ function Gladius:SetupOptions()
 								end,
 								disabled=function()
 									return not self.dbi.profile.groupButtons
-									end,
+								end,
 								order=1,
 							},
 							backgroundPadding = {
@@ -396,7 +396,7 @@ function Gladius:SetupOptions()
 					font = {
 						type="group",
 						name=L["Font"],
-						desc=L["Font settings"], 
+						desc=L["Font settings"],
 						inline=true,
 						order=4,
 						args = {
@@ -468,7 +468,7 @@ function Gladius:SetupOptions()
 		self:SetupModule(moduleName, module, order)
 		order = order + 5
 	end
-	for _,module in pairs(self.modules) do
+	for _, module in pairs(self.modules) do
 		self:Call(module, "OptionsLoad")
 	end
 	self.options.plugins.profiles = {profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.dbi)}

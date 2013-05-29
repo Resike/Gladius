@@ -17,7 +17,7 @@ Gladius.eventHandler:SetScript("OnEvent", function(self, event, ...)
 		Gladius:OnEnable()
 		Gladius.eventHandler:UnregisterEvent("PLAYER_LOGIN")
 	else
-		local func = self.events[event]				
+		local func = self.events[event]
 		if (type(Gladius[func]) == "function") then
 			Gladius[func](Gladius, event, ...)
 		end
@@ -154,7 +154,7 @@ function Gladius:GetParent(unit, module)
 			if (not frame) then
 				self:Call(m, "Update", unit)
 				frame = m:GetFrame(unit)
-			end				
+			end
 				return frame
 			end
 		return nil
@@ -199,8 +199,8 @@ function Gladius:OnInitialize()
 		end
 		rawset(t, index, value)
 	end})
-	--[[ option reset (increase number)
-	self.version = 2
+	-- option reset (increase number)
+	--[[self.version = 2
 	if (self.db.version == nil or self.db.version < self.version) then
 		print("Gladius:", "Resetting options...") 
 		self.dbi:ResetProfile()
@@ -221,7 +221,7 @@ function Gladius:OnInitialize()
 		["arena4"] = { health = 20000, maxHealth = 40000, power = 80, maxPower = 130, powerType = 6, unitClass = "DEATHKNIGHT", unitRace = "Dwarf", unitSpec = "Unholy" },
 		["arena5"] = { health = 10000, maxHealth = 30000, power = 10, maxPower = 100, powerType = 1, unitClass = "WARRIOR", unitRace = "Gnome", unitSpec = "Arms" },
 	},
-	{ 
+	{
 		__index = function(t, k)
 			return t["arena1"]
 		end
@@ -328,7 +328,7 @@ function Gladius:JoinedArena()
 	self:HideFrame()
 	-- background
 	if (self.db.groupButtons) then
-		self.background:SetAlpha(1)		
+		self.background:SetAlpha(1)
 		if (not self.db.locked) then
 			self.anchor:SetAlpha(1)
 			self.anchor:SetFrameStrata("LOW")
@@ -545,7 +545,7 @@ function Gladius:UpdateUnit(unit, module)
 				--self.anchor:SetPoint("BOTTOMLEFT", self.background, "TOPLEFT")
 			end
 		else
-			self.anchor:SetWidth(self.buttons[unit]:GetWidth() + abs(right) + abs(left))	
+			self.anchor:SetWidth(self.buttons[unit]:GetWidth() + abs(right) + abs(left))
 			if (self.db.growUp) then
 				self.anchor:SetPoint("TOPLEFT", self.buttons["arena1"], "BOTTOMLEFT", left, 0)
 				--self.anchor:SetPoint("TOPLEFT", self.buttons["arena1"], "BOTTOMLEFT", left, 0)
@@ -572,9 +572,12 @@ function Gladius:UpdateUnit(unit, module)
 end
 
 function Gladius:ShowUnit(unit, testing, module)
-
-	if (not strfind(unit, "arena") or strfind(unit, "pet")) then return end
-	if (not self.buttons[unit]) then return end
+	if (not strfind(unit, "arena") or strfind(unit, "pet")) then
+		return
+	end
+	if (not self.buttons[unit]) then
+		return
+	end
 	-- disable test mode, when there are real arena opponents (happens when entering arena and using /gladius test)
 	local testing = testing or false
 	if (not testing and self.test) then 
@@ -668,10 +671,8 @@ end
 function Gladius:CreateButton(unit)
 	local button = CreateFrame("Frame", "GladiusButtonFrame" .. unit, UIParent)
 	-- Commenting this out as it messes up the look of the bar backgrounds, should leave the background color to the actual background frame and the bar backgrounds imo - Proditor
-	--[[
-	button:SetBackdrop({bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", tile = true, tileSize = 16,})
-	button:SetBackdropColor(0, 0, 0, 0.4)
-	--]]
+	--[[button:SetBackdrop({bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", tile = true, tileSize = 16,})
+	button:SetBackdropColor(0, 0, 0, 0.4)]]
 	button:SetClampedToScreen(true)
 	button:EnableMouse(true)
 	button:SetMovable(true)

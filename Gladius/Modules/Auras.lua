@@ -27,7 +27,6 @@ local Auras = Gladius:NewModule("Auras", false, true, {
 	aurasBuffsOffsetY = 0,
 	aurasBuffsGloss = false,
 	aurasBuffsGlossColor = { r = 1, g = 1, b = 1, a = 0.4 },
-	
 	aurasDebuffsAttachTo = "ClassIcon",
 	aurasDebuffsAnchor = "BOTTOMLEFT",
 	aurasDebuffsRelativePoint = "TOPLEFT",
@@ -43,10 +42,12 @@ local Auras = Gladius:NewModule("Auras", false, true, {
 	aurasDebuffsOffsetY = 0,
 	aurasDebuffsGloss = false,
 	aurasDebuffsGlossColor = { r = 1, g = 1, b = 1, a = 0.4 },
-	
 	aurasImportantAuras = true,
 	aurasFrameAuras = nil,
-}, {"Bottom Single Row"})
+},
+{
+	"Bottom Single Row"
+})
 
 function Auras:OnEnable()
 	self:RegisterEvent("UNIT_AURA")
@@ -160,7 +161,7 @@ function Auras:CreateFrame(unit)
 		self.buffFrame[unit] = CreateFrame("Frame", "Gladius" .. self.name .. "BuffFrame" .. unit, button)
 		for i=1, 40 do
 			self.buffFrame[unit][i] = CreateFrame("CheckButton", "Gladius" .. self.name .. "BuffFrameIcon" .. i .. unit, button, "ActionButtonTemplate")
-			self.buffFrame[unit][i]:SetScript("OnEnter", function(f) 
+			self.buffFrame[unit][i]:SetScript("OnEnter", function(f)
 				GameTooltip:SetUnitAura(unit, i, "HELPFUL")
 				f:SetScript("OnUpdate", function(f)
 					updateTooltip(f, unit, i, "HELPFUL")
@@ -176,7 +177,6 @@ function Auras:CreateFrame(unit)
 			self.buffFrame[unit][i].normalTexture = _G[self.buffFrame[unit][i]:GetName().."NormalTexture"]
 			self.buffFrame[unit][i].cooldown = _G[self.buffFrame[unit][i]:GetName().."Cooldown"]
 			self.buffFrame[unit][i].cooldown:SetReverse(false)
-			
 			Gladius:Call(Gladius.modules.Timer, "RegisterTimer", self.buffFrame[unit][i])
 		end
 	end
@@ -186,7 +186,7 @@ function Auras:CreateFrame(unit)
 		self.debuffFrame[unit]:EnableMouse(false)
 		for i=1, 40 do
 			self.debuffFrame[unit][i] = CreateFrame("CheckButton", "Gladius" .. self.name .. "DebuffFrameIcon" .. i .. unit, button, "ActionButtonTemplate")
-			self.debuffFrame[unit][i]:SetScript("OnEnter", function(f) 
+			self.debuffFrame[unit][i]:SetScript("OnEnter", function(f)
 				GameTooltip:SetUnitAura(unit, i, "HARMFUL")
 				f:SetScript("OnUpdate", function(f)
 					updateTooltip(f, unit, i, "HARMFUL")
@@ -202,7 +202,6 @@ function Auras:CreateFrame(unit)
 			self.debuffFrame[unit][i].normalTexture = _G[self.debuffFrame[unit][i]:GetName().."NormalTexture"]
 			self.debuffFrame[unit][i].cooldown = _G[self.debuffFrame[unit][i]:GetName().."Cooldown"]
 			self.debuffFrame[unit][i].cooldown:SetReverse(false)
-			
 			Gladius:Call(Gladius.modules.Timer, "RegisterTimer", self.debuffFrame[unit][i])
 		end
 	end
@@ -247,7 +246,6 @@ function Auras:Update(unit)
 					anchor, parent, relativePoint, offsetX, offsetY = grow1, startAnchor, startRelPoint, 0, strfind(Gladius.db.aurasBuffsGrow, "DOWN") and -Gladius.db.aurasBuffsSpacingY or Gladius.db.aurasBuffsSpacingY
 				else
 					anchor, parent, relativePoint, offsetX, offsetY = grow1, self.buffFrame[unit][i-1], grow3, strfind(Gladius.db.aurasBuffsGrow, "LEFT") and -Gladius.db.aurasBuffsSpacingX or Gladius.db.aurasBuffsSpacingX, 0
-					
 					if (start == Gladius.db.aurasBuffsPerColumn) then
 						start = 0
 						startAnchor = self.buffFrame[unit][i - Gladius.db.aurasBuffsPerColumn + 1]
@@ -282,7 +280,7 @@ function Auras:Update(unit)
 		self.debuffFrame[unit]:SetPoint(Gladius.db.aurasDebuffsAnchor, parent, Gladius.db.aurasDebuffsRelativePoint, Gladius.db.aurasDebuffsOffsetX, Gladius.db.aurasDebuffsOffsetY)
 		-- size
 		self.debuffFrame[unit]:SetWidth(Gladius.db.aurasDebuffsWidth*Gladius.db.aurasDebuffsPerColumn+Gladius.db.aurasDebuffsSpacingX*Gladius.db.aurasDebuffsPerColumn)
-		self.debuffFrame[unit]:SetHeight(Gladius.db.aurasDebuffsHeight*math.ceil(Gladius.db.aurasDebuffsMax/Gladius.db.aurasDebuffsPerColumn)+(Gladius.db.aurasDebuffsSpacingY*(math.ceil(Gladius.db.aurasDebuffsMax/Gladius.db.aurasDebuffsPerColumn)+1)))
+		self.debuffFrame[unit]:SetHeight(Gladius.db.aurasDebuffsHeight*math.ceil(Gladius.db.aurasDebuffsMax/Gladius.db.aurasDebuffsPerColumn)+(Gladius.db.aurasDebuffsSpacingY*(math.ceil(Gladius.db.aurasDebuffsMax / Gladius.db.aurasDebuffsPerColumn) + 1)))
 		-- icon points
 		local anchor, parent, relativePoint, offsetX, offsetY
 		local start, startAnchor = 1, self.debuffFrame[unit]
@@ -299,12 +297,11 @@ function Auras:Update(unit)
 		end	
 		for i=1, 40 do
 			self.debuffFrame[unit][i]:ClearAllPoints()
-			
 			if (Gladius.db.aurasDebuffsMax >= i) then
 				if (start == 1) then
-					anchor, parent, relativePoint, offsetX, offsetY = grow1, startAnchor, startRelPoint, 0, strfind(Gladius.db.aurasDebuffsGrow, "DOWN") and -Gladius.db.aurasDebuffsSpacingY or Gladius.db.aurasDebuffsSpacingY
+					anchor, parent, relativePoint, offsetX, offsetY = grow1, startAnchor, startRelPoint, 0, strfind(Gladius.db.aurasDebuffsGrow, "DOWN") and - Gladius.db.aurasDebuffsSpacingY or Gladius.db.aurasDebuffsSpacingY
 				else
-					anchor, parent, relativePoint, offsetX, offsetY = grow1, self.debuffFrame[unit][i-1], grow3, strfind(Gladius.db.aurasDebuffsGrow, "LEFT") and -Gladius.db.aurasDebuffsSpacingX or Gladius.db.aurasDebuffsSpacingX, 0
+					anchor, parent, relativePoint, offsetX, offsetY = grow1, self.debuffFrame[unit][i-1], grow3, strfind(Gladius.db.aurasDebuffsGrow, "LEFT") and - Gladius.db.aurasDebuffsSpacingX or Gladius.db.aurasDebuffsSpacingX, 0
 					if (start == Gladius.db.aurasDebuffsPerColumn) then
 						start = 0
 						startAnchor = self.debuffFrame[unit][i - Gladius.db.aurasDebuffsPerColumn + 1]

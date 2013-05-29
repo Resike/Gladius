@@ -130,7 +130,7 @@ function Highlight:CreateFrame(unit)
 	self.frame[unit].priority = - 1
 end
 
-function Highlight:Update(unit) 
+function Highlight:Update(unit)
 	-- create frame
 	if (not self.frame[unit]) then
 		self:CreateFrame(unit)

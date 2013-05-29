@@ -34,7 +34,7 @@ function ClassIcon:OnEnable()
 	self.version = 1
 	LSM = Gladius.LSM
 	if (not self.frame) then
-	self.frame = {}
+		self.frame = { }
 	end
 	Gladius.db.auraVersion = self.version
 	Gladius.db.aurasFrameAuras = Gladius.db.aurasFrameAuras or Gladius.modules["Auras"]:GetAuraList()
@@ -121,7 +121,7 @@ function ClassIcon:UpdateAura(unit)
 		Gladius:Call(Gladius.modules.Timer, "SetTimer", self.frame[unit], self.frame[unit].timeleft, start)
 	elseif (not aura and self.frame[unit].priority > 0) then
 		-- reset
-		self.frame[unit].priority = 0 
+		self.frame[unit].priority = 0
 		self:SetClassIcon(unit)
 	elseif (not aura) then
 		self:SetClassIcon(unit)
@@ -170,7 +170,7 @@ end
 
 function ClassIcon:Update(unit)
 	-- TODO: check why we need this >_<
-	self.frame = self.frame or {}
+	self.frame = self.frame or { }
 	-- create frame
 	if (not self.frame[unit]) then
 		self:CreateFrame(unit)

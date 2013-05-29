@@ -305,7 +305,7 @@ function CastBar:Update(unit)
 		self.frame[unit].background:SetWidth(self.frame[unit]:GetWidth() + self.frame[unit].icon:GetWidth())
 	else
 		self.frame[unit].background:SetWidth(self.frame[unit]:GetWidth())
-		end]]
+	end]]
 	self.frame[unit].background:SetHeight(self.frame[unit]:GetHeight())
 	self.frame[unit].background:SetTexture(LSM:Fetch(LSM.MediaType.STATUSBAR, Gladius.db.castBarTexture))
 	self.frame[unit].background:SetVertexColor(Gladius.db.castBarBackgroundColor.r, Gladius.db.castBarBackgroundColor.g, Gladius.db.castBarBackgroundColor.b, Gladius.db.castBarBackgroundColor.a)
