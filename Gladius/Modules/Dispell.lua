@@ -43,7 +43,7 @@ function Dispell:OnEnable()
 	self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 	LSM = Gladius.LSM
 	if (not self.frame) then
-		self.frame = {}
+		self.frame = { }
 	end
 end
 
@@ -83,7 +83,6 @@ function Dispell:SetTemplate(template)
 			Gladius.db.dispellGridStyleIcon = true
 			Gladius.db.dispellAdjustHeight = false
 			Gladius.db.dispellHeight = Gladius.db.healthBarHeight
-			
 			Gladius.db.dispellAttachTo = "HealthBar"
 			Gladius.db.dispellAnchor = "TOPLEFT"
 			Gladius.db.dispellRelativePoint = "TOPRIGHT"
@@ -183,8 +182,8 @@ end
 
 function Dispell:Update(unit)
 	-- create frame
-	if (not self.frame[unit]) then 
-	self:CreateFrame(unit)
+	if (not self.frame[unit]) then
+		self:CreateFrame(unit)
 	end
 	-- update frame
 	self.frame[unit]:ClearAllPoints()
@@ -203,11 +202,11 @@ function Dispell:Update(unit)
 				end
 			end]]
 			if (height) then
-			self.frame[unit]:SetWidth(Gladius.buttons[unit].height)
-			self.frame[unit]:SetHeight(Gladius.buttons[unit].height)
+				self.frame[unit]:SetWidth(Gladius.buttons[unit].height)
+				self.frame[unit]:SetHeight(Gladius.buttons[unit].height)
 			else
-			self.frame[unit]:SetWidth(Gladius.buttons[unit].frameHeight)
-			self.frame[unit]:SetHeight(Gladius.buttons[unit].frameHeight)
+				self.frame[unit]:SetWidth(Gladius.buttons[unit].frameHeight)
+				self.frame[unit]:SetHeight(Gladius.buttons[unit].frameHeight)
 			end
 		else
 			self.frame[unit]:SetWidth(Gladius:GetModule(self:GetAttachTo()).frame[unit]:GetHeight() or 1)

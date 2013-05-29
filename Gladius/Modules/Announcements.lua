@@ -113,19 +113,19 @@ function Announcements:ARENA_PREP_OPPONENT_SPECIALIZATIONS(event, ...)
 			local specID = GetArenaOpponentSpec(i)
 			if (specID > 0) then
 				local _, spec, _, specIcon, _, _, class = GetSpecializationInfoByID(specID)
-				--if(class) then
-				--prepFrame.classPortrait:SetTexture("Interface\\TargetingFrame\\UI-Classes-Circles")
-				--prepFrame.classPortrait:SetTexCoord(unpack(CLASS_ICON_TCOORDS[strupper(class)]))
-				--end
-				--SetPortraitToTexture(prepFrame.specPortrait, specIcon)
-				--prepFrame:Show()
-				--else
-				--prepFrame:Hide()
+				--[[if(class) then
+						prepFrame.classPortrait:SetTexture("Interface\\TargetingFrame\\UI-Classes-Circles")
+						prepFrame.classPortrait:SetTexCoord(unpack(CLASS_ICON_TCOORDS[strupper(class)]))
+					end
+					SetPortraitToTexture(prepFrame.specPortrait, specIcon)
+					prepFrame:Show()
+				else
+					prepFrame:Hide()]]
 				self:Send("Enemy specs: "..spec.." "..class )
 			end
 			--else
 			--prepFrame:Hide()
-		end	
+		end
 	end
 end
 

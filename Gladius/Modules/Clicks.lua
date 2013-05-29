@@ -160,10 +160,10 @@ function Clicks:GetOptions()
 								if (not Gladius.db.clickAttributes[attr]) then
 									-- add to db
 									Gladius.db.clickAttributes[attr] = {
-									button = addAttrButton, 
-									modifier = addAttrMod, 
-									action = "target", 
-									macro = ""
+										button = addAttrButton, 
+										modifier = addAttrMod, 
+										action = "target", 
+										macro = ""
 									}
 									-- add to options
 									Gladius.options.args[self.name].args.attributeList.args[attr] = self:GetAttributeOptionTable(attr, order)
