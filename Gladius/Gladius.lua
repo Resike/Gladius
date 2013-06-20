@@ -175,7 +175,7 @@ end
 
 function Gladius:GetModules(module)
 	-- get module list for frame anchor
-	local t = { ["Frame"] = L["Frame"] }
+	local t = {["Frame"] = L["Frame"]}
 	for moduleName, m in pairs(self.modules) do
 		if (moduleName ~= module and m:GetAttachTo() ~= module and m.attachTo and m:IsEnabled()) then
 			t[moduleName] = L[moduleName]
@@ -319,10 +319,9 @@ function Gladius:JoinedArena()
 	self.testCount = 0
 	-- create and update buttons on first launch
 	local groupSize = max(GetNumGroupMembers())
-	
-	for i=1, groupSize do
-		self:UpdateUnit("arena" .. i)
-		self.buttons["arena" .. i]:RegisterForDrag("LeftButton")
+	for i = 1, groupSize do
+		self:UpdateUnit("arena"..i)
+		self.buttons["arena"..i]:RegisterForDrag("LeftButton")
 	end
 	-- hide buttons
 	self:HideFrame()
@@ -403,10 +402,12 @@ function Gladius:HideFrame()
 	-- hide background
 	if (self.background) then
 		self.background:SetAlpha(0)
+		--self.background:Hide()
 	end
 	-- hide anchor
 	if (self.anchor) then
-		self.anchor:SetAlpha(0)
+		--self.anchor:SetAlpha(0)
+		self.anchor:Hide()
 	end
 end
 
@@ -427,12 +428,12 @@ function Gladius:UpdateUnit(unit, module)
 	self.buttons[unit].spec = ""
 	-- Update spec from API
 	local numOpps = GetNumArenaOpponentSpecs()
-	for i=1, numOpps do
+	for i = 1, numOpps do
 		local specID = GetArenaOpponentSpec(i)
 		if (specID > 0) then
 			local _, spec, _, specIcon, _, _, class = GetSpecializationInfoByID(specID)
 			if not(Gladius.buttons["arena"..i] == null) then
-				Gladius.buttons["arena"..i].spec=spec
+				Gladius.buttons["arena"..i].spec = spec
 			end
 		end
 	end
@@ -483,20 +484,20 @@ function Gladius:UpdateUnit(unit, module)
 		end
 	else
 	local parent = string.match(unit, "^arena(.+)") - 1
-	local parentButton = self.buttons["arena" .. parent]
+	local parentButton = self.buttons["arena"..parent]
 	if (parentButton) then
 		if (self.db.growUp) then
 			self.buttons[unit]:SetPoint("BOTTOMLEFT", parentButton, "TOPLEFT", 0, self.db.bottomMargin + indicatorHeight)
 			else
-				self.buttons[unit]:SetPoint("TOPLEFT", parentButton, "BOTTOMLEFT", 0, -self.db.bottomMargin - indicatorHeight)
+				self.buttons[unit]:SetPoint("TOPLEFT", parentButton, "BOTTOMLEFT", 0, - self.db.bottomMargin - indicatorHeight)
 			end
 			if (self.db.growLeft) then
 				local left, right = self.buttons[unit]:GetHitRectInsets()
-				self.buttons[unit]:SetPoint("TOPLEFT", parentButton, "TOPLEFT", -self.buttons[unit]:GetWidth()-self.db.backgroundPadding - abs(left), 0)
+				self.buttons[unit]:SetPoint("TOPLEFT", parentButton, "TOPLEFT", - self.buttons[unit]:GetWidth() - self.db.backgroundPadding - abs(left), 0)
 			end
 			if (self.db.growRight) then -- LEFT AND RIGHT
 				local left, right = self.buttons[unit]:GetHitRectInsets()
-				self.buttons[unit]:SetPoint("TOPLEFT", parentButton, "TOPLEFT", self.buttons[unit]:GetWidth()+self.db.backgroundPadding + abs(left), 0)
+				self.buttons[unit]:SetPoint("TOPLEFT", parentButton, "TOPLEFT", self.buttons[unit]:GetWidth() + self.db.backgroundPadding + abs(left), 0)
 			end
 		end
 	end 
@@ -521,9 +522,9 @@ function Gladius:UpdateUnit(unit, module)
 		self.background:SetWidth(self.buttons[unit]:GetWidth() + self.db.backgroundPadding * 2 + abs(right) + abs(left))
 		self.background:ClearAllPoints()
 		if (self.db.growUp) then
-			self.background:SetPoint("BOTTOMLEFT", self.buttons["arena1"], "BOTTOMLEFT", -self.db.backgroundPadding + left, -self.db.backgroundPadding)
+			self.background:SetPoint("BOTTOMLEFT", self.buttons["arena1"], "BOTTOMLEFT", - self.db.backgroundPadding + left, - self.db.backgroundPadding)
 		else
-			self.background:SetPoint("TOPLEFT", self.buttons["arena1"], "TOPLEFT", -self.db.backgroundPadding + left, self.db.backgroundPadding)
+			self.background:SetPoint("TOPLEFT", self.buttons["arena1"], "TOPLEFT", - self.db.backgroundPadding + left, self.db.backgroundPadding)
 		end
 		self.background:SetScale(self.db.frameScale)
 		if (self.db.groupButtons) then
@@ -534,24 +535,19 @@ function Gladius:UpdateUnit(unit, module)
 		end
 		-- anchor
 		self.anchor:ClearAllPoints()
-		
 		if (self.db.backgroundColor.a > 0) then
 			self.anchor:SetWidth(self.buttons[unit]:GetWidth() + self.db.backgroundPadding * 2 + abs(right) + abs(left))
 			if (self.db.growUp) then
 				self.anchor:SetPoint("TOPLEFT", self.background, "BOTTOMLEFT")
-				--self.anchor:SetPoint("TOPLEFT", self.background, "BOTTOMLEFT")
 			else
 				self.anchor:SetPoint("BOTTOMLEFT", self.background, "TOPLEFT")
-				--self.anchor:SetPoint("BOTTOMLEFT", self.background, "TOPLEFT")
 			end
 		else
 			self.anchor:SetWidth(self.buttons[unit]:GetWidth() + abs(right) + abs(left))
 			if (self.db.growUp) then
 				self.anchor:SetPoint("TOPLEFT", self.buttons["arena1"], "BOTTOMLEFT", left, 0)
-				--self.anchor:SetPoint("TOPLEFT", self.buttons["arena1"], "BOTTOMLEFT", left, 0)
 			else
 				self.anchor:SetPoint("BOTTOMLEFT", self.buttons["arena1"], "TOPLEFT", left, 0)
-				--self.anchor:SetPoint("BOTTOMLEFT", self.buttons["arena1"], "TOPLEFT", left, 0)
 			end
 		end
 		self.anchor:SetHeight(20)
@@ -559,7 +555,7 @@ function Gladius:UpdateUnit(unit, module)
 		self.anchor.text:SetPoint("CENTER", self.anchor, "CENTER")
 		self.anchor.text:SetFont(self.LSM:Fetch(self.LSM.MediaType.FONT, Gladius.db.globalFont), (Gladius.db.useGlobalFontSize and Gladius.db.globalFontSize or 11))
 		self.anchor.text:SetTextColor(1, 1, 1, 1)
-		self.anchor.text:SetShadowOffset(1, -1)
+		self.anchor.text:SetShadowOffset(1, - 1)
 		self.anchor.text:SetShadowColor(0, 0, 0, 1)
 		self.anchor.text:SetText(L["Gladius Anchor - click to move"])
 		if (self.db.groupButtons and not self.db.locked) then
@@ -611,11 +607,11 @@ function Gladius:ShowUnit(unit, testing, module)
 	end
 	-- Update spec from API
 	local numOpps = GetNumArenaOpponentSpecs()
-	for i=1, numOpps do
+	for i = 1, numOpps do
 		local specID = GetArenaOpponentSpec(i)
 		if (specID > 0) then
 			local _, spec, _, specIcon, _, _, class = GetSpecializationInfoByID(specID)
-			Gladius.buttons["arena"..i].spec=spec
+			Gladius.buttons["arena"..i].spec = spec
 		end
 	end
 	self.background:SetHeight(self.buttons[unit]:GetHeight() * maxHeight + self.db.bottomMargin * (maxHeight - 1) + self.db.backgroundPadding * 2)
@@ -669,7 +665,7 @@ function Gladius:UpdateAlpha(unit, alpha)
 end
 
 function Gladius:CreateButton(unit)
-	local button = CreateFrame("Frame", "GladiusButtonFrame" .. unit, UIParent)
+	local button = CreateFrame("Frame", "GladiusButtonFrame"..unit, UIParent)
 	-- Commenting this out as it messes up the look of the bar backgrounds, should leave the background color to the actual background frame and the bar backgrounds imo - Proditor
 	--[[button:SetBackdrop({bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", tile = true, tileSize = 16,})
 	button:SetBackdropColor(0, 0, 0, 0.4)]]
@@ -677,8 +673,8 @@ function Gladius:CreateButton(unit)
 	button:EnableMouse(true)
 	button:SetMovable(true)
 	button:RegisterForDrag("LeftButton")
-	button:SetScript("OnDragStart", function(f) 
-		if (not InCombatLockdown() and not self.db.locked) then 
+	button:SetScript("OnDragStart", function(f)
+		if (not InCombatLockdown() and not self.db.locked) then
 			local f = self.db.groupButtons and self.buttons["arena1"] or f
 			f:StartMoving()
 		end
@@ -694,7 +690,7 @@ function Gladius:CreateButton(unit)
 		end
 	end)
 	-- secure
-	local secure = CreateFrame("Button", "GladiusButton" .. unit, button, "SecureActionButtonTemplate")
+	local secure = CreateFrame("Button", "GladiusButton"..unit, button, "SecureActionButtonTemplate")
 	secure:RegisterForClicks("AnyUp")
 	button.secure = secure
 	self.buttons[unit] = button
@@ -709,7 +705,7 @@ function Gladius:CreateButton(unit)
 		anchor:SetMovable(true)
 		anchor:RegisterForDrag("LeftButton")
 		anchor:SetScript("OnDragStart", function(f)
-			if (not self.db.locked) then 
+			if (not self.db.locked) then
 				local f = self.buttons["arena1"]
 				f:StartMoving() 
 			end
@@ -752,11 +748,11 @@ function Gladius:UNIT_AURA(event, unit)
 		index = index + 1
 		-- Update spec from API
 		local numOpps = GetNumArenaOpponentSpecs()
-		for i=1, numOpps do
+		for i = 1, numOpps do
 			local specID = GetArenaOpponentSpec(i)
 			if (specID > 0) then
 				local _, spec, _, specIcon, _, _, class = GetSpecializationInfoByID(specID)
-				Gladius.buttons["arena"..i].spec=spec
+				Gladius.buttons["arena"..i].spec = spec
 			end
 		end
 	end
@@ -776,11 +772,11 @@ function Gladius:UNIT_SPELLCAST_START(event, unit)
 	end
 	-- Update spec from API
 	local numOpps = GetNumArenaOpponentSpecs()
-	for i=1, numOpps do
+	for i = 1, numOpps do
 		local specID = GetArenaOpponentSpec(i)
 		if (specID > 0) then
 			local _, spec, _, specIcon, _, _, class = GetSpecializationInfoByID(specID)
-			Gladius.buttons["arena"..i].spec=spec
+			Gladius.buttons["arena"..i].spec = spec
 		end
 	end
 end
@@ -798,11 +794,11 @@ function Gladius:UNIT_HEALTH(event, unit)
 	end
 	-- Update spec from API
 	local numOpps = GetNumArenaOpponentSpecs()
-	for i=1, numOpps do
+	for i = 1, numOpps do
 		local specID = GetArenaOpponentSpec(i)
 		if (specID > 0) then
 			local _, spec, _, specIcon, _, _, class = GetSpecializationInfoByID(specID)
-			Gladius.buttons["arena"..i].spec=spec
+			Gladius.buttons["arena"..i].spec = spec
 		end
 	end
 end

@@ -10,8 +10,8 @@ local pairs = pairs
 
 local Clicks = Gladius:NewModule("Clicks", false, false, {
 	clickAttributes = {
-	["Left"] = { button = "1", modifier = "", action = "target", macro = ""},
-	["Right"] = { button = "2", modifier = "", action = "focus", macro = ""},
+		["Left"] = { button = "1", modifier = "", action = "target", macro = ""},
+		["Right"] = { button = "2", modifier = "", action = "focus", macro = ""},
 	},
 })
 
@@ -22,10 +22,10 @@ end
 
 function Clicks:OnDisable()
 	-- Iterate over all the secure frames and disable any attributes
-	for _,t in pairs(self.secureFrames) do
+	for _, t in pairs(self.secureFrames) do
 		for frame,_ in pairs(t) do
 			for _,attr in pairs(Gladius.dbi.profile.clickAttributes) do
-				frame:SetAttribute(attr.modifier .. "type" .. attr.button, nil)
+				frame:SetAttribute(attr.modifier.."type"..attr.button, nil)
 			end
 		end
 	end
@@ -75,11 +75,11 @@ end
 function Clicks:ApplyAttributes(unit, frame)
 	frame:SetAttribute("unit", unit)
 	for _, attr in pairs(Gladius.dbi.profile.clickAttributes) do
-		frame:SetAttribute(attr.modifier .. "type" .. attr.button, attr.action)
+		frame:SetAttribute(attr.modifier.."type"..attr.button, attr.action)
 		if (attr.action == "macro" and attr.macro ~= "") then
-			frame:SetAttribute(attr.modifier .. "macrotext" .. attr.button, string.gsub(attr.macro, "*unit", unit))
+			frame:SetAttribute(attr.modifier.."macrotext"..attr.button, string.gsub(attr.macro, "*unit", unit))
 		elseif (attr.action == "spell" and attr.macro ~= "") then
-			frame:SetAttribute(attr.modifier .. "spell" .. attr.button, attr.macro)
+			frame:SetAttribute(attr.modifier.."spell"..attr.button, attr.macro)
 		end
 	end
 end
@@ -110,53 +110,53 @@ function Clicks:GetOptions()
 	local addAttrMod = ""
 	local options = {
 		attributeList = {
-			type="group",
-			name=L["Click Actions"],
-			order=1,
-				args={
+			type = "group",
+			name = L["Click Actions"],
+			order = 1,
+				args = {
 					add = {
-					type="group",
-					name=L["Add click action"],
-					inline=true,
-					order=1,
+					type = "group",
+					name = L["Add click action"],
+					inline = true,
+					order = 1,
 					args = {
 						button = {
-							type="select",
-							name=L["Mouse button"],
-							desc=L["Select which mouse button this click action uses"],
-							values=CLICK_BUTTONS,
-							get=function(info)
+							type = "select",
+							name = L["Mouse button"],
+							desc = L["Select which mouse button this click action uses"],
+							values = CLICK_BUTTONS,
+							get = function(info)
 								return addAttrButton
 							end,
-							set=function(info, value)
+							set = function(info, value)
 								addAttrButton = value
 							end,
-							disabled=function()
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							order=10,
+							order = 10,
 						},
 						modifier = {
-							type="select",
-							name=L["Modifier"],
-							desc=L["Select a modifier for this click action"],
-							values=CLICK_MODIFIERS,
-							get=function(info)
+							type = "select",
+							name = L["Modifier"],
+							desc = L["Select a modifier for this click action"],
+							values = CLICK_MODIFIERS,
+							get = function(info)
 								return addAttrMod
 							end,
-							set=function(info,
+							set = function(info,
 								value) addAttrMod = value
 							end,
-							disabled=function()
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							order=20,
+							order = 20,
 						},
 						add = {
-							type="execute",
-							name=L["Add"],
-							func=function()
-								local attr = addAttrMod ~= "" and CLICK_MODIFIERS[addAttrMod] .. CLICK_BUTTONS[addAttrButton] or CLICK_BUTTONS[addAttrButton]
+							type = "execute",
+							name = L["Add"],
+							func = function()
+								local attr = addAttrMod ~= "" and CLICK_MODIFIERS[addAttrMod]..CLICK_BUTTONS[addAttrButton] or CLICK_BUTTONS[addAttrButton]
 								if (not Gladius.db.clickAttributes[attr]) then
 									-- add to db
 									Gladius.db.clickAttributes[attr] = {
@@ -171,7 +171,7 @@ function Clicks:GetOptions()
 									Gladius:UpdateFrame()
 								end
 							end,
-							order=30,
+							order = 30,
 						},
 					},
 				},
@@ -189,18 +189,18 @@ end
 
 function Clicks:GetAttributeOptionTable(attribute, order)
 	return {
-		type="group",
-		name=attribute,
-		childGroups="tree",
-		order=order,
-		disabled=function()
+		type = "group",
+		name = attribute,
+		childGroups = "tree",
+		order = order,
+		disabled = function()
 			return not Gladius.dbi.profile.modules[self.name]
 		end,
 		args = {
 			delete = {
-				type="execute",
-				name=L["Delete Click Action"],
-				func=function()
+				type = "execute",
+				name = L["Delete Click Action"],
+				func = function()
 					-- remove from db
 					Gladius.db.clickAttributes[attribute] = nil
 					-- remove from options
@@ -208,36 +208,36 @@ function Clicks:GetAttributeOptionTable(attribute, order)
 					-- update
 					Gladius:UpdateFrame()
 				end,
-				order=1,
+				order = 1,
 			},
 			action = {
-				type="group",
-				name=L["Action"],
-				inline=true,
-				get=getOption,
-				set=setOption,
-				order=2,
+				type = "group",
+				name = L["Action"],
+				inline = true,
+				get = getOption,
+				set = setOption,
+				order = 2,
 				args = {
 					action = {
-						type="select",
-						name=L["Action"],
-						desc=L["Select what this Click Action does"],
+						type = "select",
+						name = L["Action"],
+						desc = L["Select what this Click Action does"],
 						values={["macro"] = MACRO, ["target"] = TARGET, ["focus"] = FOCUS, ["spell"] = L["Cast Spell"]},
-						order=10,
+						order = 10,
 					},
 					sep = {
 						type = "description",
-						name="",
-						width="full",
-						order=15,
+						name = "",
+						width = "full",
+						order = 15,
 					},
 					macro = {
-						type="input",
-						multiline=true,
-						name=L["Spell Name / Macro Text"],
-						desc=L["Select what this Click Action does"],
-						width="double",
-						order=20,
+						type = "input",
+						multiline = true,
+						name = L["Spell Name / Macro Text"],
+						desc = L["Select what this Click Action does"],
+						width = "double",
+						order = 20,
 					},
 				},
 			},

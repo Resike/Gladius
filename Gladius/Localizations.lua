@@ -1,6 +1,9 @@
 ﻿if (not Gladius.L) then
 	if (GetLocale() == "enUS" or GetLocale() == "enGB") then
 		Gladius.L = setmetatable({
+			["xCT"] = "xCT",
+			["xCT Plus"] = "xCT Plus",
+			["You can't use this function inside arenas."] = "You can't use this function inside arenas.",
 			["Frame"] = "Frame",
 			["Welcome to Gladius!"] = "Welcome to Gladius!",
 			["First run has been detected, displaying test frame."] = "First run has been detected, displaying test frame.",
@@ -2571,8 +2574,8 @@
 		},
 		{
 			__index = function(t, index)
-					return index
-				end
+				return index
+			end
 		})
 	end
 end

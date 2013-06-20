@@ -18,11 +18,11 @@ local ClassIcon = Gladius:NewModule("ClassIcon", false, true, {
 	classIconRelativePoint = "TOPLEFT",
 	classIconAdjustSize = false,
 	classIconSize = 40,
-	classIconOffsetX = -1,
+	classIconOffsetX = - 1,
 	classIconOffsetY = 0,
 	classIconFrameLevel = 2,
 	classIconGloss = true,
-	classIconGlossColor = { r = 1, g = 1, b = 1, a = 0.4 },
+	classIconGlossColor = {r = 1, g = 1, b = 1, a = 0.4},
 	classIconImportantAuras = true,
 	classIconCrop = false,
 	classIconCooldown = false,
@@ -160,7 +160,7 @@ function ClassIcon:CreateFrame(unit)
 		return
 	end
 	-- create frame
-	self.frame[unit] = CreateFrame("CheckButton", "Gladius" .. self.name .. "Frame" .. unit, button, "ActionButtonTemplate")
+	self.frame[unit] = CreateFrame("CheckButton", "Gladius"..self.name.."Frame"..unit, button, "ActionButtonTemplate")
 	self.frame[unit]:EnableMouse(false)
 	self.frame[unit]:SetNormalTexture("Interface\\AddOns\\Gladius\\Images\\Gloss")
 	self.frame[unit].texture = _G[self.frame[unit]:GetName().."Icon"]
@@ -206,9 +206,9 @@ function ClassIcon:Update(unit)
 	local left, right, top, bottom = Gladius.buttons[unit]:GetHitRectInsets()
 	
 	if (strfind(Gladius.db.classIconRelativePoint, "LEFT")) then
-		left = -self.frame[unit]:GetWidth() + Gladius.db.classIconOffsetX
+		left = - self.frame[unit]:GetWidth() + Gladius.db.classIconOffsetX
 		else
-			right = -self.frame[unit]:GetWidth() + -Gladius.db.classIconOffsetX
+			right = - self.frame[unit]:GetWidth() + - Gladius.db.classIconOffsetX
 		end
 		-- search for an attached frame
 		--[[for _, module in pairs(Gladius.modules) do
@@ -326,186 +326,186 @@ end
 function ClassIcon:GetOptions()
 	return {
 		general = {
-			type="group",
-			name=L["General"],
-			order=1,
+			type = "group",
+			name = L["General"],
+			order = 1,
 			args = {
 				widget = {
-					type="group",
-					name=L["Widget"],
-					desc=L["Widget settings"],
-					inline=true,
-					order=1,
+					type = "group",
+					name = L["Widget"],
+					desc = L["Widget settings"],
+					inline = true,
+					order = 1,
 					args = {
 						classIconImportantAuras = {
-							type="toggle",
-							name=L["Class Icon Important Auras"],
-							desc=L["Show important auras instead of the class icon"],
-							disabled=function()
+							type = "toggle",
+							name = L["Class Icon Important Auras"],
+							desc = L["Show important auras instead of the class icon"],
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							order=5,
+							order = 5,
 						},
 						classIconCrop = {
-							type="toggle",
-							name=L["Class Icon Crop Borders"],
-							desc=L["Toggle if the class icon borders should be cropped or not."],
-							disabled=function()
+							type = "toggle",
+							name = L["Class Icon Crop Borders"],
+							desc = L["Toggle if the class icon borders should be cropped or not."],
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							hidden=function()
+							hidden = function()
 								return not Gladius.db.advancedOptions
 							end,
-							order=6,
+							order = 6,
 						},
 						sep = {
 							type = "description",
-							name="",
-							width="full",
-							order=7,
+							name = "",
+							width = "full",
+							order = 7,
 						},
 						classIconCooldown = {
-							type="toggle",
-							name=L["Class Icon Cooldown Spiral"],
-							desc=L["Display the cooldown spiral for important auras"],
-							disabled=function()
+							type = "toggle",
+							name = L["Class Icon Cooldown Spiral"],
+							desc = L["Display the cooldown spiral for important auras"],
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							hidden=function()
+							hidden = function()
 								return not Gladius.db.advancedOptions
 							end,
-							order=10,
+							order = 10,
 						},
 						classIconCooldownReverse = {
-							type="toggle",
-							name=L["Class Icon Cooldown Reverse"],
-							desc=L["Invert the dark/bright part of the cooldown spiral"],
-							disabled=function()
+							type = "toggle",
+							name = L["Class Icon Cooldown Reverse"],
+							desc = L["Invert the dark/bright part of the cooldown spiral"],
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							hidden=function()
+							hidden = function()
 								return not Gladius.db.advancedOptions
 							end,
-							order=15,
+							order = 15,
 						},
 						sep2 = {
 							type = "description",
-							name="",
-							width="full",
-							order=17,
+							name = "",
+							width = "full",
+							order = 17,
 						},
 						classIconGloss = {
-							type="toggle",
-							name=L["Class Icon Gloss"],
-							desc=L["Toggle gloss on the class icon"],
-							disabled=function()
+							type = "toggle",
+							name = L["Class Icon Gloss"],
+							desc = L["Toggle gloss on the class icon"],
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							hidden=function()
+							hidden = function()
 								return not Gladius.db.advancedOptions
 							end,
-							order=20,
+							order = 20,
 						},
 						classIconGlossColor = {
-							type="color",
-							name=L["Class Icon Gloss Color"],
-							desc=L["Color of the class icon gloss"],
-							get=function(info)
+							type = "color",
+							name = L["Class Icon Gloss Color"],
+							desc = L["Color of the class icon gloss"],
+							get = function(info)
 								return Gladius:GetColorOption(info)
 							end,
-							set=function(info, r, g, b, a)
+							set = function(info, r, g, b, a)
 								return Gladius:SetColorOption(info, r, g, b, a)
 							end,
-							hasAlpha=true,
-							disabled=function()
+							hasAlpha = true,
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							hidden=function()
+							hidden = function()
 								return not Gladius.db.advancedOptions
 							end,
-							order=25,
+							order = 25,
 						},
 						sep3 = {
 							type = "description",
-							name="",
-							width="full",
-							order=27,
+							name = "",
+							width = "full",
+							order = 27,
 						},
 						classIconFrameLevel = {
-							type="range",
-							name=L["Class Icon Frame Level"],
-							desc=L["Frame level of the class icon"],
-							disabled=function()
+							type = "range",
+							name = L["Class Icon Frame Level"],
+							desc = L["Frame level of the class icon"],
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							hidden=function()
+							hidden = function()
 								return not Gladius.db.advancedOptions
 							end,
-							min=1, max=5, step=1,
-							width="double",
-							order=30,
+							min = 1, max = 5, step = 1,
+							width = "double",
+							order = 30,
 						},
 					},
 				},
 				size = {
-					type="group",
-					name=L["Size"],
-					desc=L["Size settings"],
-					inline=true,
-					order=2,
+					type = "group",
+					name = L["Size"],
+					desc = L["Size settings"],
+					inline = true,
+					order = 2,
 					args = {
 						classIconAdjustSize = {
-							type="toggle",
-							name=L["Class Icon Adjust Size"],
-							desc=L["Adjust class icon size to the frame size"],
-							disabled=function()
+							type = "toggle",
+							name = L["Class Icon Adjust Size"],
+							desc = L["Adjust class icon size to the frame size"],
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							order=5,
+							order = 5,
 						},
 						classIconSize = {
-							type="range",
-							name=L["Class Icon Size"],
-							desc=L["Size of the class icon"],
-							min=10, max=100, step=1,
-							disabled=function()
+							type = "range",
+							name = L["Class Icon Size"],
+							desc = L["Size of the class icon"],
+							min = 10, max = 100, step = 1,
+							disabled = function()
 								return Gladius.dbi.profile.classIconAdjustSize or not Gladius.dbi.profile.modules[self.name]
 							end,
-							order=10,
+							order = 10,
 						},
 					},
 				},
 				position = {
-					type="group",
-					name=L["Position"],
-					desc=L["Position settings"],
-					inline=true,
-					order=3,
+					type = "group",
+					name = L["Position"],
+					desc = L["Position settings"],
+					inline = true,
+					order = 3,
 					args = {
 						classIconAttachTo = {
-							type="select",
-							name=L["Class Icon Attach To"],
-							desc=L["Attach class icon to given frame"],
-							values=function()
+							type = "select",
+							name = L["Class Icon Attach To"],
+							desc = L["Attach class icon to given frame"],
+							values = function()
 								return Gladius:GetModules(self.name)
 							end,
-							disabled=function()
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							hidden=function()
+							hidden = function()
 								return not Gladius.db.advancedOptions
 							end,
-							order=5,
+							order = 5,
 						},
 						classIconPosition = {
-							type="select",
-							name=L["Class Icon Position"],
-							desc=L["Position of the class icon"],
+							type = "select",
+							name = L["Class Icon Position"],
+							desc = L["Position of the class icon"],
 							values={ ["LEFT"] = L["Left"], ["RIGHT"] = L["Right"] },
-							get=function()
+							get = function()
 								return strfind(Gladius.db.classIconAnchor, "RIGHT") and "LEFT" or "RIGHT"
 							end,
-							set=function(info, value)
+							set = function(info, value)
 								if (value == "LEFT") then
 									Gladius.db.classIconAnchor = "TOPRIGHT"
 									Gladius.db.classIconRelativePoint = "TOPLEFT"
@@ -515,75 +515,75 @@ function ClassIcon:GetOptions()
 								end
 								Gladius:UpdateFrame(info[1])
 							end,
-							disabled=function()
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							hidden=function()
+							hidden = function()
 								return Gladius.db.advancedOptions
 							end,
-							order=6,
+							order = 6,
 						},
 						sep = {
 							type = "description",
-							name="",
-							width="full",
-							order=7,
+							name = "",
+							width = "full",
+							order = 7,
 						},
 						classIconAnchor = {
-							type="select",
-							name=L["Class Icon Anchor"],
-							desc=L["Anchor of the class icon"],
-							values=function()
+							type = "select",
+							name = L["Class Icon Anchor"],
+							desc = L["Anchor of the class icon"],
+							values = function()
 								return Gladius:GetPositions()
 							end,
-							disabled=function()
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							hidden=function()
+							hidden = function()
 								return not Gladius.db.advancedOptions
 							end,
-							order=10,
+							order = 10,
 						},
 						classIconRelativePoint = {
-							type="select",
-							name=L["Class Icon Relative Point"],
-							desc=L["Relative point of the class icon"],
-							values=function()
+							type = "select",
+							name = L["Class Icon Relative Point"],
+							desc = L["Relative point of the class icon"],
+							values = function()
 								return Gladius:GetPositions()
 							end,
-							disabled=function()
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							hidden=function()
+							hidden = function()
 								return not Gladius.db.advancedOptions
 							end,
-						order=15,
+						order = 15,
 						},
 							sep2 = {
 							type = "description",
-							name="",
-							width="full",
-							order=17,
+							name = "",
+							width = "full",
+							order = 17,
 						},
 						classIconOffsetX = {
-							type="range",
-							name=L["Class Icon Offset X"],
-							desc=L["X offset of the class icon"],
-							min=-100, max=100, step=1,
-							disabled=function()
+							type = "range",
+							name = L["Class Icon Offset X"],
+							desc = L["X offset of the class icon"],
+							min = - 100, max = 100, step = 1,
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							order=20,
+							order = 20,
 						},
 						classIconOffsetY = {
-							type="range",
-							name=L["Class Icon Offset Y"],
-							desc=L["Y offset of the class icon"],
-							disabled=function()
+							type = "range",
+							name = L["Class Icon Offset Y"],
+							desc = L["Y offset of the class icon"],
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							min=-50, max=50, step=1,
-							order=25,
+							min = - 50, max = 50, step = 1,
+							order = 25,
 						},
 					},
 				},

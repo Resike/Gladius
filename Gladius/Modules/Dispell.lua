@@ -18,8 +18,8 @@ local Dispell = Gladius:NewModule("Dispell", false, true, {
 	dispellAnchor = "TOPLEFT",
 	dispellRelativePoint = "TOPRIGHT",
 	dispellGridStyleIcon = false,
-	dispellGridStyleIconColor = { r = 0, g = 1, b = 0, a = 1 },
-	dispellGridStyleIconUsedColor = { r = 1, g = 0, b = 0, a = 1 },
+	dispellGridStyleIconColor = {r = 0, g = 1, b = 0, a = 1},
+	dispellGridStyleIconUsedColor = {r = 1, g = 0, b = 0, a = 1},
 	dispellAdjustSize = true,
 	dispellSize = 52,
 	dispellOffsetX = 52,
@@ -27,7 +27,7 @@ local Dispell = Gladius:NewModule("Dispell", false, true, {
 	dispellFrameLevel = 2,
 	dispellIconCrop = false,
 	dispellGloss = true,
-	dispellGlossColor = { r = 1, g = 1, b = 1, a = 0.4 },
+	dispellGlossColor = {r = 1, g = 1, b = 1, a = 0.4},
 	dispellCooldown = true,
 	dispellCooldownReverse = false,
 	dispellFaction = true,
@@ -50,7 +50,7 @@ end
 function Dispell:OnDisable()
 	self:UnregisterAllEvents()
 	for unit in pairs(self.frame) do
-	self.frame[unit]:SetAlpha(0)
+		self.frame[unit]:SetAlpha(0)
 	end
 end
 
@@ -113,7 +113,9 @@ function Dispell:COMBAT_LOG_EVENT_UNFILTERED(event, ...)
 	if select(2, ...) == "SPELL_DISPEL" then
 		local spell = select(12, ...)
 		local unit = select(4, ...)
-		--if (not strfind(unit, "arena") or strfind(unit, "pet")) then return end
+		--[[if (not strfind(unit, "arena") or strfind(unit, "pet")) then
+			return
+		end]]
 		if (not(UnitGUID("arena1") == unit or UnitGUID("arena2") == unit or UnitGUID("arena3") == unit or UnitGUID("arena4") == unit or UnitGUID("arena5") == unit)) then
 			return
 		end
@@ -172,7 +174,7 @@ function Dispell:CreateFrame(unit)
 		return
 	end
 	-- create frame
-	self.frame[unit] = CreateFrame("CheckButton", "Gladius" .. self.name .. "Frame" .. unit, button, "ActionButtonTemplate")
+	self.frame[unit] = CreateFrame("CheckButton", "Gladius"..self.name.."Frame"..unit, button, "ActionButtonTemplate")
 	self.frame[unit]:EnableMouse(false)
 	self.frame[unit]:SetNormalTexture("Interface\\AddOns\\Gladius\\Images\\Gloss")
 	self.frame[unit].texture = _G[self.frame[unit]:GetName().."Icon"]
@@ -292,15 +294,15 @@ function Dispell:Show(unit)
 				dispellIcon = "Interface\\Icons\\spell_nature_removecurse"
 			end
 		else
-			if (englishClass == "PRIEST" or unit=="arena1") then
+			if (englishClass == "PRIEST" or unit == "arena1") then
 				dispellIcon = "Interface\\Icons\\spell_holy_dispelmagic"
-			elseif (englishClass == "SHAMAN" or unit=="arena2") then
+			elseif (englishClass == "SHAMAN" or unit == "arena2") then
 				dispellIcon = "Interface\\Icons\\ability_shaman_cleansespirit"
-			elseif (englishClass == "PALADIN" or unit=="arena3") then
+			elseif (englishClass == "PALADIN" or unit == "arena3") then
 				dispellIcon = "Interface\\Icons\\spell_holy_purify"
-			elseif (englishClass == "DRUID" or unit=="arena4") then
+			elseif (englishClass == "DRUID" or unit == "arena4") then
 				dispellIcon = "Interface\\Icons\\ability_shaman_cleansespirit"
-			elseif (englishClass == "MAGE" or unit=="arena5") then
+			elseif (englishClass == "MAGE" or unit == "arena5") then
 				dispellIcon = "Interface\\Icons\\spell_nature_removecurse"
 			end
 		end
@@ -353,10 +355,10 @@ end
 -- Add the announcement toggle
 function Dispell:OptionsLoad()
 	Gladius.options.args.Announcements.args.general.args.announcements.args.dispell = {
-		type="toggle",
-		name=L["Dispell"],
-		desc=L["Announces when an enemy cast a dispell."],
-		disabled=function()
+		type = "toggle",
+		name = L["Dispell"],
+		desc = L["Announces when an enemy cast a dispell."],
+		disabled = function()
 			return not Gladius.db.modules[self.name]
 		end,
 	}
@@ -365,237 +367,237 @@ end
 function Dispell:GetOptions()
 	return {
 		general = {
-			type="group",
-			name=L["General"],
-			order=1,
+			type = "group",
+			name = L["General"],
+			order = 1,
 			args = {
 				widget = {
-					type="group",
-					name=L["Widget"],
-					desc=L["Widget settings"],
-					inline=true,
-					order=1,
+					type = "group",
+					name = L["Widget"],
+					desc = L["Widget settings"],
+					inline = true,
+					order = 1,
 					args = {
 						dispellGridStyleIcon = {
-							type="toggle",
-							name=L["Dispell Grid Style Icon"],
-							desc=L["Toggle dispell grid style icon"],
-							disabled=function()
+							type = "toggle",
+							name = L["Dispell Grid Style Icon"],
+							desc = L["Toggle dispell grid style icon"],
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							order=5,
+							order = 5,
 						},
 						sep = {
 							type = "description",
-							name="",
-							width="full",
-							order=7,
+							name = "",
+							width = "full",
+							order = 7,
 						},
 						dispellGridStyleIconColor = {
-							type="color",
-							name=L["Dispell Grid Style Icon Color"],
-							desc=L["Color of the dispell grid style icon"],
-							hasAlpha=true,
-							get=function(info)
+							type = "color",
+							name = L["Dispell Grid Style Icon Color"],
+							desc = L["Color of the dispell grid style icon"],
+							hasAlpha = true,
+							get = function(info)
 								return Gladius:GetColorOption(info)
 							end,
-							set=function(info, r, g, b, a)
+							set = function(info, r, g, b, a)
 								return Gladius:SetColorOption(info, r, g, b, a)
 							end,
-							disabled=function()
+							disabled = function()
 								return not Gladius.dbi.profile.dispellGridStyleIcon or not Gladius.dbi.profile.modules[self.name]
 							end,
-							order=10,
+							order = 10,
 						}, 
 						dispellGridStyleIconUsedColor = {
-							type="color",
-							name=L["Dispell Grid Style Icon Used Color"],
-							desc=L["Color of the dispell grid style icon when it's on cooldown"],
-							hasAlpha=true,
-							get=function(info)
+							type = "color",
+							name = L["Dispell Grid Style Icon Used Color"],
+							desc = L["Color of the dispell grid style icon when it's on cooldown"],
+							hasAlpha = true,
+							get = function(info)
 								return Gladius:GetColorOption(info)
 							end,
-							set=function(info, r, g, b, a)
+							set = function(info, r, g, b, a)
 								return Gladius:SetColorOption(info, r, g, b, a)
 							end,
-							disabled=function()
+							disabled = function()
 								return not Gladius.dbi.profile.dispellGridStyleIcon or not Gladius.dbi.profile.modules[self.name]
 							end,
-							order=12,
+							order = 12,
 						},
 						sep1 = {
 							type = "description",
-							name="",
-							width="full",
-							order=13,
+							name = "",
+							width = "full",
+							order = 13,
 						},
 						dispellCooldown = {
-							type="toggle",
-							name=L["Dispell Cooldown Spiral"],
-							desc=L["Display the cooldown spiral for important auras"],
-							disabled=function()
+							type = "toggle",
+							name = L["Dispell Cooldown Spiral"],
+							desc = L["Display the cooldown spiral for important auras"],
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							hidden=function()
+							hidden = function()
 								return not Gladius.db.advancedOptions
 							end,
-							order=15,
+							order = 15,
 						},
 						dispellCooldownReverse = {
-							type="toggle",
-							name=L["Dispell Cooldown Reverse"],
-							desc=L["Invert the dark/bright part of the cooldown spiral"],
-							disabled=function()
+							type = "toggle",
+							name = L["Dispell Cooldown Reverse"],
+							desc = L["Invert the dark/bright part of the cooldown spiral"],
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							hidden=function()
+							hidden = function()
 								return not Gladius.db.advancedOptions
 							end,
-							order=20,
+							order = 20,
 						},
 						sep2 = {
 							type = "description",
-							name="",
-							width="full",
-							order=23,
+							name = "",
+							width = "full",
+							order = 23,
 						},
 						dispellGloss = {
-							type="toggle",
-							name=L["Dispell Gloss"],
-							desc=L["Toggle gloss on the dispell icon"],
-							disabled=function()
+							type = "toggle",
+							name = L["Dispell Gloss"],
+							desc = L["Toggle gloss on the dispell icon"],
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							hidden=function()
+							hidden = function()
 								return not Gladius.db.advancedOptions
 							end,
-							order=25,
+							order = 25,
 						},
 						dispellGlossColor = {
-							type="color",
-							name=L["Dispell Gloss Color"],
-							desc=L["Color of the dispell icon gloss"],
-							get=function(info)
+							type = "color",
+							name = L["Dispell Gloss Color"],
+							desc = L["Color of the dispell icon gloss"],
+							get = function(info)
 								return Gladius:GetColorOption(info)
 							end,
-							set=function(info, r, g, b, a)
+							set = function(info, r, g, b, a)
 								return Gladius:SetColorOption(info, r, g, b, a)
 							end,
-							hasAlpha=true,
-							disabled=function()
+							hasAlpha = true,
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							hidden=function()
+							hidden = function()
 								return not Gladius.db.advancedOptions
 							end,
-							order=30,
+							order = 30,
 						},
 						sep3 = {
 							type = "description",
-							name="",
-							width="full",
-							hidden=function()
+							name = "",
+							width = "full",
+							hidden = function()
 								return not Gladius.db.advancedOptions
 							end,
-							order=33,
+							order = 33,
 						},
 						dispellIconCrop = {
-							type="toggle",
-							name=L["Dispell Icon Border Crop"],
-							desc=L["Toggle if the borders of the dispell icon should be cropped"],
-							disabled=function()
+							type = "toggle",
+							name = L["Dispell Icon Border Crop"],
+							desc = L["Toggle if the borders of the dispell icon should be cropped"],
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							order=35,
+							order = 35,
 						},
 						dispellFaction = {
-							type="toggle",
-							name=L["Dispell Icon Faction"],
-							desc=L["Toggle if the dispell icon should be changing based on the opponents faction"],
-							disabled=function()
+							type = "toggle",
+							name = L["Dispell Icon Faction"],
+							desc = L["Toggle if the dispell icon should be changing based on the opponents faction"],
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							order=40,
+							order = 40,
 						},
 						sep3 = {
 							type = "description",
-							name="",
-							width="full",
-							order=43,
+							name = "",
+							width = "full",
+							order = 43,
 						},
 						dispellFrameLevel = {
-							type="range",
-							name=L["Dispell Frame Level"],
-							desc=L["Frame level of the dispell"],
-							disabled=function()
+							type = "range",
+							name = L["Dispell Frame Level"],
+							desc = L["Frame level of the dispell"],
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							hidden=function()
+							hidden = function()
 								return not Gladius.db.advancedOptions
 							end,
-							min=1, max=5, step=1,
-							width="double",
-							order=45,
+							min = 1, max = 5, step = 1,
+							width = "double",
+							order = 45,
 						},
 					},
 				},
 				size = {
-					type="group",
-					name=L["Size"],
-					desc=L["Size settings"],
-					inline=true,
-					order=2,
+					type = "group",
+					name = L["Size"],
+					desc = L["Size settings"],
+					inline = true,
+					order = 2,
 					args = {
 						dispellAdjustSize = {
-							type="toggle",
-							name=L["Dispell Adjust Size"],
-							desc=L["Adjust dispell size to the frame size"],
-							disabled=function()
+							type = "toggle",
+							name = L["Dispell Adjust Size"],
+							desc = L["Adjust dispell size to the frame size"],
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							order=5,
+							order = 5,
 						},
 						dispellSize = {
-							type="range",
-							name=L["Dispell Size"],
-							desc=L["Size of the dispell"],
-							min=10, max=100, step=1,
-							disabled=function()
+							type = "range",
+							name = L["Dispell Size"],
+							desc = L["Size of the dispell"],
+							min = 10, max = 100, step = 1,
+							disabled = function()
 								return Gladius.dbi.profile.dispellAdjustSize or not Gladius.dbi.profile.modules[self.name]
 							end,
-							order=10,
+							order = 10,
 						},
 					},
 				},
 				position = {
-						type="group",
-						name=L["Position"],
-						desc=L["Position settings"],
-						inline=true,
-						order=3,
+						type = "group",
+						name = L["Position"],
+						desc = L["Position settings"],
+						inline = true,
+						order = 3,
 						args = {
 						dispellAttachTo = {
-							type="select",
-							name=L["Dispell Attach To"],
-							desc=L["Attach dispell to the given frame"],
-							values=function()
+							type = "select",
+							name = L["Dispell Attach To"],
+							desc = L["Attach dispell to the given frame"],
+							values = function()
 								return Gladius:GetModules(self.name)
 							end,
-							disabled=function()
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							arg="general",
-							order=5,
+							arg = "general",
+							order = 5,
 						},
 						dispellPosition = {
-							type="select",
-							name=L["Dispell Position"],
-							desc=L["Position of the dispell"],
+							type = "select",
+							name = L["Dispell Position"],
+							desc = L["Position of the dispell"],
 							values={["LEFT"] = L["Left"], ["RIGHT"] = L["Right"]},
-							get=function()
+							get = function()
 								return strfind(Gladius.db.dispellAnchor, "RIGHT") and "LEFT" or "RIGHT"
 							end,
-							set=function(info, value)
+							set = function(info, value)
 								if (value == "LEFT") then
 									Gladius.db.dispellAnchor = "TOPRIGHT"
 									Gladius.db.dispellRelativePoint = "TOPLEFT"
@@ -605,75 +607,75 @@ function Dispell:GetOptions()
 								end
 								Gladius:UpdateFrame(info[1])
 							end,
-							disabled=function()
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							hidden=function()
+							hidden = function()
 								return Gladius.db.advancedOptions
 							end,
-							order=6,
+							order = 6,
 						},
 						sep = {
 							type = "description",
-							name="",
-							width="full",
-							order=7,
+							name = "",
+							width = "full",
+							order = 7,
 						},
 						dispellAnchor = {
-							type="select",
-							name=L["Dispell Anchor"],
-							desc=L["Anchor of the dispell"],
-							values=function()
+							type = "select",
+							name = L["Dispell Anchor"],
+							desc = L["Anchor of the dispell"],
+							values = function()
 								return Gladius:GetPositions()
 							end,
-							disabled=function()
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							hidden=function()
+							hidden = function()
 								return not Gladius.db.advancedOptions
 							end,
-							order=10,
+							order = 10,
 						},
 						dispellRelativePoint = {
-							type="select",
-							name=L["Dispell Relative Point"],
-							desc=L["Relative point of the dispell"],
-							values=function()
+							type = "select",
+							name = L["Dispell Relative Point"],
+							desc = L["Relative point of the dispell"],
+							values = function()
 								return Gladius:GetPositions()
 							end,
-							disabled=function()
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							hidden=function()
+							hidden = function()
 								return not Gladius.db.advancedOptions
 							end,
-							order=15,
+							order = 15,
 						},
 						sep2 = {
 							type = "description",
-							name="",
-							width="full",
-							order=17,
+							name = "",
+							width = "full",
+							order = 17,
 						},
 						dispellOffsetX = {
-							type="range",
-							name=L["Dispell Offset X"],
-							desc=L["X offset of the dispell"],
-							min=-100, max=100, step=1,
-							disabled=function()
+							type = "range",
+							name = L["Dispell Offset X"],
+							desc = L["X offset of the dispell"],
+							min = - 100, max = 100, step = 1,
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							order=20,
+							order = 20,
 						},
 						dispellOffsetY = {
-							type="range",
-							name=L["Dispell Offset Y"],
-							desc=L["Y offset of the dispell"],
-							disabled=function()
+							type = "range",
+							name = L["Dispell Offset Y"],
+							desc = L["Y offset of the dispell"],
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							min=-50, max=50, step=1,
-							order=25,
+							min = - 50, max = 50, step = 1,
+							order = 25,
 						},
 					},
 				},

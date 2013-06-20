@@ -55,42 +55,42 @@ function Layout:GetOptions()
 	self.layout = ""
 	local t = {
 		general = {
-			type="group",
-			name=L["General"],
-			order=1,
+			type = "group",
+			name = L["General"],
+			order = 1,
 			args = {
 				widget = {
-					type="group",
-					name=L["Widget"],
-					desc=L["Widget settings"],
-					inline=true,
-					order=1,
+					type = "group",
+					name = L["Widget"],
+					desc = L["Widget settings"],
+					inline = true,
+					order = 1,
 					args = {
 						layoutInput = {
-							type="input",
-							name=L["Layout Code"],
-							desc=L["Code of your layout."],
-							get=function()
+							type = "input",
+							name = L["Layout Code"],
+							desc = L["Code of your layout."],
+							get = function()
 								return self.layout
 							end,
-							set=function(info, value)
+							set = function(info, value)
 								self.layout = value
 							end,
-							disabled=function()
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							multiline=true,
-							width="full",
-							order=5,
+							multiline = true,
+							width = "full",
+							order = 5,
 						},
 						layoutImport = {
-							type="execute",
-							name=L["Import layout"],
-							desc=L["Import your layout code."],
-							disabled=function()
+							type = "execute",
+							name = L["Import layout"],
+							desc = L["Import your layout code."],
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							func=function()
+							func = function()
 								if (self.layout == nil or self.layout == "") then
 									return
 								end
@@ -114,20 +114,20 @@ function Layout:GetOptions()
 								end
 								Gladius:UpdateFrame()
 							end,
-							order=10,
+							order = 10,
 						},
 						layoutExport = {
-							type="execute",
-							name=L["Export layout"],
-							desc=L["Export your layout code."],
-							disabled=function()
+							type = "execute",
+							name = L["Export layout"],
+							desc = L["Export your layout code."],
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							func=function()
+							func = function()
 								local t = CopyTable(Gladius.dbi.profile)
 								self.layout = LibStub("AceSerializer-3.0"):Serialize(SerializeTable(t, Gladius.defaults.profile))
 							end,
-							order=15,
+							order = 15,
 						},
 					},
 				},

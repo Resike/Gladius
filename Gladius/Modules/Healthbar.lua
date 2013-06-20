@@ -16,9 +16,9 @@ local HealthBar = Gladius:NewModule("HealthBar", true, true, {
 	healthBarAdjustWidth = true,
 	healthBarWidth = 200,
 	healthBarInverse = false,
-	healthBarColor = { r = 1, g = 1, b = 1, a = 1 },
+	healthBarColor = {r = 1, g = 1, b = 1, a = 1},
 	healthBarClassColor = true,
-	healthBarBackgroundColor = { r = 1, g = 1, b = 1, a = 0.3 },
+	healthBarBackgroundColor = {r = 1, g = 1, b = 1, a = 0.3},
 	healthBarTexture = "minimalist",
 	healthBarOffsetX = 0,
 	healthBarOffsetY = 0,
@@ -111,9 +111,9 @@ function HealthBar:CreateBar(unit)
 		return
 	end
 	-- create bar + text
-	self.frame[unit] = CreateFrame("STATUSBAR", "Gladius" .. self.name .. unit, button) 
-	self.frame[unit].background = self.frame[unit]:CreateTexture("Gladius" .. self.name .. unit .. "Background", "BACKGROUND")
-	self.frame[unit].highlight = self.frame[unit]:CreateTexture("Gladius" .. self.name .. "Highlight" .. unit, "OVERLAY")
+	self.frame[unit] = CreateFrame("STATUSBAR", "Gladius"..self.name..unit, button) 
+	self.frame[unit].background = self.frame[unit]:CreateTexture("Gladius"..self.name..unit.."Background", "BACKGROUND")
+	self.frame[unit].highlight = self.frame[unit]:CreateTexture("Gladius"..self.name.."Highlight"..unit, "OVERLAY")
 end
 
 function HealthBar:Update(unit)
@@ -245,163 +245,163 @@ end
 function HealthBar:GetOptions()
 	return {
 		general = {
-			type="group",
-			name=L["General"],
-			order=1,
+			type = "group",
+			name = L["General"],
+			order = 1,
 			args = {
 				bar = {
-					type="group",
-					name=L["Bar"],
-					desc=L["Bar settings"],
-					inline=true,
-					order=1,
+					type = "group",
+					name = L["Bar"],
+					desc = L["Bar settings"],
+					inline = true,
+					order = 1,
 					args = {
 						healthBarClassColor = {
-							type="toggle",
-							name=L["Health bar class color"],
-							desc=L["Toggle health bar class color"],
-							disabled=function()
+							type = "toggle",
+							name = L["Health bar class color"],
+							desc = L["Toggle health bar class color"],
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							order=5,
+							order = 5,
 						},
 						sep = {
 							type = "description",
-							name="",
-							width="full",
-							hidden=function()
+							name = "",
+							width = "full",
+							hidden = function()
 								return not Gladius.db.advancedOptions
 							end,
-							order=7,
+							order = 7,
 						},
 						healthBarColor = {
-							type="color",
-							name=L["Health bar color"],
-							desc=L["Color of the health bar"],
-							hasAlpha=true,
-							get=function(info)
+							type = "color",
+							name = L["Health bar color"],
+							desc = L["Color of the health bar"],
+							hasAlpha = true,
+							get = function(info)
 								return Gladius:GetColorOption(info)
 							end,
-							set=function(info, r, g, b, a)
+							set = function(info, r, g, b, a)
 								return Gladius:SetColorOption(info, r, g, b, a)
 							end,
-							disabled=function()
+							disabled = function()
 								return Gladius.dbi.profile.healthBarClassColor or not Gladius.dbi.profile.modules[self.name]
 							end,
-							order=10,
+							order = 10,
 						},
 						healthBarBackgroundColor = {
-							type="color",
-							name=L["Health bar background color"],
-							desc=L["Color of the health bar background"],
-							hasAlpha=true,
-							get=function(info)
+							type = "color",
+							name = L["Health bar background color"],
+							desc = L["Color of the health bar background"],
+							hasAlpha = true,
+							get = function(info)
 								return Gladius:GetColorOption(info)
 							end,
-							set=function(info, r, g, b, a)
+							set = function(info, r, g, b, a)
 								return Gladius:SetColorOption(info, r, g, b, a)
 							end,
-							disabled=function()
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							hidden=function()
+							hidden = function()
 								return not Gladius.db.advancedOptions
 							end,
-							order=15,
+							order = 15,
 						},
 						sep2 = {
 							type = "description",
-							name="",
-							width="full",
-							order=17,
+							name = "",
+							width = "full",
+							order = 17,
 						},
 						healthBarInverse = {
-							type="toggle",
-							name=L["Health bar inverse"],
-							desc=L["Inverse the health bar"],
-							disabled=function()
+							type = "toggle",
+							name = L["Health bar inverse"],
+							desc = L["Inverse the health bar"],
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							hidden=function()
+							hidden = function()
 								return not Gladius.db.advancedOptions
 							end,
-							order=20,
+							order = 20,
 						},
 						healthBarTexture = {
-							type="select",
-							name=L["Health bar texture"],
-							desc=L["Texture of the health bar"],
+							type = "select",
+							name = L["Health bar texture"],
+							desc = L["Texture of the health bar"],
 							dialogControl = "LSM30_Statusbar",
 							values = AceGUIWidgetLSMlists.statusbar,
-							disabled=function()
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							order=25,
+							order = 25,
 						},
 					},
 				},
 				size = {
-					type="group",
-					name=L["Size"],
-					desc=L["Size settings"],
-					inline=true,
-					order=2,
+					type = "group",
+					name = L["Size"],
+					desc = L["Size settings"],
+					inline = true,
+					order = 2,
 					args = {
 						healthBarAdjustWidth = {
-							type="toggle",
-							name=L["Health bar adjust width"],
-							desc=L["Adjust health bar width to the frame width"],
-							disabled=function()
+							type = "toggle",
+							name = L["Health bar adjust width"],
+							desc = L["Adjust health bar width to the frame width"],
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							order=5,
+							order = 5,
 						},
 						sep = {
 							type = "description",
-							name="",
-							width="full",
-							order=13,
+							name = "",
+							width = "full",
+							order = 13,
 						},
 						healthBarWidth = {
-							type="range",
-							name=L["Health bar width"],
-							desc=L["Width of the health bar"],
-							min=10, max=500, step=1,
-							disabled=function()
+							type = "range",
+							name = L["Health bar width"],
+							desc = L["Width of the health bar"],
+							min = 10, max = 500, step = 1,
+							disabled = function()
 								return Gladius.dbi.profile.healthBarAdjustWidth or not Gladius.dbi.profile.modules[self.name]
 							end,
-							order=15,
+							order = 15,
 						},
 						healthBarHeight = {
-							type="range",
-							name=L["Health bar height"],
-							desc=L["Height of the health bar"],
-							min=10, max=200, step=1,
-							disabled=function()
+							type = "range",
+							name = L["Health bar height"],
+							desc = L["Height of the health bar"],
+							min = 10, max = 200, step = 1,
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							order=20,
+							order = 20,
 						},
 					},
 				},
 				position = {
-					type="group",
-					name=L["Position"],
-					desc=L["Position settings"],
-					inline=true, 
-					hidden=function()
+					type = "group",
+					name = L["Position"],
+					desc = L["Position settings"],
+					inline = true, 
+					hidden = function()
 						return not Gladius.db.advancedOptions
 					end,
-					order=3,
+					order = 3,
 					args = {
 						healthBarAttachTo = {
-							type="select",
-							name=L["Health Bar Attach To"],
-							desc=L["Attach health bar to the given frame"],
-							values=function()
+							type = "select",
+							name = L["Health Bar Attach To"],
+							desc = L["Attach health bar to the given frame"],
+							values = function()
 								return Gladius:GetModules(self.name)
 							end,
-							set=function(info, value)
+							set = function(info, value)
 							local key = info.arg or info[#info]
 								if (strfind(Gladius.db.healthBarRelativePoint, "BOTTOM")) then
 									self.isBar = true
@@ -411,363 +411,363 @@ function HealthBar:GetOptions()
 								Gladius.dbi.profile[key] = value
 								Gladius:UpdateFrame()
 							end,
-							disabled=function()
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							width="double",
-							order=5,
+							width = "double",
+							order = 5,
 						},
 						sep = {
 							type = "description",
-							name="",
-							width="full",
-							order=7,
+							name = "",
+							width = "full",
+							order = 7,
 						},
 						healthBarAnchor = {
-							type="select",
-							name=L["Health Bar Anchor"],
-							desc=L["Anchor of the health bar"],
-							values=function()
+							type = "select",
+							name = L["Health Bar Anchor"],
+							desc = L["Anchor of the health bar"],
+							values = function()
 								return Gladius:GetPositions()
 							end,
-							disabled=function()
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							order=10,
+							order = 10,
 						},
 						healthBarRelativePoint = {
-							type="select",
-							name=L["Health Bar Relative Point"],
-							desc=L["Relative point of the health bar"],
-							values=function()
+							type = "select",
+							name = L["Health Bar Relative Point"],
+							desc = L["Relative point of the health bar"],
+							values = function()
 								return Gladius:GetPositions()
 							end,
-							disabled=function()
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							order=15,
+							order = 15,
 						},
 						sep2 = {
 							type = "description",
-							name="",
-							width="full",
-							order=17,
+							name = "",
+							width = "full",
+							order = 17,
 						},
 						healthBarOffsetX = {
-							type="range",
-							name=L["Health bar offset X"],
-							desc=L["X offset of the health bar"],
-							min=-100, max=100, step=1,
-							disabled=function()
+							type = "range",
+							name = L["Health bar offset X"],
+							desc = L["X offset of the health bar"],
+							min = - 100, max = 100, step = 1,
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							order=20,
+							order = 20,
 						},
 						healthBarOffsetY = {
-							type="range",
-							name=L["Health bar offset Y"],
-							desc=L["Y offset of the health bar"],
-							disabled=function()
+							type = "range",
+							name = L["Health bar offset Y"],
+							desc = L["Y offset of the health bar"],
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							min=-100, max=100, step=1,
-							order=25,
+							min = - 100, max = 100, step = 1,
+							order = 25,
 						},
 					},
 				},
 			},
 		},
 		healthDefaultColors = {
-			type="group",
-			name=L["Health colors"],
-			hidden=function()
+			type = "group",
+			name = L["Health colors"],
+			hidden = function()
 				return not Gladius.db.advancedOptions
 			end,
-			order=2,
+			order = 2,
 			args = {
 				healthBarUseDefaultColorPriest = {
-					type="toggle",
-					name=L["Default priest color"],
-					desc=L["Toggle default priest color"],
-					disabled=function()
+					type = "toggle",
+					name = L["Default priest color"],
+					desc = L["Toggle default priest color"],
+					disabled = function()
 						return not Gladius.dbi.profile.modules[self.name]
 					end,
-					order=0,
+					order = 0,
 				},
 				healthBarColorPriest = {
-					type="color",
-					name=L["Priest color"],
-					get=function(info)
+					type = "color",
+					name = L["Priest color"],
+					get = function(info)
 						return Gladius:GetColorOption(info)
 					end,
-					set=function(info, r, g, b, a)
+					set = function(info, r, g, b, a)
 						return Gladius:SetColorOption(info, r, g, b, 1)
 					end,
-					disabled=function()
+					disabled = function()
 						return not Gladius.dbi.profile.modules[self.name]
 					end,
-					order=5,
+					order = 5,
 				},
 				sep = {
 					type = "description",
-					name="",
-					width="full",
-					order=7,
+					name = "",
+					width = "full",
+					order = 7,
 				},
 				healthBarUseDefaultColorPaladin = {
-					type="toggle",
-					name=L["Default paladin color"],
-					desc=L["Toggle default paladin color"],
-					disabled=function()
+					type = "toggle",
+					name = L["Default paladin color"],
+					desc = L["Toggle default paladin color"],
+					disabled = function()
 						return not Gladius.dbi.profile.modules[self.name]
 					end,
-					order=10,
+					order = 10,
 				},
 				healthBarColorPaladin = {
-					type="color",
-					name=L["Paladin color"],
-					get=function(info)
+					type = "color",
+					name = L["Paladin color"],
+					get = function(info)
 						return Gladius:GetColorOption(info)
 					end,
-					set=function(info, r, g, b, a)
+					set = function(info, r, g, b, a)
 						return Gladius:SetColorOption(info, r, g, b, 1)
 					end,
-					disabled=function()
+					disabled = function()
 						return not Gladius.dbi.profile.modules[self.name]
 					end,
-					order=15,
+					order = 15,
 				},
 				sep2 = {
 					type = "description",
-					name="",
-					width="full",
-					order=17,
+					name = "",
+					width = "full",
+					order = 17,
 				},
 				healthBarUseDefaultColorShaman = {
-					type="toggle",
-					name=L["Default shaman color"],
-					desc=L["Toggle default shaman color"],
-					disabled=function()
+					type = "toggle",
+					name = L["Default shaman color"],
+					desc = L["Toggle default shaman color"],
+					disabled = function()
 						return not Gladius.dbi.profile.modules[self.name]
 					end,
-					order=20,
+					order = 20,
 				},
 				healthBarColorShaman = {
-					type="color",
-					name=L["Shaman color"],
-					get=function(info)
+					type = "color",
+					name = L["Shaman color"],
+					get = function(info)
 						return Gladius:GetColorOption(info)
 					end,
-					set=function(info, r, g, b, a)
+					set = function(info, r, g, b, a)
 						return Gladius:SetColorOption(info, r, g, b, 1)
 					end,
-					disabled=function()
+					disabled = function()
 						return not Gladius.dbi.profile.modules[self.name]
 					end,
-					order=25,
+					order = 25,
 				},
 				sep3 = {
 					type = "description",
-					name="",
-					width="full",
-					order=27,
+					name = "",
+					width = "full",
+					order = 27,
 				},
 				healthBarUseDefaultColorDruid = {
-					type="toggle",
-					name=L["Default druid color"],
-					desc=L["Toggle default druid color"],
-					disabled=function()
+					type = "toggle",
+					name = L["Default druid color"],
+					desc = L["Toggle default druid color"],
+					disabled = function()
 						return not Gladius.dbi.profile.modules[self.name]
 					end,
-					order=30,
+					order = 30,
 				},
 				healthBarColorDruid = {
-					type="color",
-					name=L["Druid color"],
-					get=function(info)
+					type = "color",
+					name = L["Druid color"],
+					get = function(info)
 						return Gladius:GetColorOption(info)
 					end,
-					set=function(info, r, g, b, a)
+					set = function(info, r, g, b, a)
 						return Gladius:SetColorOption(info, r, g, b, 1)
 					end,
-					disabled=function()
+					disabled = function()
 						return not Gladius.dbi.profile.modules[self.name]
 					end,
-					order=35,
+					order = 35,
 				},
 				sep4 = {
 					type = "description",
-					name="",
-					width="full",
-					order=37,
+					name = "",
+					width = "full",
+					order = 37,
 				},
 				healthBarUseDefaultColorMage = {
-					type="toggle",
-					name=L["Default mage color"],
-					desc=L["Toggle default mage color"],
-					disabled=function()
+					type = "toggle",
+					name = L["Default mage color"],
+					desc = L["Toggle default mage color"],
+					disabled = function()
 						return not Gladius.dbi.profile.modules[self.name]
 					end,
-					order=40,
+					order = 40,
 				},
 				healthBarColorMage = {
-					type="color",
-					name=L["Mage color"],
-					get=function(info)
+					type = "color",
+					name = L["Mage color"],
+					get = function(info)
 						return Gladius:GetColorOption(info)
 					end,
-					set=function(info, r, g, b, a)
+					set = function(info, r, g, b, a)
 						return Gladius:SetColorOption(info, r, g, b, 1)
 					end,
-					disabled=function()
+					disabled = function()
 						return not Gladius.dbi.profile.modules[self.name]
 					end,
-					order=45,
+					order = 45,
 				},
 				sep5 = {
 					type = "description",
-					name="",
-					width="full",
-					order=47,
+					name = "",
+					width = "full",
+					order = 47,
 				},
 				healthBarUseDefaultColorWarlock = {
-					type="toggle",
-					name=L["Default warlock color"],
-					desc=L["Toggle default warlock color"],
-					disabled=function()
+					type = "toggle",
+					name = L["Default warlock color"],
+					desc = L["Toggle default warlock color"],
+					disabled = function()
 						return not Gladius.dbi.profile.modules[self.name]
 					end,
-					order=50,
+					order = 50,
 				},
 				healthBarColorWarlock = {
-					type="color",
-					name=L["Warlock color"],
-					get=function(info)
+					type = "color",
+					name = L["Warlock color"],
+					get = function(info)
 						return Gladius:GetColorOption(info)
 					end,
-					set=function(info, r, g, b, a)
+					set = function(info, r, g, b, a)
 						return Gladius:SetColorOption(info, r, g, b, 1)
 					end,
-					disabled=function()
+					disabled = function()
 						return not Gladius.dbi.profile.modules[self.name]
 					end,
-					order=55,
+					order = 55,
 				},
 				sep6 = {
 					type = "description",
-					name="",
-					width="full",
-					order=57,
+					name = "",
+					width = "full",
+					order = 57,
 				},
 				healthBarUseDefaultColorHunter = {
-					type="toggle",
-					name=L["Default hunter color"],
-					desc=L["Toggle default hunter color"],
-					disabled=function()
+					type = "toggle",
+					name = L["Default hunter color"],
+					desc = L["Toggle default hunter color"],
+					disabled = function()
 						return not Gladius.dbi.profile.modules[self.name]
 					end,
-					order=60,
+					order = 60,
 				},
 				healthBarColorHunter = {
-					type="color",
-					name=L["Hunter color"],
-					get=function(info)
+					type = "color",
+					name = L["Hunter color"],
+					get = function(info)
 						return Gladius:GetColorOption(info)
 					end,
-					set=function(info, r, g, b, a)
+					set = function(info, r, g, b, a)
 						return Gladius:SetColorOption(info, r, g, b, 1)
 					end,
-					disabled=function()
+					disabled = function()
 						return not Gladius.dbi.profile.modules[self.name]
 					end,
-					order=65,
+					order = 65,
 				},
 				sep7 = {
 					type = "description",
-					name="",
-					width="full",
-					order=67,
+					name = "",
+					width = "full",
+					order = 67,
 				},
 				healthBarUseDefaultColorWarrior = {
-					type="toggle",
-					name=L["Default warrior color"],
-					desc=L["Toggle default warrior color"],
-					disabled=function()
+					type = "toggle",
+					name = L["Default warrior color"],
+					desc = L["Toggle default warrior color"],
+					disabled = function()
 						return not Gladius.dbi.profile.modules[self.name]
 					end,
-					order=70,
+					order = 70,
 				},
 				healthBarColorWarrior = {
-					type="color",
-					name=L["Warrior color"],
-					get=function(info)
+					type = "color",
+					name = L["Warrior color"],
+					get = function(info)
 						return Gladius:GetColorOption(info)
 					end,
-					set=function(info, r, g, b, a)
+					set = function(info, r, g, b, a)
 						return Gladius:SetColorOption(info, r, g, b, 1)
 					end,
-					disabled=function()
+					disabled = function()
 						return not Gladius.dbi.profile.modules[self.name]
 					end,
-					order=75,
+					order = 75,
 				},
 				sep8 = {
 					type = "description",
-					name="",
-					width="full",
-					order=77,
+					name = "",
+					width = "full",
+					order = 77,
 				},
 				healthBarUseDefaultColorRogue = {
-					type="toggle",
-					name=L["Default rogue color"],
-					desc=L["Toggle default eogue color"],
-					disabled=function()
+					type = "toggle",
+					name = L["Default rogue color"],
+					desc = L["Toggle default eogue color"],
+					disabled = function()
 						return not Gladius.dbi.profile.modules[self.name]
 					end,
-					order=80,
+					order = 80,
 				},
 				healthBarColorRogue = {
-					type="color",
-					name=L["Rogue color"],
-					get=function(info)
+					type = "color",
+					name = L["Rogue color"],
+					get = function(info)
 						return Gladius:GetColorOption(info)
 					end,
-					set=function(info, r, g, b, a)
+					set = function(info, r, g, b, a)
 						return Gladius:SetColorOption(info, r, g, b, 1)
 					end,
-					disabled=function()
+					disabled = function()
 						return not Gladius.dbi.profile.modules[self.name]
 					end,
-					order=85,
+					order = 85,
 				},
 				sep9 = {
 					type = "description",
-					name="",
-					width="full",
-					order=87,
+					name = "",
+					width = "full",
+					order = 87,
 				},
 				healthBarUseDefaultColorDeathknight = {
-					type="toggle",
-					name=L["Default death knight color"],
-					desc=L["Toggle default death knight color"],
-					disabled=function()
+					type = "toggle",
+					name = L["Default death knight color"],
+					desc = L["Toggle default death knight color"],
+					disabled = function()
 						return not Gladius.dbi.profile.modules[self.name]
 					end,
-					order=90,
+					order = 90,
 				},
 				healthBarColorDeathknight = {
-					type="color",
-					name=L["Death knight color"],
-					get=function(info)
+					type = "color",
+					name = L["Death knight color"],
+					get = function(info)
 						return Gladius:GetColorOption(info)
 					end,
-					set=function(info, r, g, b, a)
+					set = function(info, r, g, b, a)
 						return Gladius:SetColorOption(info, r, g, b, 1)
 					end,
-					disabled=function()
+					disabled = function()
 						return not Gladius.dbi.profile.modules[self.name]
 					end,
-					order=95,
+					order = 95,
 				},
 			},
 		},
