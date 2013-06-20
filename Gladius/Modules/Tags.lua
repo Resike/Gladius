@@ -25,7 +25,7 @@ local Tags = Gladius:NewModule("Tags", false, false, {
 			offsetX = 2,
 			offsetY = 0,
 			size = 11,
-			color = { r = 1, g = 1, b = 1, a = 1 },
+			color = {r = 1, g = 1, b = 1, a = 1},
 			text = "[name:status]",
 		},
 		["HealthBar Right Text"] = {
@@ -34,7 +34,7 @@ local Tags = Gladius:NewModule("Tags", false, false, {
 			offsetX = -2,
 			offsetY = 0,
 			size = 11,
-			color = { r = 1, g = 1, b = 1, a = 1 },
+			color = {r = 1, g = 1, b = 1, a = 1},
 			text = "[health:percentage]",
 		},
 		["PowerBar Left Text"] = {
@@ -43,7 +43,7 @@ local Tags = Gladius:NewModule("Tags", false, false, {
 			offsetX = 2,
 			offsetY = 0,
 			size = 11,
-			color = { r = 1, g = 1, b = 1, a = 1 },
+			color = {r = 1, g = 1, b = 1, a = 1},
 			text = "[spec:short] [class:short]",
 		},
 		["PowerBar Right Text"] = {
@@ -52,7 +52,7 @@ local Tags = Gladius:NewModule("Tags", false, false, {
 			offsetX = -2,
 			offsetY = 0,
 			size = 11,
-			color = { r = 1, g = 1, b = 1, a = 1 },
+			color = {r = 1, g = 1, b = 1, a = 1},
 			text = "[power:short]/[maxpower:short]",
 		},
 		["TargetBar Left Text"] = {
@@ -61,7 +61,7 @@ local Tags = Gladius:NewModule("Tags", false, false, {
 			offsetX = 2,
 			offsetY = 0,
 			size = 11,
-			color = { r = 1, g = 1, b = 1, a = 1 },
+			color = {r = 1, g = 1, b = 1, a = 1},
 			text = "[name:status]",
 		},
 		["TargetBar Right Text"] = {
@@ -70,7 +70,7 @@ local Tags = Gladius:NewModule("Tags", false, false, {
 			offsetX = -2,
 			offsetY = 0,
 			size = 11,
-			color = { r = 1, g = 1, b = 1, a = 1 },
+			color = {r = 1, g = 1, b = 1, a = 1},
 			text = "[health:short] / [maxhealth:short] ([health:percentage])",
 		},
 	},
@@ -164,7 +164,7 @@ function Tags:CreateFrame(unit, text)
 		return
 	end
 	-- create frame
-	self.frame[unit][text] = button:CreateFontString("Gladius" .. self.name .. unit .. text, "OVERLAY")
+	self.frame[unit][text] = button:CreateFontString("Gladius"..self.name..unit..text, "OVERLAY")
 end
 
 function Tags:UpdateText(unit, text)
@@ -197,7 +197,7 @@ function Tags:UpdateText(unit, text)
 			-- create function
 			if (not self.func[tag]) then
 				if tag ~= nil then
-					local func, error = loadstring("local strformat = string.format return " .. Gladius.db.tags[tag])
+					local func, error = loadstring("local strformat = string.format return "..Gladius.db.tags[tag])
 					self.func[tag] = func
 				end
 			end
@@ -210,7 +210,7 @@ function Tags:UpdateText(unit, text)
 				end
 			end
 			-- replace tag
-			tagText = strgsub(tagText, "%[" .. tag .. "%]", escapedText)
+			tagText = strgsub(tagText, "%["..tag.."%]", escapedText)
 		end
 	end
 	self.frame[unit][text]:SetText(tagText or "")
@@ -234,7 +234,7 @@ function Tags:Update(unit)
 			self.frame[unit][text]:SetParent(module.frame[unit])
 			self.frame[unit][text]:SetFont(LSM:Fetch(LSM.MediaType.FONT, Gladius.db.globalFont), (Gladius.db.useGlobalFontSize and Gladius.db.globalFontSize or Gladius.db.tagsTexts[text].size))
 			self.frame[unit][text]:SetTextColor(Gladius.db.tagsTexts[text].color.r, Gladius.db.tagsTexts[text].color.g, Gladius.db.tagsTexts[text].color.b, Gladius.db.tagsTexts[text].color.a)
-			self.frame[unit][text]:SetShadowOffset(1, -1)
+			self.frame[unit][text]:SetShadowOffset(1, - 1)
 			self.frame[unit][text]:SetShadowColor(0, 0, 0, 1)
 			-- update text
 			self:UpdateText(unit, text)
@@ -307,36 +307,36 @@ function Tags:GetOptions()
 	self.addTagName = ""
 	local options = {
 		textList = {
-			type="group",
-			name=L["Texts"],
-			order=1,
+			type = "group",
+			name = L["Texts"],
+			order = 1,
 			args = {
 				add = {
-					type="group",
-					name=L["Add text"],
-					inline=true,
-					order=1,
+					type = "group",
+					name = L["Add text"],
+					inline = true,
+					order = 1,
 					args = {
 						name = {
-							type="input",
-							name=L["Name"],
-							desc=L["Name of the text element"],
-							get=function(info)
+							type = "input",
+							name = L["Name"],
+							desc = L["Name of the text element"],
+							get = function(info)
 								return self.addTextName
 							end,
-							set=function(info, value)
+							set = function(info, value)
 								self.addTextName = value
 							end,
-							disabled=function()
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							order=5,
+							order = 5,
 						},
 						attachTo = {
-							type="select",
-							name=L["Text Attach To"],
-							desc=L["Attach text to module bar"],
-							values=function()
+							type = "select",
+							name = L["Text Attach To"],
+							desc = L["Attach text to module bar"],
+							values = function()
 								local t = { }
 								for moduleName, module in pairs(Gladius.modules) do
 									if (module.isBarOption) then
@@ -345,22 +345,22 @@ function Tags:GetOptions()
 								end
 								return t
 							end,
-							get=function(info)
+							get = function(info)
 								return self.addTextAttachTo
 							end,
-							set=function(info, value)
+							set = function(info, value)
 								self.addTextAttachTo = value
 							end,
-							disabled=function()
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							order=10,
+							order = 10,
 						},
 						add = {
-							type="execute",
-							name=L["Add Text"],
-							func=function()
-								local text = self.addTextAttachTo .. " " .. self.addTextName
+							type = "execute",
+							name = L["Add Text"],
+							func = function()
+								local text = self.addTextAttachTo.." "..self.addTextName
 								if (self.addTextName ~= "" and not Gladius.db.tagsTexts[text]) then
 									-- add to db
 									Gladius.db.tagsTexts[text] = {
@@ -369,7 +369,7 @@ function Tags:GetOptions()
 										offsetX = 0,
 										offsetY = 0,
 										size = 11,
-										color = { r = 1, g = 1, b = 1, a = 1 },
+										color = {r = 1, g = 1, b = 1, a = 1},
 										text = ""
 									}
 									-- add to options
@@ -380,45 +380,45 @@ function Tags:GetOptions()
 									Gladius:UpdateFrame()
 								end
 							end,
-							order=15,
+							order = 15,
 						},
 					},
 				},
 			},
 		},
 		tagList = {
-			type="group",
-			name=L["Tags"],
-			hidden=function()
+			type = "group",
+			name = L["Tags"],
+			hidden = function()
 				return not Gladius.db.advancedOptions
 			end,
-			order=2,
+			order = 2,
 			args = {
 				add = {
-					type="group",
-					name=L["Add tag"],
-					inline=true,
-					order=1,
+					type = "group",
+					name = L["Add tag"],
+					inline = true,
+					order = 1,
 					args = {
 						name = {
-							type="input",
-							name=L["Name"],
-							desc=L["Name of the tag"],
-							get=function(info)
+							type = "input",
+							name = L["Name"],
+							desc = L["Name of the tag"],
+							get = function(info)
 								return self.addTagName
 							end,
-							set=function(info, value)
+							set = function(info, value)
 								self.addTagName = value
 							end,
-							disabled=function()
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							order=5,
+							order = 5,
 						},
 						add = {
-						type="execute",
-						name=L["Add Tag"],
-						func=function()
+						type = "execute",
+						name = L["Add Tag"],
+						func = function()
 							if (self.addTagName ~= "" and not Gladius.db.tags[self.addTagName]) then
 								-- add to db
 								Gladius.db.tags[self.addTagName] = [[function(unit)
@@ -430,33 +430,33 @@ function Tags:GetOptions()
 								for text, v in pairs(Gladius.options.args[self.name].args.textList.args) do
 									if (v.args.tag) then
 										local tag = self.addTagName
-										local tagName = L[tag .. "Tag"] ~= tag .. "Tag" and L[tag .. "Tag"] or strformat(L["Tag: %s"], tag)
+										local tagName = L[tag.."Tag"] ~= tag.."Tag" and L[tag.."Tag"] or strformat(L["Tag: %s"], tag)
 										Gladius.options.args[self.name].args.textList.args[text].args.tag.args[tag] = {
-											type="toggle",
-											name=tagName,
-											get=function(info)
+											type = "toggle",
+											name = tagName,
+											get = function(info)
 												local key = info[#info - 2]
 												-- check if the tag is in the text
-												if (strfind(Gladius.dbi.profile.tagsTexts[key].text, "%[" .. info[#info] .. "%]")) then
+												if (strfind(Gladius.dbi.profile.tagsTexts[key].text, "%["..info[#info].."%]")) then
 													return true
 												else
 													return false
 												end
 												end,
-												set=function(info, v) 
+												set = function(info, v) 
 												local key = info[#info - 2]
 												-- add/remove tag to the text
 												if (not v) then
-													Gladius.dbi.profile.tagsTexts[key].text = strgsub(Gladius.dbi.profile.tagsTexts[key].text, "%[" .. info[#info] .. "%]", "")
+													Gladius.dbi.profile.tagsTexts[key].text = strgsub(Gladius.dbi.profile.tagsTexts[key].text, "%["..info[#info].."%]", "")
 													-- trim right
 													Gladius.dbi.profile.tagsTexts[key].text = strgsub(Gladius.dbi.profile.tagsTexts[key].text, "^(.-)%s*$", "%1")
 												else
-													Gladius.dbi.profile.tagsTexts[key].text = Gladius.dbi.profile.tagsTexts[key].text .. " [" .. info[#info] .. "]"
+													Gladius.dbi.profile.tagsTexts[key].text = Gladius.dbi.profile.tagsTexts[key].text.." ["..info[#info].."]"
 												end
 												-- update
 												Gladius:UpdateFrame()
 											end,
-											order=order,
+											order = order,
 										}
 									end
 								end
@@ -464,7 +464,7 @@ function Tags:GetOptions()
 								Gladius:UpdateFrame()
 							end
 						end,
-						order=10,
+						order = 10,
 						},
 					},
 				},
@@ -474,45 +474,45 @@ function Tags:GetOptions()
 	-- text option tags
 	self.optionTags = {
 		text = {
-			type="input",
-			name=L["Text"],
-			desc=L["Text to be displayed"],
-			disabled=function()
+			type = "input",
+			name = L["Text"],
+			desc = L["Text to be displayed"],
+			disabled = function()
 				return not Gladius.dbi.profile.modules[self.name]
 			end,
-			width="double",
-			order=1,
+			width = "double",
+			order = 1,
 		},
 	}
 	local order = 2
 	for tag, _ in pairs(Gladius.dbi.profile.tags) do
-	local tagName = L[tag .. "Tag"] ~= tag .. "Tag" and L[tag .. "Tag"] or strformat(L["Tag: %s"], tag)
+	local tagName = L[tag.."Tag"] ~= tag.."Tag" and L[tag.."Tag"] or strformat(L["Tag: %s"], tag)
 	self.optionTags[tag] = {
-		type="toggle",
-		name=tagName,
-		get=function(info)
+		type = "toggle",
+		name = tagName,
+		get = function(info)
 			local key = info[#info - 2]
 			-- check if the tag is in the text
-			if (strfind(Gladius.dbi.profile.tagsTexts[key].text, "%[" .. info[#info] .. "%]")) then
+			if (strfind(Gladius.dbi.profile.tagsTexts[key].text, "%["..info[#info].."%]")) then
 				return true
 			else
 				return false
 			end
 		end,
-		set=function(info, v)
+		set = function(info, v)
 			local key = info[#info - 2]
 			-- add/remove tag to the text
 			if (not v) then
-				Gladius.dbi.profile.tagsTexts[key].text = strgsub(Gladius.dbi.profile.tagsTexts[key].text, "%[" .. info[#info] .. "%]", "")
+				Gladius.dbi.profile.tagsTexts[key].text = strgsub(Gladius.dbi.profile.tagsTexts[key].text, "%["..info[#info].."%]", "")
 				-- trim right
 				Gladius.dbi.profile.tagsTexts[key].text = strgsub(Gladius.dbi.profile.tagsTexts[key].text, "^(.-)%s*$", "%1")
 			else
-				Gladius.dbi.profile.tagsTexts[key].text = Gladius.dbi.profile.tagsTexts[key].text .. " [" .. info[#info] .. "]"
+				Gladius.dbi.profile.tagsTexts[key].text = Gladius.dbi.profile.tagsTexts[key].text.." ["..info[#info].."]"
 			end
 			-- update
 			Gladius:UpdateFrame()
 		end,
-		order=order,
+		order = order,
 	}
 	order = order + 1
 	end
@@ -535,17 +535,17 @@ end
 
 function Tags:GetTextOptionTable(text, order)
 	return {
-		type="group",
-		name=text,
-		childGroups="tree",
-		get=getOption,
-		set=setOption,
-		order=order,
+		type = "group",
+		name = text,
+		childGroups = "tree",
+		get = getOption,
+		set = setOption,
+		order = order,
 		args = {
 			delete = {
-				type="execute",
-				name=L["Delete Text"],
-				func=function()
+				type = "execute",
+				name = L["Delete Text"],
+				func = function()
 					-- remove from db
 					Gladius.db.tagsTexts[text] = nil
 					-- remove from options
@@ -553,90 +553,90 @@ function Tags:GetTextOptionTable(text, order)
 					-- update
 					Gladius:UpdateFrame()
 				end,
-				order=1,
+				order = 1,
 			},
 			tag = {
-				type="group",
-				name=L["Tag"],
-				desc=L["Tag settings"],
-				inline=true,
-				order=2,
+				type = "group",
+				name = L["Tag"],
+				desc = L["Tag settings"],
+				inline = true,
+				order = 2,
 				args = { },
 			},
 			text = {
-			type="group",
-			name=L["Text"],
-			desc=L["Text settings"],
-			inline=true,
-			order=3,
+			type = "group",
+			name = L["Text"],
+			desc = L["Text settings"],
+			inline = true,
+			order = 3,
 				args = {
 					color = {
-						type="color",
-						name=L["Text Color"],
-						desc=L["Text color of the text"],
-						hasAlpha=true,
-						get=getColorOption,
-						set=setColorOption,
-						disabled=function()
+						type = "color",
+						name = L["Text Color"],
+						desc = L["Text color of the text"],
+						hasAlpha = true,
+						get = getColorOption,
+						set = setColorOption,
+						disabled = function()
 							return not Gladius.dbi.profile.modules[self.name]
 						end,
-						order=5,
+						order = 5,
 					},
 					size = {
-						type="range",
-						name=L["Text Size"],
-						desc=L["Text size of the text"],
-						min=1, max=20, step=1,
-						disabled=function()
+						type = "range",
+						name = L["Text Size"],
+						desc = L["Text size of the text"],
+						min = 1, max = 20, step = 1,
+						disabled = function()
 							return not Gladius.dbi.profile.modules[self.name] or Gladius.db.useGlobalFontSize
 						end,
-						order=10,
+						order = 10,
 					},
 				},
 			},
 			position = {
-				type="group",
-				name=L["Position"],
-				desc=L["Position settings"],
-				inline=true,
-				order=4,
+				type = "group",
+				name = L["Position"],
+				desc = L["Position settings"],
+				inline = true,
+				order = 4,
 				args = {
 					position = {
-						type="select",
-						name=L["Text Align"],
-						desc=L["Text align of the text"],
+						type = "select",
+						name = L["Text Align"],
+						desc = L["Text align of the text"],
 						values={["LEFT"] = L["LEFT"], ["CENTER"] = L["CENTER"], ["RIGHT"] = L["RIGHT"]},
-						disabled=function()
+						disabled = function()
 							return not Gladius.dbi.profile.modules[self.name]
 						end,
-						width="double",
-						order=5,
+						width = "double",
+						order = 5,
 					},
 					offsetX = {
-						type="range",
-						name=L["Text Offset X"],
-						desc=L["X offset of the text"],
-						min=-100, max=100, step=1,
-						disabled=function()
+						type = "range",
+						name = L["Text Offset X"],
+						desc = L["X offset of the text"],
+						min = - 100, max = 100, step = 1,
+						disabled = function()
 							return not Gladius.dbi.profile.modules[self.name]
 						end,
-						hidden=function()
+						hidden = function()
 							return not Gladius.db.advancedOptions
 						end,
-						order=10,
+						order = 10,
 					},
 					offsetY = {
-						type="range",
-						name=L["Text Offset Y"],
-						desc=L["Y offset of the text"],
-						disabled=function()
+						type = "range",
+						name = L["Text Offset Y"],
+						desc = L["Y offset of the text"],
+						disabled = function()
 							return not Gladius.dbi.profile.modules[self.name]
 						end,
-						hidden=function()
+						hidden = function()
 							return not Gladius.db.advancedOptions
 						end,
-						min=-100, max=100, step=1,
-						order=15,
+						min = - 100, max = 100, step = 1,
+						order = 15,
 					},
 				},
 			},
@@ -645,17 +645,17 @@ function Tags:GetTextOptionTable(text, order)
 end
 
 function Tags:GetTagOptionTable(tag, order)
-	local tagName = L[tag .. "Tag"] ~= tag .. "Tag" and L[tag .. "Tag"] or strformat(L["Tag: %s"], tag)
+	local tagName = L[tag.."Tag"] ~= tag.."Tag" and L[tag.."Tag"] or strformat(L["Tag: %s"], tag)
 	return {
-		type="group",
-		name=tagName,
-		childGroups="tree",
-		order=order,
+		type = "group",
+		name = tagName,
+		childGroups = "tree",
+		order = order,
 		args = {
 			delete = {
-				type="execute",
-				name=L["Delete Tag"],
-				func=function()
+				type = "execute",
+				name = L["Delete Tag"],
+				func = function()
 					-- remove from db
 					Gladius.db.tags[tag] = nil
 					Gladius.db.tagEvents[tag] = nil
@@ -670,24 +670,24 @@ function Tags:GetTagOptionTable(tag, order)
 					-- update
 					Gladius:UpdateFrame()
 				end,
-				order=1,
+				order = 1,
 			},
 			tag = {
-				type="group",
-				name=L["Tag"],
-				desc=L["Tag settings"],
-				inline=true,
-				order=2,
+				type = "group",
+				name = L["Tag"],
+				desc = L["Tag settings"],
+				inline = true,
+				order = 2,
 				args = {
 					name = {
-						type="input",
-						name=L["Name"],
-						desc=L["Name of the tag"],
-						get=function(info)
+						type = "input",
+						name = L["Name"],
+						desc = L["Name of the tag"],
+						get = function(info)
 							local key = info[#info - 2]
 							return key
 						end,
-						set=function(info, value)
+						set = function(info, value)
 							local key = info[#info - 2]
 							-- db
 							Gladius.db.tags[value] = Gladius.db.tags[key]
@@ -700,40 +700,40 @@ function Tags:GetTagOptionTable(tag, order)
 							-- update
 							Gladius:UpdateFrame()
 						end,
-						disabled=function()
+						disabled = function()
 							return not Gladius.dbi.profile.modules[self.name]
 						end,
-						width="double",
-						order=5,
+						width = "double",
+						order = 5,
 					},
 					events = {
-						type="input",
-						name=L["Events"],
-						desc=L["Events which update the tag"],
-						get=function(info)
+						type = "input",
+						name = L["Events"],
+						desc = L["Events which update the tag"],
+						get = function(info)
 						local key = info[#info - 2]
 							return Gladius.db.tagEvents[key]
 						end,
-						set=function(info, value)
+						set = function(info, value)
 							local key = info[#info - 2]
 							Gladius.db.tagEvents[key] = value
 							-- update
 							Gladius:UpdateFrame()
 						end,
-						disabled=function()
+						disabled = function()
 							return not Gladius.dbi.profile.modules[self.name]
 						end,
-						width="double",
-						order=10,
+						width = "double",
+						order = 10,
 					},
 					func = {
-						type="input",
-						name=L["Function"],
-						get=function(info)
+						type = "input",
+						name = L["Function"],
+						get = function(info)
 						local key = info[#info - 2]
 							return Gladius.db.tags[key]
 						end,
-						set=function(info, value)
+						set = function(info, value)
 							local key = info[#info - 2]
 							Gladius.db.tags[key] = value
 							-- delete cached function
@@ -741,12 +741,12 @@ function Tags:GetTagOptionTable(tag, order)
 							-- update
 							Gladius:UpdateFrame()
 						end,
-						disabled=function()
+						disabled = function()
 							return not Gladius.dbi.profile.modules[self.name]
 						end,
-						width="double",
-						multiline=true,
-						order=15,
+						width = "double",
+						multiline = true,
+						order = 15,
 					},
 				},
 			},
@@ -766,7 +766,7 @@ function Tags:GetTags()
 			return not Gladius.test and UnitClass(unit) or LOCALIZED_CLASS_NAMES_MALE[Gladius.testing[unit].unitClass]
 		end]],
 		["class:short"] = [[function(unit)
-			return not Gladius.test and Gladius.L[UnitClass(unit) .. ":short"] or Gladius.L[LOCALIZED_CLASS_NAMES_MALE[Gladius.testing[unit].unitClass] .. ":short"]
+			return not Gladius.test and Gladius.L[UnitClass(unit)..":short"] or Gladius.L[LOCALIZED_CLASS_NAMES_MALE[Gladius.testing[unit].unitClass]..":short"]
 		end]],
 		["race"] = [[function(unit)
 			return not Gladius.test and UnitRace(unit) or Gladius.testing[unit].unitRace
@@ -779,7 +779,7 @@ function Tags:GetTags()
 			if (spec == nil or spec == "") then 
 				return ""
 			end
-			return Gladius.L[spec .. ":short"]
+			return Gladius.L[spec..":short"]
 		end]],
 		["health"] = [[function(unit)
 			return not Gladius.test and UnitHealth(unit) or Gladius.testing[unit].health

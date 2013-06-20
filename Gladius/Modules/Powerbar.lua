@@ -16,9 +16,9 @@ local PowerBar = Gladius:NewModule("PowerBar", true, true, {
 	powerBarAdjustWidth = true,
 	powerBarWidth = 200,
 	powerBarInverse = false,
-	powerBarColor = { r = 1, g = 1, b = 1, a = 1 },
+	powerBarColor = {r = 1, g = 1, b = 1, a = 1},
 	powerBarDefaultColor = true,
-	powerBarBackgroundColor = { r = 1, g = 1, b = 1, a = 0.3 },
+	powerBarBackgroundColor = {r = 1, g = 1, b = 1, a = 0.3},
 	powerBarTexture = "minimalist",
 	powerBarOffsetX = 0,
 	powerBarOffsetY = 0, 
@@ -118,9 +118,9 @@ function PowerBar:CreateBar(unit)
 		return
 	end
 	-- create bar + text
-	self.frame[unit] = CreateFrame("STATUSBAR", "Gladius" .. self.name .. unit, button)
-	self.frame[unit].background = self.frame[unit]:CreateTexture("Gladius" .. self.name .. unit .. "Background", "BACKGROUND")
-	self.frame[unit].highlight = self.frame[unit]:CreateTexture("Gladius" .. self.name .. "Highlight" .. unit, "OVERLAY")
+	self.frame[unit] = CreateFrame("STATUSBAR", "Gladius"..self.name..unit, button)
+	self.frame[unit].background = self.frame[unit]:CreateTexture("Gladius"..self.name..unit.."Background", "BACKGROUND")
+	self.frame[unit].highlight = self.frame[unit]:CreateTexture("Gladius"..self.name.."Highlight"..unit, "OVERLAY")
 end
 
 function PowerBar:Update(unit)
@@ -241,163 +241,163 @@ end
 function PowerBar:GetOptions()
 	return {
 		general = {
-			type="group",
-			name=L["General"],
-			order=1,
+			type = "group",
+			name = L["General"],
+			order = 1,
 			args = {
 				bar = {
-				type="group",
-				name=L["Bar"],
-				desc=L["Bar settings"],
-				inline=true,
-				order=1,
+				type = "group",
+				name = L["Bar"],
+				desc = L["Bar settings"],
+				inline = true,
+				order = 1,
 					args = {
 						powerBarDefaultColor = {
-							type="toggle",
-							name=L["Power Bar Default Color"],
-							desc=L["Toggle power bar default color"],
-							disabled=function()
+							type = "toggle",
+							name = L["Power Bar Default Color"],
+							desc = L["Toggle power bar default color"],
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							order=5,
+							order = 5,
 						},
 						sep = {
 							type = "description",
-							name="",
-							width="full",
-							hidden=function()
+							name = "",
+							width = "full",
+							hidden = function()
 								return not Gladius.db.advancedOptions
 							end,
-							order=7,
+							order = 7,
 						},
 						powerBarColor = {
-							type="color",
-							name=L["Power Bar Color"],
-							desc=L["Color of the power bar"],
-							hasAlpha=true,
-							get=function(info)
+							type = "color",
+							name = L["Power Bar Color"],
+							desc = L["Color of the power bar"],
+							hasAlpha = true,
+							get = function(info)
 								return Gladius:GetColorOption(info)
 							end,
-							set=function(info, r, g, b, a)
+							set = function(info, r, g, b, a)
 								return Gladius:SetColorOption(info, r, g, b, a)
 							end,
-							disabled=function()
+							disabled = function()
 								return Gladius.dbi.profile.powerBarDefaultColor or not Gladius.dbi.profile.modules[self.name]
 							end,
-							order=10,
+							order = 10,
 						},
 						powerBarBackgroundColor = {
-							type="color",
-							name=L["Power Bar Background Color"],
-							desc=L["Color of the power bar background"],
-							hasAlpha=true,
-							get=function(info)
+							type = "color",
+							name = L["Power Bar Background Color"],
+							desc = L["Color of the power bar background"],
+							hasAlpha = true,
+							get = function(info)
 								return Gladius:GetColorOption(info)
 							end,
-							set=function(info, r, g, b, a)
+							set = function(info, r, g, b, a)
 								return Gladius:SetColorOption(info, r, g, b, a)
 							end,
-							disabled=function()
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							hidden=function()
+							hidden = function()
 								return not Gladius.db.advancedOptions
 							end,
-							order=15,
+							order = 15,
 						}, 
 						sep2 = {
 							type = "description",
-							name="",
-							width="full",
-							order=17,
+							name = "",
+							width = "full",
+							order = 17,
 						}, 
 						powerBarInverse = {
-							type="toggle",
-							name=L["Power Bar Inverse"],
-							desc=L["Inverse the power bar"],
-							disabled=function()
+							type = "toggle",
+							name = L["Power Bar Inverse"],
+							desc = L["Inverse the power bar"],
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							hidden=function()
+							hidden = function()
 								return not Gladius.db.advancedOptions
 							end,
-							order=20,
+							order = 20,
 						},
 						powerBarTexture = {
-							type="select",
-							name=L["Power Bar Texture"],
-							desc=L["Texture of the power bar"],
+							type = "select",
+							name = L["Power Bar Texture"],
+							desc = L["Texture of the power bar"],
 							dialogControl = "LSM30_Statusbar",
 							values = AceGUIWidgetLSMlists.statusbar,
-							disabled=function()
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							order=25,
+							order = 25,
 						},
 					},
 				},
 				size = {
-					type="group",
-					name=L["Size"],
-					desc=L["Size settings"],
-					inline=true,
-					order=2,
+					type = "group",
+					name = L["Size"],
+					desc = L["Size settings"],
+					inline = true,
+					order = 2,
 					args = {
 						powerBarAdjustWidth = {
-							type="toggle",
-							name=L["Power Bar Adjust Width"],
-							desc=L["Adjust power bar width to the frame width"],
-							disabled=function()
+							type = "toggle",
+							name = L["Power Bar Adjust Width"],
+							desc = L["Adjust power bar width to the frame width"],
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							order=5,
+							order = 5,
 						},
 						sep = {
 							type = "description",
-							name="",
-							width="full",
-							order=13,
+							name = "",
+							width = "full",
+							order = 13,
 						},
 						powerBarWidth = {
-							type="range",
-							name=L["Power Bar Width"],
-							desc=L["Width of the power bar"],
-							min=10, max=500, step=1,
-							disabled=function()
+							type = "range",
+							name = L["Power Bar Width"],
+							desc = L["Width of the power bar"],
+							min = 10, max = 500, step = 1,
+							disabled = function()
 								return Gladius.dbi.profile.powerBarAdjustWidth or not Gladius.dbi.profile.modules[self.name]
 							end,
-							order=15,
+							order = 15,
 						},
 						powerBarHeight = {
-							type="range",
-							name=L["Power Bar Height"],
-							desc=L["Height of the power bar"],
-							min=10, max=200, step=1,
-							disabled=function()
+							type = "range",
+							name = L["Power Bar Height"],
+							desc = L["Height of the power bar"],
+							min = 10, max = 200, step = 1,
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							order=20,
+							order = 20,
 						},
 					},
 				},
 				position = {
-					type="group",
-					name=L["Position"],
-					desc=L["Position settings"],
-					inline=true,
-					hidden=function()
+					type = "group",
+					name = L["Position"],
+					desc = L["Position settings"],
+					inline = true,
+					hidden = function()
 						return not Gladius.db.advancedOptions
 					end,
-					order=3,
+					order = 3,
 					args = {
 						powerBarAttachTo = {
-							type="select",
-							name=L["Power Bar Attach To"],
-							desc=L["Attach power bar to the given frame"],
-							values=function()
+							type = "select",
+							name = L["Power Bar Attach To"],
+							desc = L["Attach power bar to the given frame"],
+							values = function()
 								return Gladius:GetModules(self.name)
 							end,
-							set=function(info, value) 
+							set = function(info, value) 
 								local key = info.arg or info[#info]
 								if (strfind(Gladius.db.powerBarRelativePoint, "BOTTOM")) then
 									self.isBar = true
@@ -407,218 +407,218 @@ function PowerBar:GetOptions()
 								Gladius.dbi.profile[key] = value
 								Gladius:UpdateFrame()
 							end,
-							disabled=function()
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							width="double",
-							order=5,
+							width = "double",
+							order = 5,
 						},
 						sep = {
 							type = "description",
-							name="",
-							width="full",
-							order=7,
+							name = "",
+							width = "full",
+							order = 7,
 						},
 						powerBarAnchor = {
-							type="select",
-							name=L["Power Bar Anchor"],
-							desc=L["Anchor of the power bar"],
-							values=function()
+							type = "select",
+							name = L["Power Bar Anchor"],
+							desc = L["Anchor of the power bar"],
+							values = function()
 								return Gladius:GetPositions()
 							end,
-							disabled=function()
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							order=10,
+							order = 10,
 						},
 						powerBarRelativePoint = {
-							type="select",
-							name=L["Power Bar Relative Point"],
-							desc=L["Relative point of the power bar"],
-							values=function()
+							type = "select",
+							name = L["Power Bar Relative Point"],
+							desc = L["Relative point of the power bar"],
+							values = function()
 								return Gladius:GetPositions()
 							end,
-							disabled=function()
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							order=15,
+							order = 15,
 						},
 						sep2 = {
 							type = "description",
-							name="",
-							width="full",
-							order=17,
+							name = "",
+							width = "full",
+							order = 17,
 						},
 						powerBarOffsetX = {
-							type="range",
-							name=L["Power Bar Offset X"],
-							desc=L["X offset of the power bar"],
-							min=-100, max=100, step=1,
-							disabled=function()
+							type = "range",
+							name = L["Power Bar Offset X"],
+							desc = L["X offset of the power bar"],
+							min = - 100, max = 100, step = 1,
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							order=20,
+							order = 20,
 						},
 						powerBarOffsetY = {
-							type="range",
-							name=L["Power Bar Offset Y"],
-							desc=L["X offset of the power bar"],
-							disabled=function()
+							type = "range",
+							name = L["Power Bar Offset Y"],
+							desc = L["X offset of the power bar"],
+							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							min=-100, max=100, step=1,
-							order=25,
+							min = - 100, max = 100, step = 1,
+							order = 25,
 						},
 					},
 				},
 			},
 		},
 		powerDefaultColors = {
-			type="group",
-			name=L["Power colors"],
-			hidden=function()
+			type = "group",
+			name = L["Power colors"],
+			hidden = function()
 				return not Gladius.db.advancedOptions
 			end,
-			order=4,
+			order = 4,
 			args = {
 				powerBarUseDefaultColorMana = {
-					type="toggle",
-					name=L["Default Power Mana Color"],
-					desc=L["Toggle default power mana color"],
-					disabled=function()
+					type = "toggle",
+					name = L["Default Power Mana Color"],
+					desc = L["Toggle default power mana color"],
+					disabled = function()
 						return not Gladius.dbi.profile.modules[self.name]
 					end,
-					order=0,
+					order = 0,
 				},
 				powerBarColorMana = {
-					type="color",
-					name=L["Power Mana Color"],
-					get=function(info)
+					type = "color",
+					name = L["Power Mana Color"],
+					get = function(info)
 						return Gladius:GetColorOption(info)
 					end,
-					set=function(info, r, g, b, a)
+					set = function(info, r, g, b, a)
 						return Gladius:SetColorOption(info, r, g, b, 1)
 					end,
-					disabled=function()
+					disabled = function()
 						return not Gladius.dbi.profile.modules[self.name]
 					end,
-					order=5,
+					order = 5,
 				},
 				sep = {
 					type = "description",
-					name="",
-					width="full",
-					order=7,
+					name = "",
+					width = "full",
+					order = 7,
 				},
 				powerBarUseDefaultColorRage = {
-					type="toggle",
-					name=L["Default Power Rage Color"],
-					desc=L["Toggle default power rage color"],
-					disabled=function()
+					type = "toggle",
+					name = L["Default Power Rage Color"],
+					desc = L["Toggle default power rage color"],
+					disabled = function()
 						return not Gladius.dbi.profile.modules[self.name]
 					end,
-					order=10,
+					order = 10,
 				},
 				powerBarColorRage = {
-					type="color",
-					name=L["Power Rage Color"],
-					get=function(info)
+					type = "color",
+					name = L["Power Rage Color"],
+					get = function(info)
 						return Gladius:GetColorOption(info)
 					end,
-					set=function(info, r, g, b, a)
+					set = function(info, r, g, b, a)
 						return Gladius:SetColorOption(info, r, g, b, 1)
 					end,
-					disabled=function()
+					disabled = function()
 						return not Gladius.dbi.profile.modules[self.name]
 					end,
-					order=15,
+					order = 15,
 				},
 				sep2 = {
 					type = "description",
-					name="",
-					width="full",
-					order=17,
+					name = "",
+					width = "full",
+					order = 17,
 				},
 				powerBarUseDefaultColorFocus = {
-					type="toggle",
-					name=L["Default Power Focus Color"],
-					desc=L["Toggle default power focus color"],
-					disabled=function()
+					type = "toggle",
+					name = L["Default Power Focus Color"],
+					desc = L["Toggle default power focus color"],
+					disabled = function()
 						return not Gladius.dbi.profile.modules[self.name]
 					end,
-					order=20,
+					order = 20,
 				},
 				powerBarColorFocus = {
-					type="color",
-					name=L["Power Focus Color"],
-					get=function(info)
+					type = "color",
+					name = L["Power Focus Color"],
+					get = function(info)
 						return Gladius:GetColorOption(info)
 					end,
-					set=function(info, r, g, b, a)
+					set = function(info, r, g, b, a)
 						return Gladius:SetColorOption(info, r, g, b, 1)
 					end,
-					disabled=function()
+					disabled = function()
 						return not Gladius.dbi.profile.modules[self.name]
 					end,
-					order=25,
+					order = 25,
 				},
 				sep3 = {
 					type = "description",
-					name="",
-					width="full",
-					order=27,
+					name = "",
+					width = "full",
+					order = 27,
 				},
 				powerBarUseDefaultColorEnergy = {
-					type="toggle",
-					name=L["Default Power Energy Color"],
-					desc=L["Toggle default power energy color"],
-					disabled=function()
+					type = "toggle",
+					name = L["Default Power Energy Color"],
+					desc = L["Toggle default power energy color"],
+					disabled = function()
 						return not Gladius.dbi.profile.modules[self.name]
 					end,
-					order=30,
+					order = 30,
 				},
 				powerBarColorEnergy = {
-					type="color",
-					name=L["Power Energy Color"],
-					get=function(info)
+					type = "color",
+					name = L["Power Energy Color"],
+					get = function(info)
 						return Gladius:GetColorOption(info)
 					end,
-					set=function(info, r, g, b, a)
+					set = function(info, r, g, b, a)
 						return Gladius:SetColorOption(info, r, g, b, 1)
 					end,
-					disabled=function()
+					disabled = function()
 						return not Gladius.dbi.profile.modules[self.name]
 					end,
-					order=35,
+					order = 35,
 				},
 				sep4 = {
 					type = "description",
-					name="",
-					width="full",
-					order=37,
+					name = "",
+					width = "full",
+					order = 37,
 				},
 				powerBarUseDefaultColorRunicPower = {
-					type="toggle",
-					name=L["Default Power Runic Power Color"],
-					desc=L["Toggle default power runic power color"],
-					disabled=function()
+					type = "toggle",
+					name = L["Default Power Runic Power Color"],
+					desc = L["Toggle default power runic power color"],
+					disabled = function()
 						return not Gladius.dbi.profile.modules[self.name]
 					end,
-					order=40,
+					order = 40,
 				},
 				powerBarColorRunicPower = {
-					type="color",
-					name=L["Power Runic Power Color"],
-					get=function(info)
+					type = "color",
+					name = L["Power Runic Power Color"],
+					get = function(info)
 						return Gladius:GetColorOption(info)
 					end,
-					set=function(info, r, g, b, a)
+					set = function(info, r, g, b, a)
 						return Gladius:SetColorOption(info, r, g, b, 1)
 					end,
-					disabled=function()
+					disabled = function()
 						return not Gladius.dbi.profile.modules[self.name]
 					end,
-					order=45,
+					order = 45,
 				},
 			},
 		},

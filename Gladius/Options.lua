@@ -6,8 +6,8 @@ local L = Gladius.L
 
 Gladius.defaults = {
 	profile = {
-		x = {},
-		y = {},
+		x = { },
+		y = { },
 		modules = {
 			["*"] = true,
 			["Auras"] = false,
@@ -19,7 +19,7 @@ Gladius.defaults = {
 		growLeft = false,
 		groupButtons = true,
 		advancedOptions = false,
-		backgroundColor = { r = 0, g = 0, b = 0, a = 0.4 },
+		backgroundColor = {r = 0, g = 0, b = 0, a = 0.4},
 		backgroundPadding = 5,
 		bottomMargin = 20,
 		useGlobalFontSize = true,
@@ -31,7 +31,7 @@ Gladius.defaults = {
 }
 
 local function pairsByKeys(t, f)
-	local a = {}
+	local a = { }
 	for n in pairs(t) do table.insert(a, n) end
 	table.sort(a, f)
 	local i = 0 -- iterator variable
@@ -68,34 +68,38 @@ end
 SLASH_GLADIUS1 = "/gladius"
 SlashCmdList["GLADIUS"] = function(msg)
 	if (msg:find("test") and not Gladius.test) then
-		local test
-		if (msg == "test2") then
-			test = 2
-		elseif (msg == "test3") then
-			test = 3
-		elseif (msg == "test5") then
-			test = 5
-		else
-			test = tonumber(msg:match("^test (.+)"))
-			if (not test or test > 5 or test < 2 or test == 4) then
+		if Gladius.instanceType ~= "arena" then
+			local test
+			if (msg == "test2") then
+				test = 2
+			elseif (msg == "test3") then
+				test = 3
+			elseif (msg == "test5") then
 				test = 5
+			else
+				test = tonumber(msg:match("^test (.+)"))
+				if (not test or test > 5 or test < 2 or test == 4) then
+					test = 5
+				end
 			end
+			Gladius.testCount = test
+			Gladius.test = true
+			Gladius:HideFrame()
+			-- create and update buttons on first launch
+			for i = 1, test do
+				if (not Gladius.buttons["arena"..i]) then
+					Gladius:UpdateUnit("arena"..i)
+				end
+				if (Gladius.buttons["arena"..i]) then
+					Gladius.buttons["arena"..i]:RegisterForDrag("LeftButton")
+					Gladius.buttons["arena"..i]:Show()
+				end
+			end
+			-- update buttons, so every module should be fine
+			Gladius:UpdateFrame()
+		else
+			Gladius:Print(L["You can't use this function inside arenas."])
 		end
-		Gladius.testCount = test
-		Gladius.test = true
-		Gladius:HideFrame()
-		-- create and update buttons on first launch
-		for i=1, test do
-			if (not Gladius.buttons["arena" .. i]) then
-				Gladius:UpdateUnit("arena" .. i)
-			end
-			if (Gladius.buttons["arena" .. i]) then
-				Gladius.buttons["arena" .. i]:RegisterForDrag("LeftButton")
-				Gladius.buttons["arena" .. i]:Show()
-			end
-		end
-		-- update buttons, so every module should be fine
-		Gladius:UpdateFrame()
 	elseif (msg == "" or msg == "options" or msg == "config" or msg == "ui") then
 		AceDialog = AceDialog or LibStub("AceConfigDialog-3.0")
 		AceRegistry = AceRegistry or LibStub("AceConfigRegistry-3.0")
@@ -108,10 +112,10 @@ SlashCmdList["GLADIUS"] = function(msg)
 		-- reset test environment
 		Gladius.testCount = 0
 		Gladius.test = false
-		for i=1, 5 do
-			if (Gladius.buttons["arena" .. i]) then
-				Gladius.buttons["arena" .. i]:RegisterForDrag()
-				Gladius.buttons["arena" .. i]:Hide()
+		for i = 1, 5 do
+			if (Gladius.buttons["arena"..i]) then
+				Gladius.buttons["arena"..i]:RegisterForDrag()
+				Gladius.buttons["arena"..i]:Hide()
 			end
 		end
 		-- hide buttons
@@ -165,12 +169,12 @@ end
 
 function Gladius:SetupModule(key, module, order)
 	self.options.args[key] = {
-		type="group",
-		name=L[key],
-		desc=L[key .. " settings"],
-		childGroups="tab",
-		order=order,
-		args={},
+		type = "group",
+		name = L[key],
+		desc = L[key.." settings"],
+		childGroups = "tab",
+		order =order,
+		args = { },
 	}
 	-- set additional module options
 	local options = module:GetOptions()
@@ -179,12 +183,11 @@ function Gladius:SetupModule(key, module, order)
 	end
 	-- set enable module option
 	self.options.args[key].args.enable = {
-		type="toggle",
-		name=L["Enable Module"],
+		type = "toggle",
+		name = L["Enable Module"],
 		set=function(info, v)
 			local module = info[1]
 			self.dbi.profile.modules[module] = v
-			
 			if (v) then
 				self:EnableModule(module)
 				-- evil haxx
@@ -200,13 +203,13 @@ function Gladius:SetupModule(key, module, order)
 			local module = info[1]
 			return self.dbi.profile.modules[module]
 		end,
-		order=0,
+		order = 0,
 	}
 	-- set reset module option
 	self.options.args[key].args.reset = {
-		type="execute",
-		name=L["Reset Module"],
-		func=function()
+		type = "execute",
+		name = L["Reset Module"],
+		func = function()
 			for k,v in pairs(module.defaults) do
 				self.dbi.profile[k] = v
 			end
@@ -217,8 +220,8 @@ function Gladius:SetupModule(key, module, order)
 	-- set template module option
 	if (module.templates) then
 		self.options.args[key].args.templates = {
-			type="select",
-			name=L["Module Templates"],
+			type = "select",
+			name = L["Module Templates"],
 			values=function()
 				return module.templates
 			end,
@@ -226,7 +229,7 @@ function Gladius:SetupModule(key, module, order)
 				Gladius:Call(module, "SetTemplate", value)
 				Gladius:UpdateFrame()
 			end,
-			order=0.3,
+			order = 0.3,
 		}
 	end
 end
@@ -236,27 +239,27 @@ function Gladius:SetupOptions()
 		type = "group",
 		name = "Gladius",
 		plugins = { },
-		get=getOption,
-		set=setOption,
+		get = getOption,
+		set = setOption,
 		args = {
 			general = {
-				type="group",
-				name=L["General"],
-				desc=L["General settings"],
-				order=1,
+				type = "group",
+				name = L["General"],
+				desc = L["General settings"],
+				order = 1,
 				args = {
 					general = {
-						type="group",
-						name=L["General"],
-						desc=L["General settings"],
-						inline=true,
-						order=1,
+						type = "group",
+						name = L["General"],
+						desc = L["General settings"],
+						inline = true,
+						order = 1,
 						args = {
 							locked = {
-								type="toggle",
-								name=L["Lock frame"],
-								desc=L["Toggle if the frame can be moved"],
-								order=1,
+								type = "toggle",
+								name = L["Lock frame"],
+								desc = L["Toggle if the frame can be moved"],
+								order = 1,
 							},
 							growT = {
 								order = 5,
@@ -273,189 +276,189 @@ function Gladius:SetupOptions()
 									return growT
 								end,
 								set = function(info, value)
-									if(value==1)then
-										self.dbi.profile.growUp=true
-										self.dbi.profile.growLeft=false
-										self.dbi.profile.growRight=false
+									if(value == 1)then
+										self.dbi.profile.growUp = true
+										self.dbi.profile.growLeft = false
+										self.dbi.profile.growRight = false
 									end
-									if(value==2)then
-										self.dbi.profile.growUp=false
-										self.dbi.profile.growLeft=false
-										self.dbi.profile.growRight=false
+									if(value == 2)then
+										self.dbi.profile.growUp = false
+										self.dbi.profile.growLeft = false
+										self.dbi.profile.growRight = false
 									end
-									if(value==3)then
-										self.dbi.profile.growUp=false
-										self.dbi.profile.growLeft=true
-										self.dbi.profile.growRight=false
+									if(value == 3)then
+										self.dbi.profile.growUp = false
+										self.dbi.profile.growLeft = true
+										self.dbi.profile.growRight = false
 									end
-									if(value==4)then
-										self.dbi.profile.growUp=false
-										self.dbi.profile.growLeft=false
-										self.dbi.profile.growRight=true
+									if(value == 4)then
+										self.dbi.profile.growUp = false
+										self.dbi.profile.growLeft = false
+										self.dbi.profile.growRight = true
 									end
 									growT = value
 								end,
 							},
 							sep = {
 								type = "description",
-								name="",
-								width="full",
-								order=7,
+								name = "",
+								width = "full",
+								order = 7,
 							}, 
 							groupButtons = {
-								type="toggle",
-								name=L["Group Buttons"],
-								desc=L["If this is toggle buttons can be moved separately"],
-								order=10,
+								type = "toggle",
+								name = L["Group Buttons"],
+								desc = L["If this is toggle buttons can be moved separately"],
+								order = 10,
 							},
 							advancedOptions = {
-								type="toggle",
-								name=L["Advanced Options"],
-								desc=L["Toggle advanced options"],
-								order=15,
+								type = "toggle",
+								name = L["Advanced Options"],
+								desc = L["Toggle advanced options"],
+								order = 15,
 							},
 						},
 					},
 					frame = {
-						type="group",
-						name=L["Frame"],
-						desc=L["Frame settings"],
-						inline=true,
-						order=2,
+						type = "group",
+						name = L["Frame"],
+						desc = L["Frame settings"],
+						inline = true,
+						order = 2,
 						args = {
 							backgroundColor = {
-								type="color",
-								name=L["Background Color"],
-								desc=L["Color of the frame background"],
-								hasAlpha=true,
-								get=function(info)
+								type = "color",
+								name = L["Background Color"],
+								desc = L["Color of the frame background"],
+								hasAlpha = true,
+								get = function(info)
 									return Gladius:GetColorOption(info)
 								end,
-								set=function(info, r, g, b, a)
+								set = function(info, r, g, b, a)
 									return Gladius:SetColorOption(info, r, g, b, a)
 								end,
-								disabled=function()
+								disabled = function()
 									return not self.dbi.profile.groupButtons
 								end,
-								order=1,
+								order = 1,
 							},
 							backgroundPadding = {
-								type="range",
-								name=L["Background Padding"],
-								desc=L["Padding of the background"],
-								min=0, max=100, step=1,
-								disabled=function()
+								type = "range",
+								name = L["Background Padding"],
+								desc = L["Padding of the background"],
+								min = 0, max = 100, step = 1,
+								disabled = function()
 									return not self.dbi.profile.groupButtons
 								end,
-								order=5,
+								order = 5,
 							},
 							sep = {
 								type = "description",
-								name="",
-								width="full",
-								order=7,
+								name = "",
+								width = "full",
+								order = 7,
 							},
 							bottomMargin = {
-								type="range",
-								name=L["Bottom Margin"],
-								desc=L["Margin between each button"],
-								min=0, max=300, step=1,
-								disabled=function()
+								type = "range",
+								name = L["Bottom Margin"],
+								desc = L["Margin between each button"],
+								min = 0, max = 300, step = 1,
+								disabled = function()
 									return not self.dbi.profile.groupButtons
 								end,
-								width="double",
-								order=10,
+								width = "double",
+								order = 10,
 							},
 						},
 					},
 					size = {
-						type="group",
-						name=L["Size"],
-						desc=L["Size settings"],
-						inline=true,
-						order=3,
+						type = "group",
+						name = L["Size"],
+						desc = L["Size settings"],
+						inline = true,
+						order = 3,
 						args = {
 							barWidth = {
-								type="range",
-								name=L["Bar width"],
-								desc=L["Width of the module bars"],
-								min=10, max=500, step=1,
-								order=1,
+								type = "range",
+								name = L["Bar width"],
+								desc = L["Width of the module bars"],
+								min = 10, max = 500, step = 1,
+								order = 1,
 							},
 							frameScale = {
-								type="range",
-								name=L["Frame scale"],
-								desc=L["Scale of the frame"],
-								min=.1,
-								max=2,
-								step=.1,
-								order=5,
+								type = "range",
+								name = L["Frame scale"],
+								desc = L["Scale of the frame"],
+								min = .1,
+								max = 2,
+								step = .1,
+								order = 5,
 							},
 						},
 					},
 					font = {
-						type="group",
-						name=L["Font"],
-						desc=L["Font settings"],
-						inline=true,
-						order=4,
+						type = "group",
+						name = L["Font"],
+						desc = L["Font settings"],
+						inline = true,
+						order = 4,
 						args = {
 							globalFont = {
-								type="select",
-								name=L["Global Font"],
-								desc=L["Global font, used by the modules"],
+								type = "select",
+								name = L["Global Font"],
+								desc = L["Global font, used by the modules"],
 								dialogControl = "LSM30_Font",
 								values = AceGUIWidgetLSMlists.font,
-								order=1,
+								order = 1,
 							},
 							globalFontSize = {
-								type="range",
-								name=L["Global Font Size"],
-								desc=L["Text size of the power info text"],
-								disabled=function()
+								type = "range",
+								name = L["Global Font Size"],
+								desc = L["Text size of the power info text"],
+								disabled = function()
 									return not self.db.useGlobalFontSize
 								end,
-								min=1, max=20, step=1,
-								order=5,
+								min = 1, max = 20, step = 1,
+								order = 5,
 							},
 							sep = {
 								type = "description",
-								name="",
-								width="full",
-								order=7,
+								name = "",
+								width = "full",
+								order = 7,
 							},
 							sep2 = {
 								type = "toggle",
-								name="NYI",
-								disabled=true,
-								order=8,
+								name = "NYI",
+								disabled = true,
+								order = 8,
 							},
 							useGlobalFontSize = {
-								type="toggle",
-								name=L["Use Global Font Size"],
-								desc=L["Toggle if you want to use the global font size"],
-								order=10,
+								type = "toggle",
+								name = L["Use Global Font Size"],
+								desc = L["Toggle if you want to use the global font size"],
+								order = 10,
 							},
 						},
 					},
 					templates = {
-						type="group",
-						name=L["Global Templates"],
-						desc=L["Global templates"],
-						inline=true,
-						order=5,
+						type = "group",
+						name = L["Global Templates"],
+						desc = L["Global templates"],
+						inline = true,
+						order = 5,
 						args = {
 							templates = {
-								type="select",
-								name=L["Global Templates"],
-								values=function()
+								type = "select",
+								name = L["Global Templates"],
+								values = function()
 									return self.templates
 								end,
-								set=function(info, value)
+								set = function(info, value)
 									self:SetTemplate(value)
 									self:UpdateFrame()
 								end,
-								order=1,
+								order = 1,
 							},
 						},
 					},

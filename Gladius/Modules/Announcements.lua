@@ -106,7 +106,7 @@ end
 
 function Announcements:ARENA_PREP_OPPONENT_SPECIALIZATIONS(event, ...)
 	local numOpps = GetNumArenaOpponentSpecs()
-	for i=1, numOpps do
+	for i = 1, numOpps do
 		--local prepFrame = _G["ArenaPrepFrame"..i]
 		if (i <= numOpps) then
 			--prepFrame.specPortrait = _G["ArenaPrepFrame"..i.."SpecPortrait"]
@@ -148,7 +148,7 @@ end
 -- Sends an announcement
 -- Param unit is only used for class coloring of messages
 function Announcements:Send(msg, throttle, unit)
-	local color = unit and RAID_CLASS_COLORS[UnitClass(unit)] or { r=0, g=1, b=0 }
+	local color = unit and RAID_CLASS_COLORS[UnitClass(unit)] or {r = 0, g = 1, b = 0}
 	local dest = Gladius.db.announcements.dest
 	if (not self.throttled) then
 		self.throttled = { }
@@ -164,7 +164,7 @@ function Announcements:Send(msg, throttle, unit)
 		end
 	end
 	if (dest == "self") then
-		DEFAULT_CHAT_FRAME:AddMessage("|cff33ff99Gladius|r: " .. msg)
+		DEFAULT_CHAT_FRAME:AddMessage("|cff33ff99Gladius|r: "..msg)
 	end
 	-- change destination to party if not raid leader/officer.
 	if(dest == "rw" and not UnitIsGroupLeader() and not UnitIsGroupAssistant() and GetNumGroupMembers() > 0) then
@@ -183,13 +183,13 @@ function Announcements:Send(msg, throttle, unit)
 	elseif (dest == "fct" and IsAddOnLoaded("Blizzard_CombatText")) then
 		CombatText_AddMessage(msg, COMBAT_TEXT_SCROLL_FUNCTION, color.r, color.g, color.b)
 	-- MikScrollingBattleText	
-	elseif (dest == "msbt" and IsAddOnLoaded("MikScrollingBattleText")) then 
+	elseif (dest == "msbt" and IsAddOnLoaded("MikScrollingBattleText")) then
 		MikSBT.DisplayMessage(msg, MikSBT.DISPLAYTYPE_NOTIFICATION, false, color.r * 255, color.g * 255, color.b * 255)
 	-- xCT
-	elseif xCT then
+	elseif (dest == "xct" and IsAddOnLoaded("xCT")) then
 		ct.frames[3]:AddMessage(msg, color.r * 255, color.g * 255, color.b * 255)
 	-- xCT+
-	elseif xCT_Plus then
+	elseif (dest == "xctplus" and IsAddOnLoaded("xCT+")) then
 		xCT_Plus:AddMessage("general", msg, {color.r, color.g, color.b})
 	-- Scrolling Combat Text
 	elseif (dest == "sct" and IsAddOnLoaded("sct")) then
@@ -217,81 +217,83 @@ function Announcements:GetOptions()
 		["sct"] = L["Scrolling Combat Text"],
 		["msbt"] = L["MikScrollingBattleText"],
 		["fct"] = L["Blizzard's Floating Combat Text"],
-		["parrot"] = L["Parrot"]
+		["parrot"] = L["Parrot"],
+		["xct"] = L["xCT"],
+		["xctplus"] = L["xCT Plus"]
 	}
 	return {
 		general = {
-			type="group",
-			name=L["General"],
-			order=1,
-			get=getOption,
-			set=setOption,
-			disabled=function()
+			type = "group",
+			name = L["General"],
+			order = 1,
+			get = getOption,
+			set = setOption,
+			disabled = function()
 				return not Gladius.db.modules[self.name]
 			end,
 			args = {
 				options = {
-					type="group",
-					name=L["Options"],
-					inline=true,
-					order=1,
+					type = "group",
+					name = L["Options"],
+					inline = true,
+					order = 1,
 					args = {
 						dest = {
-							type="select",
-							name=L["Destination"],
-							desc=L["Choose how your announcements are displayed."],
-							values=destValues,
-							order=5,
+							type = "select",
+							name = L["Destination"],
+							desc = L["Choose how your announcements are displayed."],
+							values = destValues,
+							order = 5,
 						},
 						healthThreshold = {
-							type="range",
-							name=L["Low health threshold"],
-							desc=L["Choose how low an enemy must be before low health is announced."],
-							disabled=function()
+							type = "range",
+							name = L["Low health threshold"],
+							desc = L["Choose how low an enemy must be before low health is announced."],
+							disabled = function()
 								return not Gladius.db.announcements.health
 							end,
-							min=1,
-							max=100,
-							step=1,
-							order=10,
+							min = 1,
+							max = 100,
+							step = 1,
+							order = 10,
 						},
 					},
 				},
 				announcements = {
-					type="group",
-					name=L["Announcement toggles"],
-					inline=true,
-					order=5,
+					type = "group",
+					name = L["Announcement toggles"],
+					inline = true,
+					order = 5,
 					args = {
 						enemies = {
-							type="toggle",
-							name=L["New enemies"],
-							desc=L["Announces when new enemies are discovered."],
-							order=10,
+							type = "toggle",
+							name = L["New enemies"],
+							desc = L["Announces when new enemies are discovered."],
+							order = 10,
 						},
 						drinks = {
-							type="toggle",
-							name=L["Drinking"],
-							desc=L["Announces when enemies sit down to drink."],
-							order=20,
+							type = "toggle",
+							name = L["Drinking"],
+							desc = L["Announces when enemies sit down to drink."],
+							order = 20,
 						},
 						health = {
-							type="toggle",
-							name=L["Low health"],
-							desc=L["Announces when an enemy drops below a certain health threshold."],
-							order=30,
+							type = "toggle",
+							name = L["Low health"],
+							desc = L["Announces when an enemy drops below a certain health threshold."],
+							order = 30,
 						},
 						resurrect = {
-							type="toggle",
-							name=L["Resurrection"],
-							desc=L["Announces when an enemy tries to resurrect a teammate."],
-							order=40,
+							type = "toggle",
+							name = L["Resurrection"],
+							desc = L["Announces when an enemy tries to resurrect a teammate."],
+							order = 40,
 						},
 						spec = {
-							type="toggle",
-							name=L["Spec Detection"],
-							desc=L["Announces when the spec of an enemy was detected."],
-							order=40,
+							type = "toggle",
+							name = L["Spec Detection"],
+							desc = L["Announces when the spec of an enemy was detected."],
+							order = 40,
 						},
 					},
 				},
