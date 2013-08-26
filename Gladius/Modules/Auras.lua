@@ -26,7 +26,7 @@ local Auras = Gladius:NewModule("Auras", false, true, {
 	aurasBuffsOffsetX = 0,
 	aurasBuffsOffsetY = 0,
 	aurasBuffsGloss = false,
-	aurasBuffsGlossColor = { r = 1, g = 1, b = 1, a = 0.4 },
+	aurasBuffsGlossColor = {r = 1, g = 1, b = 1, a = 0.4},
 	aurasDebuffsAttachTo = "ClassIcon",
 	aurasDebuffsAnchor = "BOTTOMLEFT",
 	aurasDebuffsRelativePoint = "TOPLEFT",
@@ -41,7 +41,7 @@ local Auras = Gladius:NewModule("Auras", false, true, {
 	aurasDebuffsOffsetX = 0,
 	aurasDebuffsOffsetY = 0,
 	aurasDebuffsGloss = false,
-	aurasDebuffsGlossColor = { r = 1, g = 1, b = 1, a = 0.4 },
+	aurasDebuffsGlossColor = {r = 1, g = 1, b = 1, a = 0.4},
 	aurasImportantAuras = true,
 	aurasFrameAuras = nil,
 },
@@ -109,6 +109,9 @@ function Auras:GetIndicatorHeight()
 end
 
 function Auras:UNIT_AURA(event, unit)
+	if unit == nil then
+		return
+	end
 	if (not strfind(unit, "arena") or strfind(unit, "pet")) then
 		return
 	end
@@ -132,6 +135,9 @@ function Auras:UNIT_AURA(event, unit)
 	-- debuff frame
 	for i = 1, 40 do
 		local name, rank, icon, count, dispelType, duration, expires, caster, isStealable = UnitAura(unit, i, "HARMFUL")
+		if (self.debuffFrame[unit][i] == nil) then
+			break
+		end
 		if (not self.debuffFrame[unit][i]) then
 			break
 		end
