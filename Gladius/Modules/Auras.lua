@@ -20,7 +20,7 @@ local Auras = Gladius:NewModule("Auras", false, true, {
 	aurasBuffsSpacingX = 0,
 	aurasBuffsSpacingY = 0,
 	aurasBuffsPerColumn = 10,
-	aurasBuffsMax = 20,
+	aurasBuffsMax = 10,
 	aurasBuffsHeight = 16,
 	aurasBuffsWidth = 16,
 	aurasBuffsOffsetX = 0,
@@ -35,7 +35,7 @@ local Auras = Gladius:NewModule("Auras", false, true, {
 	aurasDebuffsSpacingX = 0,
 	aurasDebuffsSpacingY = 0,
 	aurasDebuffsPerColumn = 10,
-	aurasDebuffsMax = 20,
+	aurasDebuffsMax = 10,
 	aurasDebuffsHeight = 16,
 	aurasDebuffsWidth = 16,
 	aurasDebuffsOffsetX = 0,
@@ -62,9 +62,15 @@ function Auras:OnDisable()
 	self:UnregisterAllEvents()
 	for unit in pairs(self.debuffFrame) do
 		self.debuffFrame[unit]:Hide()
+		for i = 1, Gladius.db.aurasDebuffsMax do
+			self.debuffFrame[unit][i]:Hide()
+		end
 	end
 	for unit in pairs(self.buffFrame) do
 		self.buffFrame[unit]:Hide()
+		for i = 1, Gladius.db.aurasBuffsMax do
+			self.buffFrame[unit][i]:Hide()
+		end
 	end
 end
 
@@ -118,35 +124,29 @@ function Auras:UNIT_AURA(event, unit)
 	-- buff frame
 	for i = 1, 40 do
 		local name, rank, icon, count, dispelType, duration, expires, caster, isStealable = UnitAura(unit, i, "HELPFUL")
-		if (self.buffFrame[unit] == nil) then
-			break
-		end
-		if (not self.buffFrame[unit][i]) then
+		if (not self.buffFrame[unit]) or (not self.buffFrame[unit][i]) then
 			break
 		end
 		if (name) then
 			self.buffFrame[unit][i].texture:SetTexture(icon)
 			Gladius:Call(Gladius.modules.Timer, "SetTimer", self.buffFrame[unit][i], duration)
-			self.buffFrame[unit][i]:SetAlpha(1)
+			self.buffFrame[unit][i]:Show()
 		else
-			self.buffFrame[unit][i]:SetAlpha(0)
+			self.buffFrame[unit][i]:Hide()
 		end
 	end
 	-- debuff frame
 	for i = 1, 40 do
 		local name, rank, icon, count, dispelType, duration, expires, caster, isStealable = UnitAura(unit, i, "HARMFUL")
-		if (self.debuffFrame[unit][i] == nil) then
-			break
-		end
 		if (not self.debuffFrame[unit][i]) then
 			break
 		end
 		if (name) then
 			self.debuffFrame[unit][i].texture:SetTexture(icon)
 			Gladius:Call(Gladius.modules.Timer, "SetTimer", self.debuffFrame[unit][i], duration)
-			self.debuffFrame[unit][i]:SetAlpha(1)
+			self.debuffFrame[unit][i]:Show()
 		else
-			self.debuffFrame[unit][i]:SetAlpha(0)
+			self.debuffFrame[unit][i]:Hide()
 		end
 	end
 end
@@ -276,7 +276,7 @@ function Auras:Update(unit)
 			Gladius.db.aurasBuffsGlossColor.b, Gladius.db.aurasBuffsGloss and Gladius.db.aurasBuffsGlossColor.a or 0)
 		end
 		-- hide
-		self.buffFrame[unit]:SetAlpha(0)
+		self.buffFrame[unit]:Hide()
 	end
 	-- update debuff frame
 	if (Gladius.db.aurasDebuffs) then
@@ -332,7 +332,7 @@ function Auras:Update(unit)
 			Gladius.db.aurasDebuffsGlossColor.b, Gladius.db.aurasDebuffsGloss and Gladius.db.aurasDebuffsGlossColor.a or 0)
 		end
 		-- hide
-		self.debuffFrame[unit]:SetAlpha(0)
+		self.debuffFrame[unit]:Hide()
 	end
 	-- event
 	if (not Gladius.db.aurasDebuffs and not Gladius.db.aurasBuffs) then
@@ -343,19 +343,36 @@ function Auras:Update(unit)
 end
 
 function Auras:Show(unit)
-	local testing = Gladius.test
-	-- show buff frame
-	if (self.buffFrame[unit]) then
-		self.buffFrame[unit]:SetAlpha(1)
-		for i = 1, Gladius.db.aurasBuffsMax do
-			self.buffFrame[unit][i]:SetAlpha(1)
+	-- show/hide buff frame
+	if Gladius.db.aurasBuffs then
+		if (self.buffFrame[unit]) then
+			self.buffFrame[unit]:Show()
+			for i = 1, Gladius.db.aurasBuffsMax do
+				self.buffFrame[unit][i]:Show()
+			end
+		end
+	else
+		if (self.buffFrame[unit]) then
+			self.buffFrame[unit]:Hide()
+			for i = 1, Gladius.db.aurasBuffsMax do
+				self.buffFrame[unit][i]:Hide()
+			end
 		end
 	end
-	-- show debuff frame
-	if (self.debuffFrame[unit]) then
-		self.debuffFrame[unit]:SetAlpha(1)
-		for i = 1, Gladius.db.aurasDebuffsMax do
-			self.debuffFrame[unit][i]:SetAlpha(1)
+	-- show/hide debuff frame
+	if Gladius.db.aurasDebuffs then
+		if (self.debuffFrame[unit]) then
+			self.debuffFrame[unit]:Show()
+			for i = 1, Gladius.db.aurasDebuffsMax do
+				self.debuffFrame[unit][i]:Show()
+			end
+		end
+	else
+		if (self.debuffFrame[unit]) then
+			self.debuffFrame[unit]:Hide()
+			for i = 1, Gladius.db.aurasDebuffsMax do
+				self.debuffFrame[unit][i]:Hide()
+			end
 		end
 	end
 end
@@ -363,33 +380,35 @@ end
 function Auras:Reset(unit)
 	if (self.buffFrame[unit]) then
 		-- hide buff frame
-		self.buffFrame[unit]:SetAlpha(0)
+		self.buffFrame[unit]:Hide()
 		for i = 1, 40 do
 			self.buffFrame[unit][i].texture:SetTexture("")
-			self.buffFrame[unit][i]:SetAlpha(0)
+			self.buffFrame[unit][i]:Hide()
 		end
 	end
 	if (self.debuffFrame[unit]) then
 		-- hide debuff frame
-		self.debuffFrame[unit]:SetAlpha(0)
+		self.debuffFrame[unit]:Hide()
 		for i = 1, 40 do
 			self.debuffFrame[unit][i].texture:SetTexture("")
-			self.debuffFrame[unit][i]:SetAlpha(0)
+			self.debuffFrame[unit][i]:Hide()
 		end
 	end
 end
 
 function Auras:Test(unit)
 	-- test buff frame
+	local testBuff = GetSpellTexture(21562)
 	if (self.buffFrame[unit]) then
 		for i = 1, Gladius.db.aurasBuffsMax do
-			self.buffFrame[unit][i].texture:SetTexture(GetSpellTexture(21562))
+			self.buffFrame[unit][i].texture:SetTexture(testBuff)
 		end
 	end
 	-- test debuff frame
+	local testDebuff = GetSpellTexture(589)
 	if (self.debuffFrame[unit]) then
 		for i = 1, Gladius.db.aurasDebuffsMax do
-			self.debuffFrame[unit][i].texture:SetTexture(GetSpellTexture(589))
+			self.debuffFrame[unit][i].texture:SetTexture(testDebuff)
 		end
 	end
 end
@@ -826,7 +845,7 @@ function Auras:GetOptions()
 									min = 0, max = 30, step = 1,
 									disabled = function()
 										return not Gladius.dbi.profile.modules[self.name]
-										end,
+									end,
 									order = 15,
 								},
 								aurasDebuffsSpacingX = {
@@ -984,7 +1003,7 @@ function Auras:GetOptions()
 							order = 1,
 						},
 						priority = {
-							type= "range",
+							type = "range",
 							name = L["Priority"],
 							desc = L["Select what priority the aura should have - higher equals more priority"],
 							get = function()
@@ -1061,7 +1080,7 @@ function Auras:SetupAura(aura, priority)
 				order = 1,
 			},
 			priority = {
-				type= "range",
+				type = "range",
 				name = L["Priority"],
 				desc = L["Select what priority the aura should have - higher equals more priority"],
 				min = 0,

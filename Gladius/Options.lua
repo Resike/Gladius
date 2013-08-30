@@ -237,7 +237,7 @@ end
 function Gladius:SetupOptions()
 	self.options = {
 		type = "group",
-		name = "Gladius",
+		name = "Gladius "..GetAddOnMetadata("Gladius", "Version"),
 		plugins = { },
 		get = getOption,
 		set = setOption,
@@ -426,12 +426,6 @@ function Gladius:SetupOptions()
 								name = "",
 								width = "full",
 								order = 7,
-							},
-							sep2 = {
-								type = "toggle",
-								name = "NYI",
-								disabled = true,
-								order = 8,
 							},
 							useGlobalFontSize = {
 								type = "toggle",
