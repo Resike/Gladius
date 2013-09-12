@@ -138,7 +138,7 @@ function Auras:UNIT_AURA(event, unit)
 	-- debuff frame
 	for i = 1, 40 do
 		local name, rank, icon, count, dispelType, duration, expires, caster, isStealable = UnitAura(unit, i, "HARMFUL")
-		if (not self.debuffFrame[unit][i]) then
+		if (not self.debuffFrame[unit]) or (not self.debuffFrame[unit][i]) then
 			break
 		end
 		if (name) then

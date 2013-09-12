@@ -21,7 +21,7 @@ local Announcements = Gladius:NewModule("Announcements", false, false, {
 		resurrect = true,
 		spec = true,
 		healthThreshold = 25,
-		dest = "party",
+		dest = "party"
 	}
 })
 
@@ -44,7 +44,7 @@ function Announcements:OnDisable()
 	self:UnregisterAllEvents()
 end
 
--- Needed to not throw Lua errors <,<
+-- Needed to not throw Lua errors
 function Announcements:GetAttachTo()
 	return ""
 end
@@ -55,7 +55,7 @@ function Announcements:Reset(unit)
 	self.enemy = { }
 end
 
--- New enemy announcement, could be broken.
+-- New enemy announcement, could be broken
 function Announcements:Show(unit)
 	self:UNIT_NAME_UPDATE(nil, unit)
 end
@@ -108,24 +108,22 @@ function Announcements:ARENA_PREP_OPPONENT_SPECIALIZATIONS(event, ...)
 	local numOpps = GetNumArenaOpponentSpecs()
 	for i = 1, numOpps do
 		--local prepFrame = _G["ArenaPrepFrame"..i]
-		if (i <= numOpps) then
-			--prepFrame.specPortrait = _G["ArenaPrepFrame"..i.."SpecPortrait"]
-			local specID = GetArenaOpponentSpec(i)
-			if (specID > 0) then
-				local _, spec, _, specIcon, _, _, class = GetSpecializationInfoByID(specID)
-				--[[if(class) then
-						prepFrame.classPortrait:SetTexture("Interface\\TargetingFrame\\UI-Classes-Circles")
-						prepFrame.classPortrait:SetTexCoord(unpack(CLASS_ICON_TCOORDS[strupper(class)]))
-					end
-					SetPortraitToTexture(prepFrame.specPortrait, specIcon)
-					prepFrame:Show()
-				else
-					prepFrame:Hide()]]
-				self:Send("Enemy specs: "..spec.." "..class )
-			end
-			--else
-			--prepFrame:Hide()
+		--prepFrame.specPortrait = _G["ArenaPrepFrame"..i.."SpecPortrait"]
+		local specID = GetArenaOpponentSpec(i)
+		if (specID > 0) then
+			local _, spec, _, specIcon, _, _, class = GetSpecializationInfoByID(specID)
+			--[[if(class) then
+					prepFrame.classPortrait:SetTexture("Interface\\TargetingFrame\\UI-Classes-Circles")
+					prepFrame.classPortrait:SetTexCoord(unpack(CLASS_ICON_TCOORDS[strupper(class)]))
+				end
+				SetPortraitToTexture(prepFrame.specPortrait, specIcon)
+				prepFrame:Show()
+			else
+				prepFrame:Hide()]]
+			self:Send("Enemy specs: "..spec.." "..class )
 		end
+		--else
+		--prepFrame:Hide()
 	end
 end
 
@@ -156,7 +154,7 @@ function Announcements:Send(msg, throttle, unit)
 	-- Throttling of messages
 	if (throttle and throttle > 0) then
 		if (not self.throttled[msg]) then
-			self.throttled[msg] = GetTime()+throttle
+			self.throttled[msg] = GetTime() + throttle
 		elseif (self.throttled[msg] < GetTime()) then
 			self.throttled[msg] = nil
 		else
