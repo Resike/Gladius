@@ -196,14 +196,14 @@ function Tags:UpdateText(unit, text)
 			else
 			-- create function
 			if (not self.func[tag]) then
-				if tag ~= nil then
+				if tag then
 					local func, error = loadstring("local strformat = string.format return "..Gladius.db.tags[tag])
 					self.func[tag] = func
 				end
 			end
 			-- escape return string
 			local funcText = self.func[tag]()
-				if (funcText) then
+				if (funcText and unitParameter) then
 					escapedText = strgsub(funcText(unitParameter) or "", "%%", "%%%%")
 				else
 					escapedText = ""
