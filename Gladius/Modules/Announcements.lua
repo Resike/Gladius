@@ -131,7 +131,8 @@ local RES_SPELLS = {
 	[GetSpellInfo(2008)] = true, -- Ancestral Spirit
 	[GetSpellInfo(50769)] = true, -- Revive
 	[GetSpellInfo(2006)] = true, -- Resurrection
-	[GetSpellInfo(7328)] = true -- Redemption
+	[GetSpellInfo(7328)] = true, -- Redemption
+	[GetSpellInfo(50662)] = true -- Resuscitate
 }
 
 function Announcements:UNIT_SPELLCAST_START(event, unit, spell, rank)

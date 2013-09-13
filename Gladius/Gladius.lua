@@ -11,6 +11,7 @@ Gladius.eventHandler.events = { }
 Gladius.eventHandler:RegisterEvent("PLAYER_LOGIN")
 Gladius.eventHandler:RegisterEvent("ADDON_LOADED")
 Gladius.eventHandler:RegisterEvent("ARENA_PREP_OPPONENT_SPECIALIZATIONS")
+
 Gladius.eventHandler:SetScript("OnEvent", function(self, event, ...)
 	if (event == "PLAYER_LOGIN") then
 		Gladius:OnInitialize()
