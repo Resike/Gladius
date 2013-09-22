@@ -46,12 +46,6 @@ local function pairsByKeys(t, f)
 	return iter
 end
 
-Gladius.templates = {
-	"Gladius Classic",
-	"Gladius Light",
-	"Gladius Advanced",
-}
-
 function Gladius:SetTemplate(template)
 	if (template == 1) then
 		-- classic Gladius1 template
@@ -215,23 +209,8 @@ function Gladius:SetupModule(key, module, order)
 			end
 			Gladius:UpdateFrame()
 		end,
-		order=0.5,
+		order = 0.5,
 	}
-	-- set template module option
-	if (module.templates) then
-		self.options.args[key].args.templates = {
-			type = "select",
-			name = L["Module Templates"],
-			values=function()
-				return module.templates
-			end,
-			set=function(info, value)
-				Gladius:Call(module, "SetTemplate", value)
-				Gladius:UpdateFrame()
-			end,
-			order = 0.3,
-		}
-	end
 end
 
 function Gladius:SetupOptions()
@@ -432,27 +411,6 @@ function Gladius:SetupOptions()
 								name = L["Use Global Font Size"],
 								desc = L["Toggle if you want to use the global font size"],
 								order = 10,
-							},
-						},
-					},
-					templates = {
-						type = "group",
-						name = L["Global Templates"],
-						desc = L["Global templates"],
-						inline = true,
-						order = 5,
-						args = {
-							templates = {
-								type = "select",
-								name = L["Global Templates"],
-								values = function()
-									return self.templates
-								end,
-								set = function(info, value)
-									self:SetTemplate(value)
-									self:UpdateFrame()
-								end,
-								order = 1,
 							},
 						},
 					},
