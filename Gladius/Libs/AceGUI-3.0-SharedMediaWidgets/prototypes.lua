@@ -1,4 +1,4 @@
-﻿-- Widget created by Yssaril
+-- Widget created by Yssaril
 --[===[@debug@
 local DataVersion = 9001 -- dev version always overwrites everything else :)
 --@end-debug@]===]

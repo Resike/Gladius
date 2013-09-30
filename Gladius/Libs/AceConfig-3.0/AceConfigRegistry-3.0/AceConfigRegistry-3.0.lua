@@ -1,4 +1,4 @@
-﻿--- AceConfigRegistry-3.0 handles central registration of options tables in use by addons and modules.\\
+--- AceConfigRegistry-3.0 handles central registration of options tables in use by addons and modules.\\
 -- Options tables can be registered as raw tables, OR as function refs that return a table.\\
 -- Such functions receive three arguments: "uiType", "uiName", "appName". \\
 -- * Valid **uiTypes**: "cmd", "dropdown", "dialog". This is verified by the library at call time. \\

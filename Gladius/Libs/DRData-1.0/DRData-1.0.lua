@@ -1,4 +1,4 @@
-﻿local major = "DRData-1.0"
+local major = "DRData-1.0"
 local minor = 1023
 assert(LibStub, string.format("%s requires LibStub.", major))
 
@@ -81,10 +81,10 @@ Data.spells = {
 	-- Druid
 	[  2637] = "disorient", -- Hibernate
 	[    99] = "disorient", -- Disorienting Roar (talent)
-	-- Hunter
+    -- Hunter
 	[  3355] = "disorient", -- Freezing Trap
 	[ 19386] = "disorient", -- Wyvern Sting
-	-- Mage
+    -- Mage
 	[   118] = "disorient", -- Polymorph
 	[ 28272] = "disorient", -- Polymorph (pig)
 	[ 28271] = "disorient", -- Polymorph (turtle)
@@ -93,47 +93,47 @@ Data.spells = {
 	[ 61721] = "disorient", -- Polymorph (rabbit)
 	[ 61780] = "disorient", -- Polymorph (turkey)
 	[ 82691] = "disorient", -- Ring of Frost
-	-- Monk
+    -- Monk
 	[115078] = "disorient", -- Paralysis
-	-- Paladin
+    -- Paladin
 	[ 20066] = "disorient", -- Repentance
-	-- Priest
+    -- Priest
 	[  9484] = "disorient", -- Shackle Undead
-	-- Rogue
+    -- Rogue
 	[  1776] = "disorient", -- Gouge
 	[  6770] = "disorient", -- Sap
-	-- Shaman
+    -- Shaman
 	[ 51514] = "disorient", -- Hex
-	-- Pandaren
+    -- Pandaren
 	[107079] = "disorient", -- Quaking Palm
 
 	--[[ SILENCES ]]--
 	-- Death Knight
 	[ 47476] = "silence", -- Strangulate
-	-- Druid
+    -- Druid
 	[ 78675] = "silence", -- Solar Beam -- FIXME: check id
 	[ 81261] = "silence", -- Solar Beam -- Definitely correct
 	[113286] = "silence", -- Solar Beam (Symbiosis)
 	[113287] = "silence", -- Solar Beam (Symbiosis)
-	-- Hunter
+    -- Hunter
 	[ 34490] = "silence", -- Silencing Shot
-	-- Mage
+    -- Mage
 	[ 55021] = "silence", -- Improved Counterspell
 	[102051] = "silence", -- Frostjaw (talent)
-	-- Monk
+    -- Monk
 	[116709] = "silence", -- Spear Hand Strike
-	-- Paladin
+    -- Paladin
 	[ 31935] = "silence", -- Avenger's Shield
-	-- Priest
+    -- Priest
 	[ 15487] = "silence", -- Silence
-	-- Rogue
+    -- Rogue
 	[  1330] = "silence", -- Garrote
-	-- Warlock
+    -- Warlock
 	[ 24259] = "silence", -- Spell Lock (Felhunter)
 	[115782] = "silence", -- Optical Blast (Observer)
-	-- Warrior
+    -- Warrior
 	[ 18498] = "silence", -- Glyph of Gag Order
-	-- Blood Elf
+    -- Blood Elf
 	[ 25046] = "silence", -- Arcane Torrent (Energy version)
 	[ 28730] = "silence", -- Arcane Torrent (Mana version)
 	[ 50613] = "silence", -- Arcane Torrent (Runic power version)
@@ -144,36 +144,36 @@ Data.spells = {
 	-- Hunter
 	[ 91644] = "disarm", -- Snatch (Bird of Prey)
 	[ 50541] = "disarm", -- Clench (Scorpid)
-	-- Monk
+    -- Monk
 	[117368] = "disarm", -- Grapple Weapon
 	[126458] = "disarm", -- Grapple Weapon (Symbiosis)
 	-- Priest
 	[ 64058] = "disarm", -- Psychic Horror (Disarm effect)
-	-- Rogue
+    -- Rogue
 	[ 51722] = "disarm", -- Dismantle
-	-- Warlock
+    -- Warlock
 	[118093] = "disarm", -- Disarm (Voidwalker/Voidlord)
-	-- Warrior
+    -- Warrior
 	[   676] = "disarm", -- Disarm
 
 	--[[ FEARS ]]--
 	-- Hunter
 	[  1513] = "fear", -- Scare Beast
-	-- Paladin
+    -- Paladin
 	[105421] = "fear", -- Blinding Light
 	[ 10326] = "fear", -- Turn Evil
-	-- Priest
+    -- Priest
 	[  8122] = "fear", -- Psychic Scream
 	[113792] = "fear", -- Psychic Terror (Psyfiend)
-	-- Rogue
+    -- Rogue
 	[  2094] = "fear", -- Blind
-	-- Warlock
+    -- Warlock
 	[118699] = "fear", -- Fear -- new SpellID in MoP, Blood Fear uses same ID
 	[  5484] = "fear", -- Howl of Terror
 	[104045] = "fear", -- Sleep (Metamorphosis) -- FIXME: verify this is the correct category
 	[  6358] = "fear", -- Seduction (Succubus)
 	[115268] = "fear", -- Mesmerize (Shivarra)
-	-- Warrior
+    -- Warrior
 	[  5246] = "fear", -- Intimidating Shout (main target)
 	[ 20511] = "fear", -- Intimidating Shout (secondary targets)
 	[113004] = "fear", -- Intimidating Roar (Symbiosis)
@@ -185,54 +185,54 @@ Data.spells = {
 	[ 91800] = "ctrlstun", -- Gnaw (Ghoul)
 	[ 91797] = "ctrlstun", -- Monstrous Blow (Dark Transformation Ghoul)
 	[115001] = "ctrlstun", -- Remorseless Winter (talent)
-	-- Druid
+    -- Druid
 	[ 22570] = "ctrlstun", -- Maim
 	[  9005] = "ctrlstun", -- Pounce
 	[  5211] = "ctrlstun", -- Mighty Bash (talent)
 	[102795] = "ctrlstun", -- Bear Hug
 	[113801] = "ctrlstun", -- Bash (treants in feral spec) (Bugged by blizzard - it instantly applies all 3 levels of DR right now, making any target instantly immune to ctrlstuns)
-	-- Hunter
+    -- Hunter
 	[ 24394] = "ctrlstun", -- Intimidation
 	[ 90337] = "ctrlstun", -- Bad Manner (Monkey)
 	[ 50519] = "ctrlstun", -- Sonic Blast (Bat)
 	-- [ 56626] = "ctrlstun", -- Sting (Wasp) --FIXME: this doesn't share with ctrlstun anymore. Unknown what it is right now, so watch for it on www.arenajunkies.com/topic/227748-mop-diminishing-returns-updating-the-list
 	[117526] = "ctrlstun", -- Binding Shot (talent)
 	[ 96201] = "ctrlstun", -- Web Wrap (Shale Spider)
-	-- Mage
+    -- Mage
 	[ 44572] = "ctrlstun", -- Deep Freeze
 	[118271] = "ctrlstun", -- Combustion Impact (Combustion; Fire)
-	-- Monk
+    -- Monk
 	[119392] = "ctrlstun", -- Charging Ox Wave (talent)
 	[119381] = "ctrlstun", -- Leg Sweep (talent)
 	[122242] = "ctrlstun", -- Clash (Brewmaster)
 	[120086] = "ctrlstun", -- Fists of Fury (Windwalker)
-	-- Paladin
+    -- Paladin
 	[   853] = "ctrlstun", -- Hammer of Justice
 	[110698] = "ctrlstun", -- Hammer of Justice (Symbiosis)
 	[119072] = "ctrlstun", -- Holy Wrath (Protection)
 	[105593] = "ctrlstun", -- Fist of Justice (talent)
 	[115752] = "ctrlstun", -- Glyph of Blinding Light
-	-- Priest
+    -- Priest
 	-- [ 88625] = "ctrlstun", -- Holy Word: Chastise --FIXME: this doesn't share with ctrlstun anymore. Unknown what it is right now, so watch for it on www.arenajunkies.com/topic/227748-mop-diminishing-returns-updating-the-list
-	-- Rogue
+    -- Rogue
 	[  1833] = "ctrlstun", -- Cheap Shot
 	[   408] = "ctrlstun", -- Kidney Shot
-	-- Shaman
+    -- Shaman
 	[118905] = "ctrlstun", -- Static Charge (Capacitor Totem)
 	-- Warlock
 	[ 30283] = "ctrlstun", -- Shadowfury
 	[ 89766] = "ctrlstun", -- Axe Toss (Felguard)
 	-- [ 22703] = "ctrlstun", -- Infernal Awakening (Infernal) -- According to the DR thread on AJ, this doesn't have DR at all.
-	-- Warrior
+    -- Warrior
 	[132168] = "ctrlstun", -- Shockwave
 	[105771] = "ctrlstun", -- Warbringer (talent)
-	-- Tauren
+    -- Tauren
 	[ 20549] = "ctrlstun", -- War Stomp
 
 	--[[ RANDOM STUNS ]]--
 	-- Rogue
 	[113953] = "rndstun", -- Paralysis (Paralytic Poison five stack stun)
-	-- Warrior
+    -- Warrior
 	[118895] = "rndstun", -- Dragon Roar (talent)
 	-- Shaman
 	[77505] = "rndstun", -- Earthquake Knockdown (Elemental)
@@ -247,24 +247,24 @@ Data.spells = {
 	[113275] = "ctrlroot", -- Entangling Roots (Symbiosis)
 	[ 19975] = "ctrlroot", -- Nature's Grasp (Uses different spellIDs than Entangling Roots for the same spell)
 	[102359] = "ctrlroot", -- Mass Entanglement (talent)
-	-- Hunter
+    -- Hunter
 	[ 50245] = "ctrlroot", -- Pin (Crab)
 	[  4167] = "ctrlroot", -- Web (Spider)
 	[ 54706] = "ctrlroot", -- Venom Web Spray (Silithid)
 	[ 90327] = "ctrlroot", -- Lock Jaw (Dog)
 	[128405] = "ctrlroot", -- Narrow Escape (talent)
-	-- Mage
+    -- Mage
 	[   122] = "ctrlroot", -- Frost Nova
 	[110693] = "ctrlroot", -- Frost Nova (Symbiosis)
 	[ 33395] = "ctrlroot", -- Freeze (Water Elemental)
-	-- Monk
+    -- Monk
 	[116706] = "ctrlroot", -- Disable
-	-- Priest
+    -- Priest
 	[114404] = "ctrlroot", -- Void Tendrils
-	-- Shaman
+    -- Shaman
 	[ 64695] = "ctrlroot", -- Earthgrab
 	[ 63685] = "ctrlroot", -- Freeze (Frozen Power talent)
-	-- Warrior
+    -- Warrior
 	[107566] = "ctrlroot", -- Staggering Shout (talent)
 
 	--[[ HORROR ]]--
