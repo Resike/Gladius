@@ -1,4 +1,4 @@
-﻿--- AceDBOptions-3.0 provides a universal AceConfig options screen for managing AceDB-3.0 profiles.
+--- AceDBOptions-3.0 provides a universal AceConfig options screen for managing AceDB-3.0 profiles.
 -- @class file
 -- @name AceDBOptions-3.0
 -- @release $Id: AceDBOptions-3.0.lua 1066 2012-09-18 14:36:49Z nevcairiel $

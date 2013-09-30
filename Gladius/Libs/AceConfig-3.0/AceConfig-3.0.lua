@@ -1,4 +1,4 @@
-﻿--- AceConfig-3.0 wrapper library.
+--- AceConfig-3.0 wrapper library.
 -- Provides an API to register an options table with the config registry,
 -- as well as associate it with a slash command.
 -- @class file

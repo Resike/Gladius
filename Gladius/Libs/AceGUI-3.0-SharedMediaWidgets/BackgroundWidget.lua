@@ -1,4 +1,4 @@
-﻿-- Widget is based on the AceGUIWidget-DropDown.lua supplied with AceGUI-3.0
+-- Widget is based on the AceGUIWidget-DropDown.lua supplied with AceGUI-3.0
 -- Widget created by Yssaril
 
 local AceGUI = LibStub("AceGUI-3.0")
