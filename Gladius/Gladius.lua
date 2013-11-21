@@ -1,5 +1,4 @@
-﻿-- global functions
-local type = type
+﻿local type = type
 local pairs = pairs
 local strfind = string.find
 local UnitCastingInfo, UnitAura, UnitIsDeadOrGhost = UnitCastingInfo, UnitAura, UnitIsDeadOrGhost
@@ -13,13 +12,13 @@ Gladius.eventHandler:RegisterEvent("ADDON_LOADED")
 Gladius.eventHandler:RegisterEvent("ARENA_PREP_OPPONENT_SPECIALIZATIONS")
 
 Gladius.eventHandler:SetScript("OnEvent", function(self, event, ...)
-	if (event == "PLAYER_LOGIN") then
+	if event == "PLAYER_LOGIN" then
 		Gladius:OnInitialize()
 		Gladius:OnEnable()
 		Gladius.eventHandler:UnregisterEvent("PLAYER_LOGIN")
 	else
 		local func = self.events[event]
-		if (type(Gladius[func]) == "function") then
+		if type(Gladius[func]) == "function" then
 			Gladius[func](Gladius, event, ...)
 		end
 	end
@@ -32,11 +31,11 @@ local L
 
 function Gladius:Call(handler, func, ...)
 	-- module disabled, return
-	if (not handler.IsEnabled) then
+	if not handler.IsEnabled then
 		return
 	end
 	-- save module function call
-	if (type(handler[func]) == "function") then
+	if type(handler[func]) == "function" then
 		handler[func](handler, ...)
 	end
 end
@@ -77,7 +76,7 @@ function Gladius:NewModule(key, bar, attachTo, defaults, templates)
 	module.eventHandler.messages = { }
 	module.eventHandler:SetScript("OnEvent", function(self, event, ...)
 		local func = module.eventHandler.events[event]
-		if (type(module[func]) == "function") then
+		if type(module[func]) == "function" then
 			module[func](module, event, ...)
 		end
 	end)
@@ -94,9 +93,9 @@ function Gladius:NewModule(key, bar, attachTo, defaults, templates)
 	end
 	-- module status
 	module.Enable = function(self)
-		if (not self.enabled) then
+		if not self.enabled then
 			self.enabled = true	
-			if (type(self.OnEnable) == "function") then
+			if type(self.OnEnable) == "function" then
 				self:OnEnable()
 			end
 		end
@@ -104,7 +103,7 @@ function Gladius:NewModule(key, bar, attachTo, defaults, templates)
 	module.Disable = function(self)
 		if (self.enabled) then
 			self.enabled = false
-			if (type(self.OnDisable) == "function") then
+			if type(self.OnDisable) == "function" then
 				self:OnDisable()
 			end
 		end
@@ -140,19 +139,19 @@ end
 
 function Gladius:GetParent(unit, module)
 	-- get parent frame
-	if (module == "Frame") then
+	if module == "Frame" then
 		return self.buttons[unit]
 	else
 		-- get parent module frame
 		local m = self:GetModule(module, true)
-		if (m and type(m.GetFrame) == "function") then
+		if m and type(m.GetFrame) == "function" then
 			-- return frame as parent, if parent module is not enabled
-			if (not m:IsEnabled()) then
+			if not m:IsEnabled() then
 				return self.buttons[unit]
 			end
 			-- update module, if frame doesn't exist
 			local frame = m:GetFrame(unit)
-			if (not frame) then
+			if not frame then
 				self:Call(m, "Update", unit)
 				frame = m:GetFrame(unit)
 			end
@@ -178,7 +177,7 @@ function Gladius:GetModules(module)
 	-- get module list for frame anchor
 	local t = {["Frame"] = L["Frame"]}
 	for moduleName, m in pairs(self.modules) do
-		if (moduleName ~= module and m:GetAttachTo() ~= module and m.attachTo and m:IsEnabled()) then
+		if moduleName ~= module and m:GetAttachTo() ~= module and m.attachTo and m:IsEnabled() then
 			t[moduleName] = L[moduleName]
 		end
 	end
@@ -195,14 +194,14 @@ function Gladius:OnInitialize()
 	SML:Register(SML.MediaType.STATUSBAR, "Smooth", "Interface\\Addons\\Gladius\\Images\\Smooth")
 	self.db = setmetatable(self.dbi.profile, {
 		__newindex = function(t, index, value)
-		if (type(value) == "table") then
+		if type(value) == "table" then
 			rawset(self.defaults.profile, index, value)
 		end
 		rawset(t, index, value)
 	end})
 	-- option reset (increase number)
 	--[[self.version = 2
-	if (self.db.version == nil or self.db.version < self.version) then
+	if self.db.version == nil or self.db.version < self.version then
 		print("Gladius:", "Resetting options...") 
 		self.dbi:ResetProfile()
 	end
@@ -240,15 +239,14 @@ function Gladius:OnEnable()
 	self:RegisterEvent("ARENA_PREP_OPPONENT_SPECIALIZATIONS")
 	-- enable modules
 	for moduleName, module in pairs(self.modules) do
-		if (self.db.modules[moduleName]) then
+		if self.db.modules[moduleName] then
 			module:Enable()
 		else
 			module:Disable()
 		end
 	end
 	-- display help message
-	if (not self.db.locked and not self.db.x["arena1"] and not self.db.y["arena1"]) then
-		-- this is such a evil haxx!
+	if not self.db.locked and not self.db.x["arena1"] and not self.db.y["arena1"] then
 		SlashCmdList["GLADIUS"]("test 5")
 		self:Print(L["Welcome to Gladius!"])
 		self:Print(L["First run has been detected, displaying test frame."])
@@ -260,8 +258,7 @@ function Gladius:OnEnable()
 		self:Print(L["If this is not your first run please lock or move the frame to prevent this from happening."])
 	end
 	-- clique
-	if (IsAddOnLoaded("Clique")) then
-		-- this is a more evil haxx than the welcome message haxx!
+	if IsAddOnLoaded("Clique") then
 		SlashCmdList["GLADIUS"]("test 5")
 		SlashCmdList["GLADIUS"]("hide")	
 		ClickCastFrames = ClickCastFrames or { }
@@ -282,7 +279,6 @@ function Gladius:OnDisable()
 	self:UnregisterAllEvents()
 	for _, module in pairs(self.modules) do
 		module:Disable()
-		-- evil haxx
 		self:Call(module, "OnDisable")
 	end
 end
@@ -296,9 +292,9 @@ end
 function Gladius:ZONE_CHANGED_NEW_AREA()
 	local type = select(2, IsInInstance())
 	-- check if we are entering or leaving an arena 
-	if (type == "arena") then
+	if type == "arena" then
 		self:JoinedArena()
-	elseif (type ~= "arena" and self.instanceType == "arena") then
+	elseif type ~= "arena" and self.instanceType == "arena" then
 		self:LeftArena()
 	end
 	self.instanceType = type
@@ -328,9 +324,9 @@ function Gladius:JoinedArena()
 	-- hide buttons
 	self:HideFrame()
 	-- background
-	if (self.db.groupButtons) then
+	if self.db.groupButtons then
 		self.background:SetAlpha(1)
-		if (not self.db.locked) then
+		if not self.db.locked then
 			self.anchor:SetAlpha(1)
 			self.anchor:SetFrameStrata("LOW")
 		end
@@ -352,26 +348,28 @@ function Gladius:LeftArena()
 end
 
 function Gladius:UNIT_NAME_UPDATE(event, unit)
-if not IsActiveBattlefieldArena() then return end
-	if (not strfind(unit, "arena") or strfind(unit, "pet")) then
+	if not IsActiveBattlefieldArena() then
 		return
 	end
-	if (not self.buttons[unit] or self.buttons[unit]:GetAlpha() < 1) then
+	if not strfind(unit, "arena") or strfind(unit, "pet") then
+		return
+	end
+	if not self.buttons[unit] or self.buttons[unit]:GetAlpha() < 1 then
 		self:ShowUnit(unit)
 	end
 end
 
 function Gladius:ARENA_OPPONENT_UPDATE(event, unit, type)
 	-- enemy seen
-	if (type == "seen" or type == "destroyed") then
-		if (not self.buttons[unit] or self.buttons[unit]:GetAlpha() < 1) then
+	if type == "seen" or type == "destroyed" then
+		if not self.buttons[unit] or self.buttons[unit]:GetAlpha() < 1 then
 			self:ShowUnit(unit)
 		end
 	-- enemy stealth
-	elseif (type == "unseen") then
+	elseif type == "unseen" then
 		self:UpdateAlpha(unit, self.db.stealthAlpha)
 	-- enemy left arena
-	elseif (type == "cleared") then
+	elseif type == "cleared" then
 		--self:ResetUnit(unit)
 	end
 end
@@ -382,14 +380,14 @@ function Gladius:UpdateFrame()
 	self.buttons = self.buttons or { }
 	for unit, _ in pairs(self.buttons) do
 		local unitId = tonumber(string.match(unit, "^arena(.+)"))
-		if (self.testCount >= unitId) then
+		if self.testCount >= unitId then
 			-- update frame will only be called in the test environment
 			self:UpdateUnit(unit)
-			if (not self.buttons[unit] or self.buttons[unit]:GetAlpha() < 1) then
+			if not self.buttons[unit] or self.buttons[unit]:GetAlpha() < 1 then
 				self:ShowUnit(unit, true)
 			end
 			-- test environment
-			if (self.test) then
+			if self.test then
 				self:TestUnit(unit)
 			end
 		end
@@ -402,26 +400,26 @@ function Gladius:HideFrame()
 		self:ResetUnit(unit)
 	end
 	-- hide background
-	if (self.background) then
+	if self.background then
 		self.background:SetAlpha(0)
 		--self.background:Hide()
 	end
 	-- hide anchor
-	if (self.anchor) then
+	if self.anchor then
 		--self.anchor:SetAlpha(0)
 		self.anchor:Hide()
 	end
 end
 
 function Gladius:UpdateUnit(unit, module)
-	if (not strfind(unit, "arena") or strfind(unit, "pet")) then
+	if not strfind(unit, "arena") or strfind(unit, "pet") then
 		return
 	end
-	if (InCombatLockdown()) then
+	if InCombatLockdown() then
 		return
 	end
 	-- create button 
-	if (not self.buttons[unit]) then
+	if not self.buttons[unit] then
 		self:CreateButton(unit)
 	end
 	local height = 0
@@ -432,7 +430,7 @@ function Gladius:UpdateUnit(unit, module)
 	local numOpps = GetNumArenaOpponentSpecs()
 	for i = 1, numOpps do
 		local specID = GetArenaOpponentSpec(i)
-		if (specID > 0) then
+		if specID > 0 then
 			local _, spec, _, specIcon, _, _, class = GetSpecializationInfoByID(specID)
 			if not(Gladius.buttons["arena"..i] == null) then
 				Gladius.buttons["arena"..i].spec = spec
@@ -447,14 +445,14 @@ function Gladius:UpdateUnit(unit, module)
 	self.buttons[unit].secure:SetHitRectInsets(0, 0, 0, 0)
 	-- update modules (bars first, because we need the height)
 	for _, m in pairs(self.modules) do
-		if (m:IsEnabled()) then
+		if m:IsEnabled() then
 			-- update and get bar height
-			if (m.isBarOption) then
-				if (module == nil or (module and m.name == module)) then
+			if m.isBarOption then
+				if module == nil or (module and m.name == module) then
 					self:Call(m, "Update", unit)
 				end
 				local attachTo = m:GetAttachTo()
-				if (attachTo == "Frame" or m.isBar) then
+				if attachTo == "Frame" or m.isBar then
 					frameHeight = frameHeight + (m.frame[unit] and m.frame[unit]:GetHeight() or 0)
 				else
 					height = height + (m.frame[unit] and m.frame[unit]:GetHeight() or 0)
@@ -471,14 +469,14 @@ function Gladius:UpdateUnit(unit, module)
 	-- update modules (indicator)
 	local indicatorHeight = 0
 	for _, m in pairs(self.modules) do
-		if (m:IsEnabled() and not m.isBarOption) then
+		if m:IsEnabled() and not m.isBarOption then
 			self:Call(m, "Update", unit)
 		end
 	end
 	-- set point
 	self.buttons[unit]:ClearAllPoints()
-	if (unit == "arena1" or not self.db.groupButtons) then
-		if ((not self.db.x and not self.db.y) or (not self.db.x[unit] and not self.db.y[unit])) then
+	if unit == "arena1" or not self.db.groupButtons then
+		if (not self.db.x and not self.db.y) or (not self.db.x[unit] and not self.db.y[unit]) then
 			self.buttons[unit]:SetPoint("CENTER")
 		else
 			local scale = self.buttons[unit]:GetEffectiveScale()
@@ -487,17 +485,17 @@ function Gladius:UpdateUnit(unit, module)
 	else
 	local parent = string.match(unit, "^arena(.+)") - 1
 	local parentButton = self.buttons["arena"..parent]
-	if (parentButton) then
-		if (self.db.growUp) then
+	if parentButton then
+		if self.db.growUp then
 			self.buttons[unit]:SetPoint("BOTTOMLEFT", parentButton, "TOPLEFT", 0, self.db.bottomMargin + indicatorHeight)
 			else
 				self.buttons[unit]:SetPoint("TOPLEFT", parentButton, "BOTTOMLEFT", 0, - self.db.bottomMargin - indicatorHeight)
 			end
-			if (self.db.growLeft) then
+			if self.db.growLeft then
 				local left, right = self.buttons[unit]:GetHitRectInsets()
 				self.buttons[unit]:SetPoint("TOPLEFT", parentButton, "TOPLEFT", - self.buttons[unit]:GetWidth() - self.db.backgroundPadding - abs(left), 0)
 			end
-			if (self.db.growRight) then -- LEFT AND RIGHT
+			if self.db.growRight then
 				local left, right = self.buttons[unit]:GetHitRectInsets()
 				self.buttons[unit]:SetPoint("TOPLEFT", parentButton, "TOPLEFT", self.buttons[unit]:GetWidth() + self.db.backgroundPadding + abs(left), 0)
 			end
@@ -517,19 +515,19 @@ function Gladius:UpdateUnit(unit, module)
 	self.buttons[unit]:SetFrameStrata("LOW")
 	self.buttons[unit].secure:SetFrameStrata("MEDIUM")
 	-- update background
-	if (unit == "arena1") then
+	if unit == "arena1" then
 		local left, right = self.buttons[unit]:GetHitRectInsets()
 		-- background
 		self.background:SetBackdropColor(self.db.backgroundColor.r, self.db.backgroundColor.g, self.db.backgroundColor.b, self.db.backgroundColor.a)
 		self.background:SetWidth(self.buttons[unit]:GetWidth() + self.db.backgroundPadding * 2 + abs(right) + abs(left))
 		self.background:ClearAllPoints()
-		if (self.db.growUp) then
+		if self.db.growUp then
 			self.background:SetPoint("BOTTOMLEFT", self.buttons["arena1"], "BOTTOMLEFT", - self.db.backgroundPadding + left, - self.db.backgroundPadding)
 		else
 			self.background:SetPoint("TOPLEFT", self.buttons["arena1"], "TOPLEFT", - self.db.backgroundPadding + left, self.db.backgroundPadding)
 		end
 		self.background:SetScale(self.db.frameScale)
-		if (self.db.groupButtons) then
+		if self.db.groupButtons then
 			self.background:Show()
 			self.background:SetAlpha(0)
 		else
@@ -537,16 +535,16 @@ function Gladius:UpdateUnit(unit, module)
 		end
 		-- anchor
 		self.anchor:ClearAllPoints()
-		if (self.db.backgroundColor.a > 0) then
+		if self.db.backgroundColor.a > 0 then
 			self.anchor:SetWidth(self.buttons[unit]:GetWidth() + self.db.backgroundPadding * 2 + abs(right) + abs(left))
-			if (self.db.growUp) then
+			if self.db.growUp then
 				self.anchor:SetPoint("TOPLEFT", self.background, "BOTTOMLEFT")
 			else
 				self.anchor:SetPoint("BOTTOMLEFT", self.background, "TOPLEFT")
 			end
 		else
 			self.anchor:SetWidth(self.buttons[unit]:GetWidth() + abs(right) + abs(left))
-			if (self.db.growUp) then
+			if self.db.growUp then
 				self.anchor:SetPoint("TOPLEFT", self.buttons["arena1"], "BOTTOMLEFT", left, 0)
 			else
 				self.anchor:SetPoint("BOTTOMLEFT", self.buttons["arena1"], "TOPLEFT", left, 0)
@@ -560,7 +558,7 @@ function Gladius:UpdateUnit(unit, module)
 		self.anchor.text:SetShadowOffset(1, - 1)
 		self.anchor.text:SetShadowColor(0, 0, 0, 1)
 		self.anchor.text:SetText(L["Gladius Anchor - click to move"])
-		if (self.db.groupButtons and not self.db.locked) then
+		if self.db.groupButtons and not self.db.locked then
 			self.anchor:Show()
 			self.anchor:SetAlpha(0)
 		else
@@ -570,15 +568,15 @@ function Gladius:UpdateUnit(unit, module)
 end
 
 function Gladius:ShowUnit(unit, testing, module)
-	if (not strfind(unit, "arena") or strfind(unit, "pet")) then
+	if not strfind(unit, "arena") or strfind(unit, "pet") then
 		return
 	end
-	if (not self.buttons[unit]) then
+	if not self.buttons[unit] then
 		return
 	end
 	-- disable test mode, when there are real arena opponents (happens when entering arena and using /gladius test)
 	local testing = testing or false
-	if (not testing and self.test) then 
+	if not testing and self.test then 
 		-- reset frame
 		self:HideFrame()
 		-- disable test mode
@@ -586,16 +584,16 @@ function Gladius:ShowUnit(unit, testing, module)
 	end
 	self.buttons[unit]:SetAlpha(1)
 	for _, m in pairs(self.modules) do
-		if (m:IsEnabled()) then
-			if (module == nil or (module and m.name == module)) then
+		if m:IsEnabled() then
+			if module == nil or (module and m.name == module) then
 				self:Call(m, "Show", unit)
 			end
 		end
 	end
 	-- background
-	if (self.db.groupButtons) then
+	if self.db.groupButtons then
 		self.background:SetAlpha(1)
-		if (not self.db.locked) then
+		if not self.db.locked then
 			self.anchor:SetAlpha(1)
 			self.anchor:SetFrameStrata("LOW")
 		end
@@ -603,7 +601,7 @@ function Gladius:ShowUnit(unit, testing, module)
 	local maxHeight = 0
 	for u, button in pairs(self.buttons) do
 		local unitId = tonumber(string.match(u, "^arena(.+)"))
-		if (button:GetAlpha() > 0) then
+		if button:GetAlpha() > 0 then
 			maxHeight = math.max(maxHeight, unitId)
 		end
 	end
@@ -611,7 +609,7 @@ function Gladius:ShowUnit(unit, testing, module)
 	local numOpps = GetNumArenaOpponentSpecs()
 	for i = 1, numOpps do
 		local specID = GetArenaOpponentSpec(i)
-		if (specID > 0) then
+		if specID > 0 then
 			local _, spec, _, specIcon, _, _, class = GetSpecializationInfoByID(specID)
 			Gladius.buttons["arena"..i].spec = spec
 		end
@@ -620,13 +618,13 @@ function Gladius:ShowUnit(unit, testing, module)
 end
 
 function Gladius:TestUnit(unit, module)
-	if (not strfind(unit, "arena") or strfind(unit, "pet")) then
+	if not strfind(unit, "arena") or strfind(unit, "pet") then
 		return
 	end
 	-- test modules
 	for _, m in pairs(self.modules) do
-		if (m:IsEnabled()) then
-			if (module == nil or (module and m.name == module)) then
+		if m:IsEnabled() then
+			if module == nil or (module and m.name == module) then
 				self:Call(m, "Test", unit)
 			end
 		end
@@ -637,16 +635,16 @@ function Gladius:TestUnit(unit, module)
 end
 
 function Gladius:ResetUnit(unit, module)
-	if (not strfind(unit, "arena") or strfind(unit, "pet")) then
+	if not strfind(unit, "arena") or strfind(unit, "pet") then
 		return
 	end
-	if (not self.buttons[unit]) then
+	if not self.buttons[unit] then
 		return
 	end
 	-- reset modules
 	for _, m in pairs(self.modules) do
-		if (m:IsEnabled()) then
-			if (module == nil or (module and m.name == module)) then
+		if m:IsEnabled() then
+			if module == nil or (module and m.name == module) then
 				self:Call(m, "Reset", unit)
 			end
 		end
@@ -661,14 +659,13 @@ end
 function Gladius:UpdateAlpha(unit, alpha)
 	-- update button alpha
 	alpha = alpha and alpha or 0.25
-	if (self.buttons[unit]) then 
+	if self.buttons[unit] then 
 		self.buttons[unit]:SetAlpha(alpha)
 	end
 end
 
 function Gladius:CreateButton(unit)
 	local button = CreateFrame("Frame", "GladiusButtonFrame"..unit, UIParent)
-	-- Commenting this out as it messes up the look of the bar backgrounds, should leave the background color to the actual background frame and the bar backgrounds imo - Proditor
 	--[[button:SetBackdrop({bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", tile = true, tileSize = 16,})
 	button:SetBackdropColor(0, 0, 0, 0.4)]]
 	button:SetClampedToScreen(true)
@@ -676,13 +673,13 @@ function Gladius:CreateButton(unit)
 	button:SetMovable(true)
 	button:RegisterForDrag("LeftButton")
 	button:SetScript("OnDragStart", function(f)
-		if (not InCombatLockdown() and not self.db.locked) then
+		if not InCombatLockdown() and not self.db.locked then
 			local f = self.db.groupButtons and self.buttons["arena1"] or f
 			f:StartMoving()
 		end
 	end)
 	button:SetScript("OnDragStop", function(f)
-		if (not InCombatLockdown()) then
+		if not InCombatLockdown() then
 			local f = self.db.groupButtons and self.buttons["arena1"] or f
 			local unit = self.db.groupButtons and "arena1" or unit
 			f:StopMovingOrSizing()
@@ -697,17 +694,17 @@ function Gladius:CreateButton(unit)
 	button.secure = secure
 	self.buttons[unit] = button
 	-- group background
-	if (unit == "arena1") then
+	if unit == "arena1" then
 		-- anchor
 		local anchor = CreateFrame("Frame", "GladiusButtonAnchor", UIParent)
-		anchor:SetBackdrop({bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", tile = true, tileSize = 16,})
+		anchor:SetBackdrop({bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", tile = true, tileSize = 16})
 		anchor:SetBackdropColor(0, 0, 0, 1)
 		anchor:SetClampedToScreen(true)
 		anchor:EnableMouse(true)
 		anchor:SetMovable(true)
 		anchor:RegisterForDrag("LeftButton")
 		anchor:SetScript("OnDragStart", function(f)
-			if (not self.db.locked) then
+			if not self.db.locked then
 				local f = self.buttons["arena1"]
 				f:StartMoving() 
 			end
@@ -723,7 +720,7 @@ function Gladius:CreateButton(unit)
 		self.anchor = anchor
 		-- background
 		local background = CreateFrame("Frame", "GladiusButtonBackground", UIParent)
-		background:SetBackdrop({bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", tile = true, tileSize = 16,})
+		background:SetBackdrop({bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", tile = true, tileSize = 16})
 		background:SetBackdropColor(self.db.backgroundColor.r, self.db.backgroundColor.g, self.db.backgroundColor.b, self.db.backgroundColor.a)
 		background:SetFrameStrata("BACKGROUND")
 		self.background = background
@@ -731,19 +728,19 @@ function Gladius:CreateButton(unit)
 end
 
 function Gladius:UNIT_AURA(event, unit)
-	if (not strfind(unit, "arena") or strfind(unit, "pet")) then
+	if not strfind(unit, "arena") or strfind(unit, "pet") then
 		return
 	end
-	if (not self.buttons[unit] or self.buttons[unit]:GetAlpha() < 1) then
+	if not self.buttons[unit] or self.buttons[unit]:GetAlpha() < 1 then
 		self:ShowUnit(unit)
 	end
 	local index = 1
-	while (true) do
+	while true do
 		local name, rank, icon, count, debuffType, duration, expirationTime, unitCaster, isStealable = UnitAura(unit, index, "HELPFUL")
-		if (not name) then
+		if not name then
 			break
 		end
-		if (self.specSpells[name] and self.buttons[unitCaster] and self.buttons[unitCaster].spec == "") then
+		if self.specSpells[name] and self.buttons[unitCaster] and self.buttons[unitCaster].spec == "" then
 			--self.buttons[unitCaster].spec = self.specSpells[name]
 			self:SendMessage("GLADIUS_SPEC_UPDATE", unitCaster)
 		end
@@ -752,7 +749,7 @@ function Gladius:UNIT_AURA(event, unit)
 		local numOpps = GetNumArenaOpponentSpecs()
 		for i = 1, numOpps do
 			local specID = GetArenaOpponentSpec(i)
-			if (specID > 0) then
+			if specID > 0 then
 				local _, spec, _, specIcon, _, _, class = GetSpecializationInfoByID(specID)
 				Gladius.buttons["arena"..i].spec = spec
 			end
@@ -761,14 +758,14 @@ function Gladius:UNIT_AURA(event, unit)
 end
 
 function Gladius:UNIT_SPELLCAST_START(event, unit)
-	if (not strfind(unit, "arena") or strfind(unit, "pet")) then
+	if not strfind(unit, "arena") or strfind(unit, "pet") then
 		return
 	end
-	if (not self.buttons[unit] or self.buttons[unit]:GetAlpha() < 1) then
+	if not self.buttons[unit] or self.buttons[unit]:GetAlpha() < 1 then
 		self:ShowUnit(unit)
 	end
 	local spell = UnitCastingInfo(unit)
-	if (self.specSpells[spell] and self.buttons[unit].spec == "") then
+	if self.specSpells[spell] and self.buttons[unit].spec == "" then
 		--self.buttons[unit].spec = self.specSpells[spell]
 		self:SendMessage("GLADIUS_SPEC_UPDATE", unit)
 	end
@@ -776,7 +773,7 @@ function Gladius:UNIT_SPELLCAST_START(event, unit)
 	local numOpps = GetNumArenaOpponentSpecs()
 	for i = 1, numOpps do
 		local specID = GetArenaOpponentSpec(i)
-		if (specID > 0) then
+		if specID > 0 then
 			local _, spec, _, specIcon, _, _, class = GetSpecializationInfoByID(specID)
 			Gladius.buttons["arena"..i].spec = spec
 		end
@@ -784,21 +781,21 @@ function Gladius:UNIT_SPELLCAST_START(event, unit)
 end
 
 function Gladius:UNIT_HEALTH(event, unit)
-	if (not strfind(unit, "arena") or strfind(unit, "pet")) then
+	if not strfind(unit, "arena") or strfind(unit, "pet") then
 		return
 	end
 	-- update unit
-	if (not self.buttons[unit] or self.buttons[unit]:GetAlpha() < 1) then
+	if not self.buttons[unit] or self.buttons[unit]:GetAlpha() < 1 then
 		self:ShowUnit(unit)
 	end
-	if (UnitIsDeadOrGhost(unit)) then
+	if UnitIsDeadOrGhost(unit) then
 		self:UpdateAlpha(unit, 0.5)
 	end
 	-- Update spec from API
 	local numOpps = GetNumArenaOpponentSpecs()
 	for i = 1, numOpps do
 		local specID = GetArenaOpponentSpec(i)
-		if (specID > 0) then
+		if specID > 0 then
 			local _, spec, _, specIcon, _, _, class = GetSpecializationInfoByID(specID)
 			Gladius.buttons["arena"..i].spec = spec
 		end
