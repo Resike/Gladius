@@ -1021,7 +1021,7 @@ function Auras:GetOptions()
 							type = "execute",
 							name = L["Add new Aura"],
 							func = function(info)
-								Gladius.dbi.profile.aurasFrameAuras[Auras.newAuraName] = Auras.newAuraPriority 
+								Gladius.dbi.profile.aurasFrameAuras[Auras.newAuraName] = Auras.newAuraPriority
 								Gladius.options.args[self.name].args.auraList.args[Auras.newAuraName] = Auras:SetupAura(Auras.newAuraName, Auras.newAuraPriority)
 							end,
 							order = 3,
@@ -1185,7 +1185,6 @@ function Auras:GetAuraList()
 		[GetSpellInfo(107574)]	= 4,	-- Avatar
 		[GetSpellInfo(106952)]	= 4,	-- Berserk
 		[GetSpellInfo(12292)]	= 4,	-- Bloodbath
-		[GetSpellInfo(12292)]	= 4,	-- Death Wish
 		[GetSpellInfo(51271)]	= 4,	-- Pillar of Frost
 		[GetSpellInfo(1719)]	= 4,	-- Recklessness
 		[GetSpellInfo(121471)]	= 4,	-- Shadow Blades
@@ -1302,6 +1301,7 @@ function Auras:GetAuraList()
 		[GetSpellInfo(1513)]	= 10,	-- Scare Beast
 		[GetSpellInfo(6358)]	= 10,	-- Seduction
 		[GetSpellInfo(9484)]	= 10,	-- Shackle Undead
+		[GetSpellInfo(10326)]	= 10,	-- Turn Evil
 		[GetSpellInfo(19386)]	= 10,	-- Wyvern Sting
 		-- Immunity Auras (11)
 		[GetSpellInfo(48707)]	= 11,	-- Anti-Magic Shell
