@@ -61,45 +61,45 @@ function Announcements:Show(unit)
 end
 
 function Announcements:UNIT_NAME_UPDATE(event, unit)
-	if (not strfind(unit, "arena") or strfind(unit, "pet")) then
+	if not strfind(unit, "arena") or strfind(unit, "pet") then
 		return
 	end
-	if (not Gladius.db.announcements.enemies or not UnitName(unit)) then
+	if not Gladius.db.announcements.enemies or not UnitName(unit) then
 		return
 	end
 	local name = UnitName(unit)
-	if (name == UNKNOWN or name == nil) then
+	if name == UNKNOWN or not name then
 		return
 	end
-	if (not self.enemy[unit]) then
+	if not self.enemy[unit] then
 		self:Send(string.format("%s - %s", name, UnitClass(unit) or ""), 2, unit)
 		self.enemy[unit] = true
 	end
 end
 
 function Announcements:GLADIUS_SPEC_UPDATE(unit, event)
-	if (not strfind(unit, "arena") or strfind(unit, "pet") or not Gladius.db.announcements.spec) then
+	if not strfind(unit, "arena") or strfind(unit, "pet") or not Gladius.db.announcements.spec then
 		return
 	end
 	self:Send(string.format(L["SPEC DETECTED: %s (%s)"], UnitName(unit), Gladius.buttons[unit].spec), 2, unit)
 end
 
 function Announcements:UNIT_HEALTH(event, unit)
-	if (not strfind(unit, "arena") or strfind(unit, "pet") or not Gladius.db.announcements.health) then
+	if not strfind(unit, "arena") or strfind(unit, "pet") or not Gladius.db.announcements.health then
 		return
 	end
 	local healthPercent = math.floor((UnitHealth(unit) / UnitHealthMax(unit)) * 100)
-	if (healthPercent < Gladius.db.announcements.healthThreshold) then
+	if healthPercent < Gladius.db.announcements.healthThreshold then
 		self:Send(string.format(L["LOW HEALTH: %s (%s)"], UnitName(unit), UnitClass(unit)), 10, unit)
 	end
 end
 
 local DRINK_SPELL = GetSpellInfo(57073)
 function Announcements:UNIT_AURA(event, unit)
-	if (not strfind(unit, "arena") or strfind(unit, "pet") or not Gladius.db.announcements.drinks) then
+	if not strfind(unit, "arena") or strfind(unit, "pet") or not Gladius.db.announcements.drinks then
 		return
 	end
-	if (UnitAura(unit, DRINK_SPELL)) then
+	if UnitAura(unit, DRINK_SPELL) then
 		self:Send(string.format(L["DRINKING: %s (%s)"], UnitName(unit), UnitClass(unit)), 2, unit)
 	end
 end
@@ -110,7 +110,7 @@ function Announcements:ARENA_PREP_OPPONENT_SPECIALIZATIONS(event, ...)
 		--local prepFrame = _G["ArenaPrepFrame"..i]
 		--prepFrame.specPortrait = _G["ArenaPrepFrame"..i.."SpecPortrait"]
 		local specID = GetArenaOpponentSpec(i)
-		if (specID > 0) then
+		if specID > 0 then
 			local _, spec, _, specIcon, _, _, class = GetSpecializationInfoByID(specID)
 			--[[if(class) then
 					prepFrame.classPortrait:SetTexture("Interface\\TargetingFrame\\UI-Classes-Circles")
@@ -136,10 +136,10 @@ local RES_SPELLS = {
 }
 
 function Announcements:UNIT_SPELLCAST_START(event, unit, spell, rank)
-	if (not strfind(unit, "arena") or strfind(unit, "pet") or not Gladius.db.announcements.resurrect) then
+	if not strfind(unit, "arena") or strfind(unit, "pet") or not Gladius.db.announcements.resurrect then
 		return
 	end
-	if (RES_SPELLS[spell]) then
+	if RES_SPELLS[spell] then
 		self:Send(string.format(L["RESURRECTING: %s (%s)"], UnitName(unit), UnitClass(unit)), 2, unit)
 	end
 end
@@ -149,52 +149,52 @@ end
 function Announcements:Send(msg, throttle, unit)
 	local color = unit and RAID_CLASS_COLORS[UnitClass(unit)] or {r = 0, g = 1, b = 0}
 	local dest = Gladius.db.announcements.dest
-	if (not self.throttled) then
+	if not self.throttled then
 		self.throttled = { }
 	end
 	-- Throttling of messages
-	if (throttle and throttle > 0) then
-		if (not self.throttled[msg]) then
+	if throttle and throttle > 0 then
+		if not self.throttled[msg] then
 			self.throttled[msg] = GetTime() + throttle
-		elseif (self.throttled[msg] < GetTime()) then
+		elseif self.throttled[msg] < GetTime() then
 			self.throttled[msg] = nil
 		else
 			return
 		end
 	end
-	if (dest == "self") then
+	if dest == "self" then
 		DEFAULT_CHAT_FRAME:AddMessage("|cff33ff99Gladius|r: "..msg)
 	end
 	-- change destination to party if not raid leader/officer.
-	if(dest == "rw" and not UnitIsGroupLeader() and not UnitIsGroupAssistant() and GetNumGroupMembers() > 0) then
+	if dest == "rw" and not UnitIsGroupLeader() and not UnitIsGroupAssistant() and GetNumGroupMembers() > 0 then
 		dest = "party"
 	end
 	-- party chat
-	if (dest == "party" and (GetNumGroupMembers() > 0)) then
+	if dest == "party" and (GetNumGroupMembers() > 0) then
 		SendChatMessage(msg, "PARTY")
 	-- say
-	elseif (dest == "say") then
+	elseif dest == "say" then
 		SendChatMessage(msg, "SAY")
 	-- raid warning
-	elseif (dest == "rw") then
+	elseif dest == "rw" then
 		SendChatMessage(msg, "RAID_WARNING")
 	-- floating combat text
-	elseif (dest == "fct" and IsAddOnLoaded("Blizzard_CombatText")) then
+	elseif dest == "fct" and IsAddOnLoaded("Blizzard_CombatText") then
 		CombatText_AddMessage(msg, COMBAT_TEXT_SCROLL_FUNCTION, color.r, color.g, color.b)
 	-- MikScrollingBattleText	
-	elseif (dest == "msbt" and IsAddOnLoaded("MikScrollingBattleText")) then
+	elseif dest == "msbt" and IsAddOnLoaded("MikScrollingBattleText") then
 		MikSBT.DisplayMessage(msg, MikSBT.DISPLAYTYPE_NOTIFICATION, false, color.r * 255, color.g * 255, color.b * 255)
 	-- xCT
-	elseif (dest == "xct" and IsAddOnLoaded("xCT")) then
+	elseif dest == "xct" and IsAddOnLoaded("xCT") then
 		ct.frames[3]:AddMessage(msg, color.r * 255, color.g * 255, color.b * 255)
 	-- xCT+
-	elseif (dest == "xctplus" and IsAddOnLoaded("xCT+")) then
+	elseif dest == "xctplus" and IsAddOnLoaded("xCT+") then
 		xCT_Plus:AddMessage("general", msg, {color.r, color.g, color.b})
 	-- Scrolling Combat Text
-	elseif (dest == "sct" and IsAddOnLoaded("sct")) then
+	elseif dest == "sct" and IsAddOnLoaded("sct") then
 		SCT:DisplayText(msg, color, nil, "event", 1)
 	-- Parrot
-	elseif (dest == "parrot" and IsAddOnLoaded("parrot")) then
+	elseif dest == "parrot" and IsAddOnLoaded("parrot") then
 		Parrot:ShowMessage(msg, "Notification", false, color.r, color.g, color.b)
 	end
 end
