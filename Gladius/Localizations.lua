@@ -1,5 +1,5 @@
-﻿if (not Gladius.L) then
-	if (GetLocale() == "enUS" or GetLocale() == "enGB") then
+﻿if not Gladius.L then
+	if GetLocale() == "enUS" or GetLocale() == "enGB" then
 		Gladius.L = setmetatable({
 			["xCT"] = "xCT",
 			["xCT Plus"] = "xCT Plus",
@@ -612,7 +612,7 @@
 				return index
 			end
 		})
-	elseif (GetLocale() == "deDE") then
+	elseif GetLocale() == "deDE" then
 		Gladius.L = setmetatable({
 			["Add"] = "Hinzufügen",
 			["Add text"] = "Text hinzufügen",
@@ -746,7 +746,7 @@
 				return index
 			end
 		})
-	elseif (GetLocale() == "koKR") then
+	elseif GetLocale() == "koKR" then
 		Gladius.L = setmetatable({
 			["Action"] = "행동",
 			["Add"] = "추가",
@@ -1356,7 +1356,7 @@
 				return index
 			end
 		})
-	elseif (GetLocale() == "zhCN") then
+	elseif GetLocale() == "zhCN" then
 		Gladius.L = setmetatable({
 			["Frame"] = "框体",
 			["Welcome to Gladius!"] = "欢迎使用Gladius!",

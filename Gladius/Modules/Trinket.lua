@@ -37,7 +37,7 @@ local Trinket = Gladius:NewModule("Trinket", false, true, {
 function Trinket:OnEnable()
 	self:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
 	LSM = Gladius.LSM
-	if (not self.frame) then
+	if not self.frame then
 		self.frame = { }
 	end 
 end
@@ -58,17 +58,17 @@ function Trinket:GetFrame(unit)
 end
 
 function Trinket:SetTemplate(template)
-	if (template == 1) then
-	-- reset width
-		if (Gladius.db.targetBarAttachTo == "HealthBar" and not Gladius.db.healthBarAdjustWidth) then
+	if template == 1 then
+		-- reset width
+		if Gladius.db.targetBarAttachTo == "HealthBar" and not Gladius.db.healthBarAdjustWidth then
 			Gladius.db.healthBarAdjustWidth = true
 		end
 		-- reset to default
 		for k, v in pairs(self.defaults) do
 			Gladius.db[k] = v
 		end
-	elseif (template == 2) then
-		if (Gladius.db.modules["HealthBar"]) then
+	elseif template == 2 then
+		if Gladius.db.modules["HealthBar"] then
 			if (Gladius.db.healthBarAdjustWidth) then
 				Gladius.db.healthBarAdjustWidth = false
 				Gladius.db.healthBarWidth = Gladius.db.barWidth - Gladius.db.healthBarHeight
@@ -85,7 +85,7 @@ function Trinket:SetTemplate(template)
 			Gladius.db.trinketOffsetY = 0
 		end
 	else
-		if (Gladius.db.modules["PowerBar"]) then
+		if Gladius.db.modules["PowerBar"] then
 			if (Gladius.db.powerBarAdjustWidth) then
 				Gladius.db.powerBarAdjustWidth = false
 				Gladius.db.powerBarWidth = Gladius.db.powerBarWidth - Gladius.db.powerBarHeight
@@ -105,39 +105,40 @@ function Trinket:SetTemplate(template)
 end
 
 function Trinket:UNIT_SPELLCAST_SUCCEEDED(event, unit, spell, rank)
-	if (not strfind(unit, "arena") or strfind(unit, "pet")) then
+	local _, instanceType = IsInInstance()
+	if instanceType ~= "arena" or not strfind(unit, "arena") or strfind(unit, "pet") then
 		return
 	end
 	-- pvp trinket
-	if (spell == GetSpellInfo(59752) or spell == GetSpellInfo(42292)) then
+	if spell == GetSpellInfo(59752) or spell == GetSpellInfo(42292) then
 		self:UpdateTrinket(unit, 120)
 	end
 	-- wotf
-	if (spell == GetSpellInfo(7744)) then
+	if spell == GetSpellInfo(7744) then
 		self:UpdateTrinket(unit, 45)
 	end
 end
 
 function Trinket:UpdateTrinket(unit, duration)
 	-- grid style icon
-	if (Gladius.db.trinketGridStyleIcon) then
+	if Gladius.db.trinketGridStyleIcon then
 		self.frame[unit].texture:SetVertexColor(Gladius.db.trinketGridStyleIconUsedColor.r, Gladius.db.trinketGridStyleIconUsedColor.g, Gladius.db.trinketGridStyleIconUsedColor.b, Gladius.db.trinketGridStyleIconUsedColor.a)
 	end
 	-- announcement
-	if (Gladius.db.announcements.trinket) then
-	Gladius:Call(Gladius.modules.Announcements, "Send", strformat(L["TRINKET USED: %s (%s)"], UnitName(unit) or "test", UnitClass(unit) or "test"), 2, unit)
+	if Gladius.db.announcements.trinket then
+		Gladius:Call(Gladius.modules.Announcements, "Send", strformat(L["TRINKET USED: %s (%s)"], UnitName(unit) or "test", UnitClass(unit) or "test"), 2, unit)
 	end
-	if (Gladius.db.announcements.trinket or Gladius.db.trinketGridStyleIcon) then
+	if Gladius.db.announcements.trinket or Gladius.db.trinketGridStyleIcon then
 		self.frame[unit].timeleft = duration
 		self.frame[unit]:SetScript("OnUpdate", function(f, elapsed)
 			self.frame[unit].timeleft = self.frame[unit].timeleft - elapsed
-			if (self.frame[unit].timeleft <= 0) then
-			-- trinket
-				if (Gladius.db.trinketGridStyleIcon) then
+			if self.frame[unit].timeleft <= 0 then
+				-- trinket
+				if Gladius.db.trinketGridStyleIcon then
 					self.frame[unit].texture:SetVertexColor(Gladius.db.trinketGridStyleIconColor.r, Gladius.db.trinketGridStyleIconColor.g, Gladius.db.trinketGridStyleIconColor.b, Gladius.db.trinketGridStyleIconColor.a)
 				end
 				-- announcement
-				if (Gladius.db.announcements.trinket) then
+				if Gladius.db.announcements.trinket then
 					Gladius:Call(Gladius.modules.Announcements, "Send", strformat(L["TRINKET READY: %s (%s)"], UnitName(unit) or "", UnitClass(unit) or ""), 2, unit)
 				end
 				self.frame[unit]:SetScript("OnUpdate", nil)
@@ -150,7 +151,7 @@ end
 
 function Trinket:CreateFrame(unit)
 	local button = Gladius.buttons[unit]
-	if (not button) then
+	if not button then
 		return
 	end
 	-- create frame
@@ -164,7 +165,7 @@ end
 
 function Trinket:Update(unit)
 	-- create frame
-	if (not self.frame[unit]) then
+	if not self.frame[unit] then
 		self:CreateFrame(unit)
 	end
 	-- update frame
@@ -174,8 +175,8 @@ function Trinket:Update(unit)
 	self.frame[unit]:SetPoint(Gladius.db.trinketAnchor, parent, Gladius.db.trinketRelativePoint, Gladius.db.trinketOffsetX, Gladius.db.trinketOffsetY)
 	-- frame level
 	self.frame[unit]:SetFrameLevel(Gladius.db.trinketFrameLevel)
-	if (Gladius.db.trinketAdjustSize) then
-		if (self:GetAttachTo() == "Frame") then
+	if Gladius.db.trinketAdjustSize then
+		if self:GetAttachTo() == "Frame" then
 			local height = false
 			-- need to rethink that
 			--[[for _, module in pairs(Gladius.modules) do
@@ -183,12 +184,12 @@ function Trinket:Update(unit)
 					height = false
 				end
 			end]]
-			if (height) then
-			self.frame[unit]:SetWidth(Gladius.buttons[unit].height)
-			self.frame[unit]:SetHeight(Gladius.buttons[unit].height)
+			if height then
+				self.frame[unit]:SetWidth(Gladius.buttons[unit].height)
+				self.frame[unit]:SetHeight(Gladius.buttons[unit].height)
 			else
-			self.frame[unit]:SetWidth(Gladius.buttons[unit].frameHeight)
-			self.frame[unit]:SetHeight(Gladius.buttons[unit].frameHeight)
+				self.frame[unit]:SetWidth(Gladius.buttons[unit].frameHeight)
+				self.frame[unit]:SetHeight(Gladius.buttons[unit].frameHeight)
 			end
 		else
 			self.frame[unit]:SetWidth(Gladius:GetModule(self:GetAttachTo()).frame[unit]:GetHeight() or 1)
@@ -199,20 +200,20 @@ function Trinket:Update(unit)
 		self.frame[unit]:SetHeight(Gladius.db.trinketSize)
 	end
 	-- set frame mouse-interactable area
-	if (self:GetAttachTo() == "Frame") then
+	if self:GetAttachTo() == "Frame" then
 		local left, right, top, bottom = Gladius.buttons[unit]:GetHitRectInsets()
-		if (strfind(Gladius.db.trinketRelativePoint, "LEFT")) then
+		if strfind(Gladius.db.trinketRelativePoint, "LEFT") then
 			left = - self.frame[unit]:GetWidth() + Gladius.db.trinketOffsetX
 		else
 			right = - self.frame[unit]:GetWidth() + - Gladius.db.trinketOffsetX
 		end
 		-- search for an attached frame
 		--[[for _, module in pairs(Gladius.modules) do
-			if (module.attachTo and module:GetAttachTo() == self.name and module.frame and module.frame[unit]) then
+			if module.attachTo and module:GetAttachTo() == self.name and module.frame and module.frame[unit] then
 				local attachedPoint = module.frame[unit]:GetPoint()
-				if (strfind(Gladius.db.trinketRelativePoint, "LEFT") and (not attachedPoint or (attachedPoint and strfind(attachedPoint, "RIGHT")))) then
+				if strfind(Gladius.db.trinketRelativePoint, "LEFT" and (not attachedPoint or (attachedPoint and strfind(attachedPoint, "RIGHT")))) then
 					left = left - module.frame[unit]:GetWidth()
-				elseif (strfind(Gladius.db.trinketRelativePoint, "RIGHT") and (not attachedPoint or (attachedPoint and strfind(attachedPoint, "LEFT")))) then
+				elseif strfind(Gladius.db.trinketRelativePoint, "RIGHT" and (not attachedPoint or (attachedPoint and strfind(attachedPoint, "LEFT")))) then
 					right = right - module.frame[unit]:GetWidth()
 				end
 			end
@@ -233,14 +234,14 @@ function Trinket:Update(unit)
 	self.frame[unit].texture:ClearAllPoints()
 	self.frame[unit].texture:SetPoint("TOPLEFT", self.frame[unit], "TOPLEFT")
 	self.frame[unit].texture:SetPoint("BOTTOMRIGHT", self.frame[unit], "BOTTOMRIGHT")
-	if (not Gladius.db.trinketIconCrop and not Gladius.db.trinketGridStyleIcon) then
+	if not Gladius.db.trinketIconCrop and not Gladius.db.trinketGridStyleIcon then
 		self.frame[unit].texture:SetTexCoord(0, 1, 0, 1)
 	else
 		self.frame[unit].texture:SetTexCoord(0.07, 0.93, 0.07, 0.93)
 	end
 	self.frame[unit].normalTexture:SetVertexColor(Gladius.db.trinketGlossColor.r, Gladius.db.trinketGlossColor.g, Gladius.db.trinketGlossColor.b, Gladius.db.trinketGloss and Gladius.db.trinketGlossColor.a or 0)
 	-- cooldown
-	if (Gladius.db.trinketCooldown) then
+	if Gladius.db.trinketCooldown then
 		self.frame[unit].cooldown:Show()
 	else
 		self.frame[unit].cooldown:Hide()
@@ -255,45 +256,45 @@ function Trinket:Show(unit)
 	local testing = Gladius.test
 	-- show frame
 	self.frame[unit]:SetAlpha(1)
-	if (Gladius.db.trinketGridStyleIcon) then
+	if Gladius.db.trinketGridStyleIcon then
 		self.frame[unit].texture:SetTexture(LSM:Fetch(LSM.MediaType.STATUSBAR, "minimalist"))
 		self.frame[unit].texture:SetVertexColor(Gladius.db.trinketGridStyleIconColor.r, Gladius.db.trinketGridStyleIconColor.g, Gladius.db.trinketGridStyleIconColor.b, Gladius.db.trinketGridStyleIconColor.a)
 	else
-	local trinketIcon
-	if (not testing) then
-		if (UnitFactionGroup(unit) == "Horde" and Gladius.db.trinketFaction) then
-			trinketIcon = UnitLevel(unit) == 80 and "Interface\\Icons\\INV_Jewelry_Necklace_38" or "Interface\\Icons\\INV_Jewelry_TrinketPVP_02"
+		local trinketIcon
+		if not testing then
+			if UnitFactionGroup(unit) == "Horde" and Gladius.db.trinketFaction then
+				trinketIcon = UnitLevel(unit) == 80 and "Interface\\Icons\\INV_Jewelry_Necklace_38" or "Interface\\Icons\\INV_Jewelry_TrinketPVP_02"
+			else
+				trinketIcon = UnitLevel(unit) == 80 and "Interface\\Icons\\INV_Jewelry_Necklace_37" or "Interface\\Icons\\INV_Jewelry_TrinketPVP_01"
+			end
 		else
-			trinketIcon = UnitLevel(unit) == 80 and "Interface\\Icons\\INV_Jewelry_Necklace_37" or "Interface\\Icons\\INV_Jewelry_TrinketPVP_01"
+			if UnitFactionGroup("player") == "Horde" and Gladius.db.trinketFaction then
+				trinketIcon = "Interface\\Icons\\INV_Jewelry_Necklace_38"
+			else
+				trinketIcon = "Interface\\Icons\\INV_Jewelry_Necklace_37"
+			end
 		end
-	else
-		if (UnitFactionGroup("player") == "Horde" and Gladius.db.trinketFaction) then
-			trinketIcon = "Interface\\Icons\\INV_Jewelry_Necklace_38"
-		else
-			trinketIcon = "Interface\\Icons\\INV_Jewelry_Necklace_37"
+		self.frame[unit].texture:SetTexture(trinketIcon)
+		if Gladius.db.trinketIconCrop then
+			self.frame[unit].texture:SetTexCoord(0.07, 0.93, 0.07, 0.93)
 		end
-	end
-	self.frame[unit].texture:SetTexture(trinketIcon)
-	if (Gladius.db.trinketIconCrop) then
-		self.frame[unit].texture:SetTexCoord(0.07, 0.93, 0.07, 0.93)
-	end
-	self.frame[unit].texture:SetVertexColor(1, 1, 1, 1)
+		self.frame[unit].texture:SetVertexColor(1, 1, 1, 1)
 	end
 end
 
 function Trinket:Reset(unit)
-	if (not self.frame[unit]) then
+	if not self.frame[unit] then
 		return
 	end
 	-- reset frame
 	local trinketIcon
-	if (UnitFactionGroup("player") == "Horde" and Gladius.db.trinketFaction) then
+	if UnitFactionGroup("player") == "Horde" and Gladius.db.trinketFaction then
 		trinketIcon = "Interface\\Icons\\INV_Jewelry_Necklace_38"
 	else
 		trinketIcon = "Interface\\Icons\\INV_Jewelry_Necklace_37"
 	end
 	self.frame[unit].texture:SetTexture(trinketIcon)
-	if (Gladius.db.trinketIconCrop) then
+	if Gladius.db.trinketIconCrop then
 		self.frame[unit].texture:SetTexCoord(0.07, 0.93, 0.07, 0.93)
 	end
 	self.frame[unit]:SetScript("OnUpdate", nil)
@@ -305,7 +306,7 @@ end
 
 function Trinket:Test(unit)
 	-- test
-	if (unit == "arena1") then
+	if unit == "arena1" then
 		self:UpdateTrinket(unit, 120)
 	end
 end
@@ -316,7 +317,9 @@ function Trinket:OptionsLoad()
 		type = "toggle",
 		name = L["Trinket"],
 		desc = L["Announces when an enemy uses a PvP trinket."],
-		disabled = function() return not Gladius.db.modules[self.name] end,
+		disabled = function()
+			return not Gladius.db.modules[self.name]
+		end,
 	}
 end
 
