@@ -252,30 +252,30 @@ function Gladius:SetupOptions()
 									[4] = "Right"
 								},
 								get = function()
-									return growT
+									return self.dbi.profile.direction
 								end,
 								set = function(info, value)
-									if(value == 1)then
+									if value == 1 then
 										self.dbi.profile.growUp = true
 										self.dbi.profile.growLeft = false
 										self.dbi.profile.growRight = false
 									end
-									if(value == 2)then
+									if value == 2 then
 										self.dbi.profile.growUp = false
 										self.dbi.profile.growLeft = false
 										self.dbi.profile.growRight = false
 									end
-									if(value == 3)then
+									if value == 3 then
 										self.dbi.profile.growUp = false
 										self.dbi.profile.growLeft = true
 										self.dbi.profile.growRight = false
 									end
-									if(value == 4)then
+									if value == 4 then
 										self.dbi.profile.growUp = false
 										self.dbi.profile.growLeft = false
 										self.dbi.profile.growRight = true
 									end
-									growT = value
+									self.dbi.profile.direction = value
 								end,
 							},
 							sep = {

@@ -141,16 +141,16 @@ function ClassIcon:SetClassIcon(unit)
 		class = Gladius.testing[unit].unitClass
 	end
 	if (class) then
-	self.frame[unit].texture:SetTexture("Interface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes")
-	local left, right, top, bottom = unpack(CLASS_BUTTONS[class])
-	-- Crop class icon borders
-	if (Gladius.db.classIconCrop) then
-		left = left + (right - left) * 0.07
-		right = right - (right - left) * 0.07
-		top = top + (bottom - top) * 0.07
-		bottom = bottom - (bottom - top) * 0.07
-	end
-	self.frame[unit].texture:SetTexCoord(left, right, top, bottom)
+		self.frame[unit].texture:SetTexture("Interface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes")
+		local left, right, top, bottom = unpack(CLASS_BUTTONS[class])
+		-- Crop class icon borders
+		if (Gladius.db.classIconCrop) then
+			left = left + (right - left) * 0.07
+			right = right - (right - left) * 0.07
+			top = top + (bottom - top) * 0.07
+			bottom = bottom - (bottom - top) * 0.07
+		end
+		self.frame[unit].texture:SetTexCoord(left, right, top, bottom)
 	end
 end
 
@@ -202,24 +202,22 @@ function ClassIcon:Update(unit)
 	end
 	self.frame[unit].texture:SetTexture("Interface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes")
 	-- set frame mouse-interactable area
-	if (self:GetAttachTo() == "Frame") then
 	local left, right, top, bottom = Gladius.buttons[unit]:GetHitRectInsets()
-	
-	if (strfind(Gladius.db.classIconRelativePoint, "LEFT")) then
-		left = - self.frame[unit]:GetWidth() + Gladius.db.classIconOffsetX
+	if (self:GetAttachTo() == "Frame") then
+		if (strfind(Gladius.db.classIconRelativePoint, "LEFT")) then
+			left = - self.frame[unit]:GetWidth() + Gladius.db.classIconOffsetX
 		else
 			right = - self.frame[unit]:GetWidth() + - Gladius.db.classIconOffsetX
 		end
 		-- search for an attached frame
 		--[[for _, module in pairs(Gladius.modules) do
 			if (module.attachTo and module:GetAttachTo() == self.name and module.frame and module.frame[unit]) then
-			local attachedPoint = module.frame[unit]:GetPoint()
-			
-			if (strfind(Gladius.db.classIconRelativePoint, "LEFT") and (not attachedPoint or (attachedPoint and strfind(attachedPoint, "RIGHT")))) then
-			left = left - module.frame[unit]:GetWidth()
-			elseif (strfind(Gladius.db.classIconRelativePoint, "LEFT") and (not attachedPoint or (attachedPoint and strfind(attachedPoint, "LEFT")))) then
-			right = right - module.frame[unit]:GetWidth() 
-			end
+				local attachedPoint = module.frame[unit]:GetPoint()
+				if (strfind(Gladius.db.classIconRelativePoint, "LEFT") and (not attachedPoint or (attachedPoint and strfind(attachedPoint, "RIGHT")))) then
+					left = left - module.frame[unit]:GetWidth()
+				elseif (strfind(Gladius.db.classIconRelativePoint, "LEFT") and (not attachedPoint or (attachedPoint and strfind(attachedPoint, "LEFT")))) then
+					right = right - module.frame[unit]:GetWidth() 
+				end
 			end
 		end]]
 		-- top / bottom
@@ -279,47 +277,47 @@ function ClassIcon:Test(unit)
 	Gladius.db.aurasFrameAuras = Gladius.db.aurasFrameAuras or Gladius.modules["Auras"]:GetAuraList()
 	local aura
 	if (unit == "arena1") then
-	aura = "Ice Block"
-	self.frame[unit].icon = select(3, GetSpellInfo(45438))
-	self.frame[unit].timeleft = 10
-	self.frame[unit].priority = Gladius.db.aurasFrameAuras[name]
-	self.frame[unit].active = true
-	self.frame[unit].aura = aura
-	self.frame[unit].texture:SetTexture(self.frame[unit].icon)
-	if (Gladius.db.classIconCrop) then
-		self.frame[unit].texture:SetTexCoord(0.07, 0.93, 0.07, 0.93)
-	else
-		self.frame[unit].texture:SetTexCoord(0, 1, 0, 1)
-	end
-	Gladius:Call(Gladius.modules.Timer, "SetTimer", self.frame[unit], self.frame[unit].timeleft)
+		aura = "Ice Block"
+		self.frame[unit].icon = select(3, GetSpellInfo(45438))
+		self.frame[unit].timeleft = 10
+		self.frame[unit].priority = Gladius.db.aurasFrameAuras[unit]
+		self.frame[unit].active = true
+		self.frame[unit].aura = aura
+		self.frame[unit].texture:SetTexture(self.frame[unit].icon)
+		if (Gladius.db.classIconCrop) then
+			self.frame[unit].texture:SetTexCoord(0.07, 0.93, 0.07, 0.93)
+		else
+			self.frame[unit].texture:SetTexCoord(0, 1, 0, 1)
+		end
+		Gladius:Call(Gladius.modules.Timer, "SetTimer", self.frame[unit], self.frame[unit].timeleft)
 	elseif (unit == "arena2") then
-	aura = "Pain Suppression"
-	self.frame[unit].icon = select(3, GetSpellInfo(33206))
-	self.frame[unit].timeleft = 8
-	self.frame[unit].priority = Gladius.db.aurasFrameAuras[name]
-	self.frame[unit].active = true
-	self.frame[unit].aura = aura
-	self.frame[unit].texture:SetTexture(self.frame[unit].icon)
-	if (Gladius.db.classIconCrop) then
-		self.frame[unit].texture:SetTexCoord(0.07, 0.93, 0.07, 0.93)
-	else
-		self.frame[unit].texture:SetTexCoord(0, 1, 0, 1)
-	end
-	Gladius:Call(Gladius.modules.Timer, "SetTimer", self.frame[unit], self.frame[unit].timeleft)
+		aura = "Pain Suppression"
+		self.frame[unit].icon = select(3, GetSpellInfo(33206))
+		self.frame[unit].timeleft = 8
+		self.frame[unit].priority = Gladius.db.aurasFrameAuras[unit]
+		self.frame[unit].active = true
+		self.frame[unit].aura = aura
+		self.frame[unit].texture:SetTexture(self.frame[unit].icon)
+		if (Gladius.db.classIconCrop) then
+			self.frame[unit].texture:SetTexCoord(0.07, 0.93, 0.07, 0.93)
+		else
+			self.frame[unit].texture:SetTexCoord(0, 1, 0, 1)
+		end
+		Gladius:Call(Gladius.modules.Timer, "SetTimer", self.frame[unit], self.frame[unit].timeleft)
 	elseif (unit == "arena3") then
-	aura = "Smoke Bomb"
-	self.frame[unit].timeleft = 0
-	self.frame[unit].icon = select(3, GetSpellInfo(76577))
-	self.frame[unit].priority = Gladius.db.aurasFrameAuras[name]
-	self.frame[unit].active = true
-	self.frame[unit].aura = aura
-	self.frame[unit].texture:SetTexture(self.frame[unit].icon)
-	if (Gladius.db.classIconCrop) then
-		self.frame[unit].texture:SetTexCoord(0.07, 0.93, 0.07, 0.93)
-	else
-		self.frame[unit].texture:SetTexCoord(0, 1, 0, 1)
-	end
-	Gladius:Call(Gladius.modules.Timer, "SetTimer", self.frame[unit], self.frame[unit].timeleft, GetTime())
+		aura = "Smoke Bomb"
+		self.frame[unit].timeleft = 0
+		self.frame[unit].icon = select(3, GetSpellInfo(76577))
+		self.frame[unit].priority = Gladius.db.aurasFrameAuras[unit]
+		self.frame[unit].active = true
+		self.frame[unit].aura = aura
+		self.frame[unit].texture:SetTexture(self.frame[unit].icon)
+		if (Gladius.db.classIconCrop) then
+			self.frame[unit].texture:SetTexCoord(0.07, 0.93, 0.07, 0.93)
+		else
+			self.frame[unit].texture:SetTexCoord(0, 1, 0, 1)
+		end
+		Gladius:Call(Gladius.modules.Timer, "SetTimer", self.frame[unit], self.frame[unit].timeleft, GetTime())
 	end
 end
 

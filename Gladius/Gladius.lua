@@ -290,11 +290,11 @@ function Gladius:OnProfileChanged(event, database, newProfileKey)
 end
 
 function Gladius:ZONE_CHANGED_NEW_AREA()
-	local _, instanceType = IsInInstance()
+	local type = select(2, IsInInstance())
 	-- check if we are entering or leaving an arena 
-	if instanceType == "arena" then
+	if type == "arena" then
 		self:JoinedArena()
-	elseif instanceType ~= "arena" and self.instanceType == "arena" then
+	elseif type ~= "arena" and self.instanceType == "arena" then
 		self:LeftArena()
 	end
 	self.instanceType = type

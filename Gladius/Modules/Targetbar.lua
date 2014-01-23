@@ -220,7 +220,6 @@ function TargetBar:Update(unit)
 	local width = 1
 		if (Gladius.db.targetBarEnableBar) then
 		width = Gladius.db.targetBarAdjustWidth and Gladius.dbWidth or Gladius.db.targetBarWidth
-		
 		-- add width of the widget if attached to an widget
 		if (Gladius.db.targetBarAttachTo ~= "Frame" and not strfind(Gladius.db.targetBarRelativePoint, "BOTTOM") and Gladius.db.targetBarAdjustWidth) then
 			if (not Gladius:GetModule(Gladius.db.targetBarAttachTo).frame[unit]) then
@@ -235,7 +234,7 @@ function TargetBar:Update(unit)
 		width = width + self.frame[unit].frame:GetHeight()
 	end
 	self.frame[unit].frame:SetWidth(width)
-	self.frame[unit].frame:SetPoint(Gladius.db.targetBarAnchor, parent, Gladius.db.targetBarRelativePoint, Gladius.db.targetBarOffsetX + (offsetX or 0), Gladius.db.targetBarOffsetY)
+	self.frame[unit].frame:SetPoint(Gladius.db.targetBarAnchor, parent, Gladius.db.targetBarRelativePoint, Gladius.db.targetBarOffsetX, Gladius.db.targetBarOffsetY)
 	-- update icon
 	self.frame[unit].icon:ClearAllPoints()
 	if (Gladius.db.targetBarIcon) then
