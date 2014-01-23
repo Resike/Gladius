@@ -125,6 +125,7 @@ function Clicks:GetOptions()
 							name = L["Mouse button"],
 							desc = L["Select which mouse button this click action uses"],
 							values = CLICK_BUTTONS,
+							order = 10,
 							get = function(info)
 								return addAttrButton
 							end,
@@ -134,13 +135,13 @@ function Clicks:GetOptions()
 							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							order = 10,
 						},
 						modifier = {
 							type = "select",
 							name = L["Modifier"],
 							desc = L["Select a modifier for this click action"],
 							values = CLICK_MODIFIERS,
+							order = 20,
 							get = function(info)
 								return addAttrMod
 							end,
@@ -150,11 +151,11 @@ function Clicks:GetOptions()
 							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							order = 20,
 						},
 						add = {
 							type = "execute",
 							name = L["Add"],
+							order = 30,
 							func = function()
 								local attr = addAttrMod ~= "" and CLICK_MODIFIERS[addAttrMod]..CLICK_BUTTONS[addAttrButton] or CLICK_BUTTONS[addAttrButton]
 								if (not Gladius.db.clickAttributes[attr]) then
@@ -166,12 +167,11 @@ function Clicks:GetOptions()
 										macro = ""
 									}
 									-- add to options
-									Gladius.options.args[self.name].args.attributeList.args[attr] = self:GetAttributeOptionTable(attr, order)
+									Gladius.options.args[self.name].args.attributeList.args[attr] = self:GetAttributeOptionTable(attr, self.order)
 									-- update
 									Gladius:UpdateFrame()
 								end
 							end,
-							order = 30,
 						},
 					},
 				},
@@ -222,7 +222,7 @@ function Clicks:GetAttributeOptionTable(attribute, order)
 						type = "select",
 						name = L["Action"],
 						desc = L["Select what this Click Action does"],
-						values={["macro"] = MACRO, ["target"] = TARGET, ["focus"] = FOCUS, ["spell"] = L["Cast Spell"]},
+						values = {["macro"] = MACRO, ["target"] = TARGET, ["focus"] = FOCUS, ["spell"] = L["Cast Spell"]},
 						order = 10,
 					},
 					sep = {

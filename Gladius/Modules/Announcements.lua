@@ -61,7 +61,8 @@ function Announcements:Show(unit)
 end
 
 function Announcements:UNIT_NAME_UPDATE(event, unit)
-	if not strfind(unit, "arena") or strfind(unit, "pet") then
+	local _, instanceType = IsInInstance()
+	if instanceType ~= "arena" or not strfind(unit, "arena") or strfind(unit, "pet") then
 		return
 	end
 	if not Gladius.db.announcements.enemies or not UnitName(unit) then
@@ -78,14 +79,16 @@ function Announcements:UNIT_NAME_UPDATE(event, unit)
 end
 
 function Announcements:GLADIUS_SPEC_UPDATE(unit, event)
-	if not strfind(unit, "arena") or strfind(unit, "pet") or not Gladius.db.announcements.spec then
+	local _, instanceType = IsInInstance()
+	if instanceType ~= "arena" or not strfind(unit, "arena") or strfind(unit, "pet") or not Gladius.db.announcements.spec then
 		return
 	end
 	self:Send(string.format(L["SPEC DETECTED: %s (%s)"], UnitName(unit), Gladius.buttons[unit].spec), 2, unit)
 end
 
 function Announcements:UNIT_HEALTH(event, unit)
-	if not strfind(unit, "arena") or strfind(unit, "pet") or not Gladius.db.announcements.health then
+	local _, instanceType = IsInInstance()
+	if instanceType ~= "arena" or not strfind(unit, "arena") or strfind(unit, "pet") or not Gladius.db.announcements.health then
 		return
 	end
 	local healthPercent = math.floor((UnitHealth(unit) / UnitHealthMax(unit)) * 100)
@@ -96,7 +99,8 @@ end
 
 local DRINK_SPELL = GetSpellInfo(57073)
 function Announcements:UNIT_AURA(event, unit)
-	if not strfind(unit, "arena") or strfind(unit, "pet") or not Gladius.db.announcements.drinks then
+	local _, instanceType = IsInInstance()
+	if instanceType ~= "arena" or not strfind(unit, "arena") or strfind(unit, "pet") or not Gladius.db.announcements.drinks then
 		return
 	end
 	if UnitAura(unit, DRINK_SPELL) then
@@ -113,9 +117,9 @@ function Announcements:ARENA_PREP_OPPONENT_SPECIALIZATIONS(event, ...)
 		if specID > 0 then
 			local _, spec, _, specIcon, _, _, class = GetSpecializationInfoByID(specID)
 			--[[if(class) then
-					prepFrame.classPortrait:SetTexture("Interface\\TargetingFrame\\UI-Classes-Circles")
-					prepFrame.classPortrait:SetTexCoord(unpack(CLASS_ICON_TCOORDS[strupper(class)]))
-				end
+				prepFrame.classPortrait:SetTexture("Interface\\TargetingFrame\\UI-Classes-Circles")
+				prepFrame.classPortrait:SetTexCoord(unpack(CLASS_ICON_TCOORDS[strupper(class)]))
+			end
 				SetPortraitToTexture(prepFrame.specPortrait, specIcon)
 				prepFrame:Show()
 			else
@@ -136,7 +140,8 @@ local RES_SPELLS = {
 }
 
 function Announcements:UNIT_SPELLCAST_START(event, unit, spell, rank)
-	if not strfind(unit, "arena") or strfind(unit, "pet") or not Gladius.db.announcements.resurrect then
+	local _, instanceType = IsInInstance()
+	if instanceType ~= "arena" or not strfind(unit, "arena") or strfind(unit, "pet") or not Gladius.db.announcements.resurrect then
 		return
 	end
 	if RES_SPELLS[spell] then

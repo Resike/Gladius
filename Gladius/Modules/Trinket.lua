@@ -494,7 +494,9 @@ function Trinket:GetOptions()
 							hidden = function()
 								return not Gladius.db.advancedOptions
 							end,
-							min = 1, max = 5, step = 1,
+							min = 1,
+							max = 5,
+							step = 1,
 							width = "double",
 							order = 45,
 						},
@@ -520,7 +522,9 @@ function Trinket:GetOptions()
 							type = "range",
 							name = L["Trinket Size"],
 							desc = L["Size of the trinket"],
-							min = 10, max = 100, step = 1,
+							min = 10,
+							max = 100,
+							step = 1,
 							disabled = function()
 								return Gladius.dbi.profile.trinketAdjustSize or not Gladius.dbi.profile.modules[self.name]
 							end,
@@ -552,7 +556,7 @@ function Trinket:GetOptions()
 							type = "select",
 							name = L["Trinket Position"],
 							desc = L["Position of the trinket"],
-							values={["LEFT"] = L["Left"], ["RIGHT"] = L["Right"]},
+							values = {["LEFT"] = L["Left"], ["RIGHT"] = L["Right"]},
 							get = function()
 								return strfind(Gladius.db.trinketAnchor, "RIGHT") and "LEFT" or "RIGHT"
 							end,
@@ -620,7 +624,9 @@ function Trinket:GetOptions()
 							type = "range",
 							name = L["Trinket Offset X"],
 							desc = L["X offset of the trinket"],
-							min = - 100, max = 100, step = 1,
+							min = - 100,
+							max = 100,
+							step = 1,
 							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
@@ -633,7 +639,9 @@ function Trinket:GetOptions()
 							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							min = - 50, max = 50, step = 1,
+							min = - 50,
+							max = 50,
+							step = 1,
 							order = 25,
 						},
 					},

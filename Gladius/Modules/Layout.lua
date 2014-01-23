@@ -34,17 +34,16 @@ local function SerializeTable(table, defaults)
 	for key, value in pairs(table) do
 		if (type(value) == "table") then
 			if (defaults[key] ~= nil) then
-			local t = SerializeTable(value, defaults[key])
-			
-			if (next(t) ~= nil) then
-			table[key] = t
-			else
-			table[key] = nil
-			end
+				local t = SerializeTable(value, defaults[key])
+				if (next(t) ~= nil) then
+					table[key] = t
+				else
+					table[key] = nil
+				end
 			end
 		else
 			if (defaults[key] == value) then
-			table[key] = nil
+				table[key] = nil
 			end
 		end
 	end
@@ -107,9 +106,9 @@ function Layout:GetOptions()
 								Gladius.dbi.profile.modules["*"] = true
 								for key, data in pairs(layout) do
 									if (type(data) == "table") then
-									Gladius.dbi.profile[key] = CopyTable(data)
+										Gladius.dbi.profile[key] = CopyTable(data)
 									else
-									Gladius.dbi.profile[key] = data
+										Gladius.dbi.profile[key] = data
 									end
 								end
 								Gladius:UpdateFrame()
