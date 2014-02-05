@@ -1,7 +1,28 @@
-﻿local type = type
+﻿local abs = abs
+local math = math
+local max = max
 local pairs = pairs
+local print = print
+local rawset = rawset
+local setmetatable = setmetatable
 local strfind = string.find
-local UnitCastingInfo, UnitAura, UnitIsDeadOrGhost = UnitCastingInfo, UnitAura, UnitIsDeadOrGhost
+local string = string
+local tonumber = tonumber
+local tostring = tostring
+local type = type
+
+local CreateFrame = CreateFrame
+local GetArenaOpponentSpec = GetArenaOpponentSpec
+local GetNumArenaOpponentSpecs = GetNumArenaOpponentSpecs
+local GetNumGroupMembers = GetNumGroupMembers
+local GetSpecializationInfoByID = GetSpecializationInfoByID
+local InCombatLockdown = InCombatLockdown
+local IsAddOnLoaded = IsAddOnLoaded
+local IsInInstance = IsInInstance
+local IsLoggedIn = IsLoggedIn
+local UnitAura = UnitAura
+local UnitCastingInfo = UnitCastingInfo
+local UnitIsDeadOrGhost = UnitIsDeadOrGhost
 
 Gladius = { }
 Gladius.eventHandler = CreateFrame("Frame")
@@ -432,7 +453,7 @@ function Gladius:UpdateUnit(unit, module)
 		local specID = GetArenaOpponentSpec(i)
 		if specID > 0 then
 			local _, spec, _, specIcon, _, _, class = GetSpecializationInfoByID(specID)
-			if not(Gladius.buttons["arena"..i] == null) then
+			if Gladius.buttons["arena"..i] then
 				Gladius.buttons["arena"..i].spec = spec
 			end
 		end

@@ -6,10 +6,13 @@ local L = Gladius.L
 local LSM
 
 -- global functions
+local _G = _G
 local strformat = string.format
 local pairs = pairs
-local GetTime = GetTime
 local floor = math.floor
+
+local GetTime = GetTime
+local CreateFrame = CreateFrame
 
 local Timer = Gladius:NewModule("Timer", false, false, {
 	timerSoonFontSize = 18,
@@ -44,35 +47,35 @@ end
 
 function Timer:SetFormattedNumber(frame, number)
 	local minutes = floor(number / 60)
-	if (minutes > 0) then
+	if minutes > 0 then
 		local seconds = number - minutes * 60
 		frame:SetFont(LSM:Fetch(LSM.MediaType.FONT, Gladius.db.globalFont), Gladius.db.timerMinutesFontSize, "OUTLINE")
 		frame:SetTextColor(Gladius.db.timerMinutesFontColor.r, Gladius.db.timerMinutesFontColor.g, Gladius.db.timerMinutesFontColor.b, Gladius.db.timerMinutesFontColor.a)
 		frame:SetText(strformat("%sm %.0f", minutes, seconds))
 	else
-		if (number > 5) then
+		if number > 5 then
 			frame:SetFont(LSM:Fetch(LSM.MediaType.FONT, Gladius.db.globalFont), Gladius.db.timerSecondsFontSize, "OUTLINE")
 			frame:SetTextColor(Gladius.db.timerSecondsFontColor.r, Gladius.db.timerSecondsFontColor.g, Gladius.db.timerSecondsFontColor.b, Gladius.db.timerSecondsFontColor.a)
 			frame:SetText(strformat("%.0f", number))
 		else
 			frame:SetFont(LSM:Fetch(LSM.MediaType.FONT, Gladius.db.globalFont), Gladius.db.timerSoonFontSize, "OUTLINE")
 			frame:SetTextColor(Gladius.db.timerSoonFontColor.r, Gladius.db.timerSoonFontColor.g, Gladius.db.timerSoonFontColor.b, Gladius.db.timerSoonFontColor.a)
-			if (number == 0) then
-			frame:SetText("")
+			if number == 0 then
+				frame:SetText("")
 			else
-			frame:SetText(strformat("%.1f", number))
+				frame:SetText(strformat("%.1f", number))
 			end
 		end
 	end
 end
 
 function Timer:SetTimer(frame, duration, start)
-	if (frame == nil) then
+	if not self.frames or frame == nil then
 		return
 	end
 	local start = start or GetTime()
 	local frameName = frame:GetName()
-	if (not self.frames[frameName]) then
+	if not self.frames[frameName] then
 		self:RegisterTimer(frame)
 	end
 	self:SetFormattedNumber(self.frames[frameName].text, duration)
@@ -80,10 +83,10 @@ function Timer:SetTimer(frame, duration, start)
 	self.frames[frameName].text:SetAlpha(1)
 	_G[frameName.."Cooldown"]:SetCooldown(start, duration)
 	_G[frameName.."Cooldown"]:SetAlpha(self.frames[frameName].showSpiral and 1 or 0)
-	if (duration > 0) then
+	if duration > 0 then
 		self.frames[frameName]:SetScript("OnUpdate", function(f, elapsed)
 			f.duration = f.duration - elapsed
-			if (f.duration <= 0) then
+			if f.duration <= 0 then
 				f.text:SetAlpha(0)
 				f:SetScript("OnUpdate", nil)
 			else
@@ -94,13 +97,13 @@ function Timer:SetTimer(frame, duration, start)
 end
 
 function Timer:HideTimer(frame)
-	if (not self.frames) then
+	if not self.frames then
 		return
 	end
 	local frameName = frame:GetName()
 	_G[frameName.."Cooldown"]:SetCooldown(0, 0)
 	
-	if (_G[frameName.."Cooldown"]:IsShown()) then
+	if _G[frameName.."Cooldown"]:IsShown() then
 		_G[frameName.."Cooldown"]:SetAlpha(0)
 	end
 	if (self.frames[frameName]) then
@@ -110,14 +113,17 @@ function Timer:HideTimer(frame)
 end
 
 function Timer:RegisterTimer(frame, showSpiral)
+	if not self.frames then
+		return
+	end
 	local frameName = frame:GetName()
-	if (not self.frames[frameName]) then
+	if not self.frames[frameName] then
 		self.frames[frameName] = CreateFrame("Frame", "Gladius"..self.name..frameName, frame)
 		self.frames[frameName].name = frameName
 		self.frames[frameName].text = self.frames[frameName]:CreateFontString("Gladius"..self.name..frameName.."Text", "OVERLAY")
 	end
 	self.frames[frameName].showSpiral = showSpiral or false
-	if (not Gladius.db.timerOmniCC) then
+	if not Gladius.db.timerOmniCC then
 		_G[frameName.."Cooldown"].noCooldownCount = true
 		self.frames[frameName].text:Show()
 	else
@@ -188,7 +194,9 @@ function Timer:GetOptions()
 							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							min = 1, max = 20, step = 1,
+							min = 1,
+							max = 20,
+							step = 1,
 							order = 10,
 						},
 						sep1 = {
@@ -220,7 +228,9 @@ function Timer:GetOptions()
 							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							min = 1, max = 20, step = 1,
+							min = 1,
+							max = 20,
+							step = 1,
 							order = 20,
 						},
 						sep2 = {
@@ -250,7 +260,9 @@ function Timer:GetOptions()
 							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							min = 1, max = 20, step = 1,
+							min = 1,
+							max = 20,
+							step = 1,
 							order = 30,
 						},
 					},

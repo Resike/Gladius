@@ -1,6 +1,10 @@
-﻿-- global functions
-local pairs = pairs
+﻿local pairs = pairs
+local print = print
+local table = table
+local tonumber = tonumber
 local type = type
+
+local GetAddOnMetadata = GetAddOnMetadata
 
 local L = Gladius.L
 

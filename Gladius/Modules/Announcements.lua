@@ -4,14 +4,32 @@ if not Gladius then
 end
 local L = Gladius.L
 
--- global functions
 local strfind = string.find
-local GetTime = GetTime
-local UnitName, UnitClass = UnitName, UnitClass
-local SendChatMessage = SendChatMessage
-local RAID_CLASS_COLORS = RAID_CLASS_COLORS
+local string = string
+local math = math
+
+local GetRealNumPartyMembers = GetRealNumPartyMembers
+local GetRealNumRaidMembers = GetRealNumRaidMembers
 local GetSpellInfo = GetSpellInfo
-local GetRealNumPartyMembers, GetRealNumRaidMembers, IsRaidLeader, IsRaidOfficer = GetRealNumPartyMembers, GetRealNumRaidMembers, IsRaidLeader, IsRaidOfficer
+local GetTime = GetTime
+local IsInInstance = IsInInstance
+local IsRaidLeader = IsRaidLeader
+local IsRaidOfficer = IsRaidOfficer
+local RAID_CLASS_COLORS = RAID_CLASS_COLORS
+local SendChatMessage = SendChatMessage
+local UnitClass = UnitClass
+local UnitName = UnitName
+local UnitHealth = UnitHealth
+local UnitHealthMax = UnitHealthMax
+local GetNumArenaOpponentSpecs = GetNumArenaOpponentSpecs
+local GetArenaOpponentSpec = GetArenaOpponentSpec
+local GetSpecializationInfoByID = GetSpecializationInfoByID
+local UnitIsGroupLeader = UnitIsGroupLeader
+local UnitIsGroupAssistant = UnitIsGroupAssistant
+local GetNumGroupMembers = GetNumGroupMembers
+local UnitAura = UnitAura
+local IsAddOnLoaded = IsAddOnLoaded
+local UNKNOWN = UNKNOWN
 
 local Announcements = Gladius:NewModule("Announcements", false, false, {
 	announcements = {
