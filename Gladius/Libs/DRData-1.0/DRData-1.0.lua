@@ -1,5 +1,5 @@
 local major = "DRData-1.0"
-local minor = 1027
+local minor = 1028
 assert(LibStub, string.format("%s requires LibStub.", major))
 
 local Data = LibStub:NewLibrary(major, minor)
@@ -26,9 +26,37 @@ local locale = GetLocale()
 if locale == "deDE" then
 	
 elseif locale == "esES" then
-	
+	L["Cyclone"] = "Ciclón"
+L["Disarms"] = "Desarmes"
+L["Fears"] = "Miedos"
+L["Horrors"] = "Horrores"
+L["Knockbacks"] = "Derribos"
+L["Mesmerizes"] = "Hipnotizaciones"
+L["Mesmerizes (short)"] = "Hipnotizaciones (cortas)"
+L["Mind Control"] = "Control Mental"
+L["Roots"] = "Raíces"
+L["Roots (short)"] = "Raíces (cortas)"
+L["Silences"] = "SIlencios"
+L["Stuns"] = "Aturdimientos"
+L["Stuns (short)"] = "Aturdimientos (cortos)"
+L["Taunts"] = "Provocaciones"
+
 elseif locale == "esMX" then
-	
+	L["Cyclone"] = "Ciclón"
+L["Disarms"] = "Desarmes"
+L["Fears"] = "Miedos"
+L["Horrors"] = "Horrores"
+L["Knockbacks"] = "Derribos"
+L["Mesmerizes"] = "Hipnotizaciones"
+L["Mesmerizes (short)"] = "Hipnotizaciones (cortas)"
+L["Mind Control"] = "Control Mental"
+L["Roots"] = "Raíces"
+L["Roots (short)"] = "Raíces (cortas)"
+L["Silences"] = "SIlencios"
+L["Stuns"] = "Aturdimientos"
+L["Stuns (short)"] = "Aturdimientos (cortos)"
+L["Taunts"] = "Provocaciones"
+
 elseif locale == "frFR" then
 	L["Cyclone"] = "Cyclone"
 L["Disarms"] = "Désarmements"
@@ -56,7 +84,21 @@ elseif locale == "ruRU" then
 elseif locale == "zhCN" then
 	
 elseif locale == "zhTW" then
-	
+	L["Cyclone"] = "颶風術"
+L["Disarms"] = "繳械"
+L["Fears"] = "恐懼"
+L["Horrors"] = "恐慌"
+L["Knockbacks"] = "擊退"
+L["Mesmerizes"] = "迷惑"
+L["Mesmerizes (short)"] = "迷惑(短)"
+L["Mind Control"] = "心靈控制"
+L["Roots"] = "定身"
+L["Roots (short)"] = "定身(短)"
+L["Silences"] = "沉默"
+L["Stuns"] = "昏迷"
+L["Stuns (short)"] = "昏迷(短)"
+L["Taunts"] = "嘲諷"
+
 end
 
 -- How long before DR resets
@@ -230,6 +272,7 @@ Data.spells = {
 	[ 22570] = "ctrlstun", -- Maim
 	[  5211] = "ctrlstun", -- Mighty Bash
 	[  9005] = "ctrlstun", -- Pounce
+	[102546] = "ctrlstun", -- Pounce (Incarnation)
 	[113801] = "ctrlstun", -- Bash (treants in feral spec) (Bugged by blizzard - it instantly applies all 3 levels of DR right now, making any target instantly immune to ctrlstuns)
 	-- Hunter
 	[117526] = "ctrlstun", -- Binding Shot
