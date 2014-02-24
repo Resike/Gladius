@@ -32,17 +32,17 @@ end
 
 local function SerializeTable(table, defaults)
 	for key, value in pairs(table) do
-		if (type(value) == "table") then
-			if (defaults[key] ~= nil) then
+		if type(value) == "table" then
+			if defaults[key] ~= nil then
 				local t = SerializeTable(value, defaults[key])
-				if (next(t) ~= nil) then
+				if next(t) ~= nil then
 					table[key] = t
 				else
 					table[key] = nil
 				end
 			end
 		else
-			if (defaults[key] == value) then
+			if defaults[key] == value then
 				table[key] = nil
 			end
 		end
@@ -90,11 +90,11 @@ function Layout:GetOptions()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
 							func = function()
-								if (self.layout == nil or self.layout == "") then
+								if self.layout == nil or self.layout == "" then
 									return
 								end
 								local err, layout = LibStub("AceSerializer-3.0"):Deserialize(self.layout)
-								if (not err) then
+								if not err then
 									Gladius:Print(strformat(L["Error while importing layout: %s"], layout))
 									return
 								end
@@ -105,7 +105,7 @@ function Layout:GetOptions()
 								Gladius.dbi:ResetProfile()
 								Gladius.dbi.profile.modules["*"] = true
 								for key, data in pairs(layout) do
-									if (type(data) == "table") then
+									if type(data) == "table" then
 										Gladius.dbi.profile[key] = CopyTable(data)
 									else
 										Gladius.dbi.profile[key] = data
