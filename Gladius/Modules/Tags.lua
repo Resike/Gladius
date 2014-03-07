@@ -6,16 +6,22 @@ local L = Gladius.L
 local LSM
 
 -- global functions
-local strfind = string.find
+local loadstring = loadstring
 local pairs = pairs
-local strgsub = string.gsub
-local strgmatch = string.gmatch
+local strfind = string.find
 local strformat = string.format
+local strgmatch = string.gmatch
+local strgsub = string.gsub
 
-local UnitName, UnitIsDeadOrGhost, LOCALIZED_CLASS_NAMES_MALE = UnitName, UnitIsDeadOrGhost, LOCALIZED_CLASS_NAMES_MALE
-local UnitClass, UnitRace = UnitClass, UnitRace
-local UnitHealth, UnitHealthMax = UnitHealth, UnitHealthMax
-local UnitPower, UnitPowerMax = UnitPower, UnitPowerMax
+local UnitClass = UnitClass
+local UnitHealth = UnitHealth
+local UnitHealthMax = UnitHealthMax
+local UnitIsDeadOrGhost = UnitIsDeadOrGhost
+local UnitName = UnitName
+local UnitPower = UnitPower
+local UnitPowerMax = UnitPowerMax
+local UnitRace = UnitRace
+local LOCALIZED_CLASS_NAMES_MALE = LOCALIZED_CLASS_NAMES_MALE
 
 local Tags = Gladius:NewModule("Tags", false, false, {
 	tagsTexts = {

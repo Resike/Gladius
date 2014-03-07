@@ -6,10 +6,10 @@ local L = Gladius.L
 local LSM
 
 -- global functions
-local pairs = pairs
 local next = next
-local type = type
+local pairs = pairs
 local strformat = string.format
+local type = type
 
 local Layout = Gladius:NewModule("Layout", false, false, {
 })
