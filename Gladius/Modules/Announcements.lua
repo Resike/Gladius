@@ -4,31 +4,32 @@ if not Gladius then
 end
 local L = Gladius.L
 
+-- global functions
+local mathfloor = math.floor
 local strfind = string.find
 local string = string
-local math = math
 
+local GetArenaOpponentSpec = GetArenaOpponentSpec
+local GetNumArenaOpponentSpecs = GetNumArenaOpponentSpecs
+local GetNumGroupMembers = GetNumGroupMembers
 local GetRealNumPartyMembers = GetRealNumPartyMembers
 local GetRealNumRaidMembers = GetRealNumRaidMembers
+local GetSpecializationInfoByID = GetSpecializationInfoByID
 local GetSpellInfo = GetSpellInfo
 local GetTime = GetTime
+local IsAddOnLoaded = IsAddOnLoaded
 local IsInInstance = IsInInstance
 local IsRaidLeader = IsRaidLeader
 local IsRaidOfficer = IsRaidOfficer
 local RAID_CLASS_COLORS = RAID_CLASS_COLORS
 local SendChatMessage = SendChatMessage
+local UnitAura = UnitAura
 local UnitClass = UnitClass
-local UnitName = UnitName
 local UnitHealth = UnitHealth
 local UnitHealthMax = UnitHealthMax
-local GetNumArenaOpponentSpecs = GetNumArenaOpponentSpecs
-local GetArenaOpponentSpec = GetArenaOpponentSpec
-local GetSpecializationInfoByID = GetSpecializationInfoByID
-local UnitIsGroupLeader = UnitIsGroupLeader
 local UnitIsGroupAssistant = UnitIsGroupAssistant
-local GetNumGroupMembers = GetNumGroupMembers
-local UnitAura = UnitAura
-local IsAddOnLoaded = IsAddOnLoaded
+local UnitIsGroupLeader = UnitIsGroupLeader
+local UnitName = UnitName
 local UNKNOWN = UNKNOWN
 
 local Announcements = Gladius:NewModule("Announcements", false, false, {
@@ -109,7 +110,7 @@ function Announcements:UNIT_HEALTH(event, unit)
 	if instanceType ~= "arena" or not strfind(unit, "arena") or strfind(unit, "pet") or not Gladius.db.announcements.health then
 		return
 	end
-	local healthPercent = math.floor((UnitHealth(unit) / UnitHealthMax(unit)) * 100)
+	local healthPercent = mathfloor((UnitHealth(unit) / UnitHealthMax(unit)) * 100)
 	if healthPercent < Gladius.db.announcements.healthThreshold then
 		self:Send(string.format(L["LOW HEALTH: %s (%s)"], UnitName(unit), UnitClass(unit)), 10, unit)
 	end

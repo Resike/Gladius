@@ -6,10 +6,17 @@ local L = Gladius.L
 local LSM
 
 -- global functions
-local strfind = string.find
+local _G = _G
 local pairs = pairs
+local select = select
+local strfind = string.find
+local unpack = unpack
+
+local CreateFrame = CreateFrame
 local GetTime = GetTime
-local GetSpellInfo, UnitAura, UnitClass = GetSpellInfo, UnitAura, UnitClass
+local GetSpellInfo = GetSpellInfo
+local UnitAura = UnitAura
+local UnitClass = UnitClass
 local CLASS_BUTTONS = CLASS_BUTTONS
 
 local ClassIcon = Gladius:NewModule("ClassIcon", false, true, {
@@ -33,7 +40,7 @@ function ClassIcon:OnEnable()
 	self:RegisterEvent("UNIT_AURA")
 	self.version = 1
 	LSM = Gladius.LSM
-	if (not self.frame) then
+	if not self.frame then
 		self.frame = { }
 	end
 	Gladius.db.auraVersion = self.version
@@ -56,7 +63,7 @@ function ClassIcon:GetFrame(unit)
 end
 
 function ClassIcon:UNIT_AURA(event, unit)
-	if (not strfind(unit, "arena") or strfind(unit, "pet")) then
+	if not strfind(unit, "arena") or strfind(unit, "pet") then
 		return
 	end
 	-- important auras
@@ -64,22 +71,22 @@ function ClassIcon:UNIT_AURA(event, unit)
 end
 
 function ClassIcon:UpdateAura(unit)
-	if (not self.frame[unit] or not Gladius.db.classIconImportantAuras) then
+	if not self.frame[unit] or not Gladius.db.classIconImportantAuras then
 		return
 	end
-	if (not Gladius.db.aurasFrameAuras) then
+	if not Gladius.db.aurasFrameAuras then
 		return
 	end
 	-- default priority
-	if (not self.frame[unit].priority) then
+	if not self.frame[unit].priority then
 		self.frame[unit].priority = 0
 	end
 	local aura
 	local index = 1
 	-- debuffs
-	while (true) do
+	while true do
 		local name, _, icon, _, _, duration, expires, _, _ = UnitAura(unit, index, "HARMFUL")
-		if (not name) then
+		if not name then
 			break
 		end
 		if (Gladius.db.aurasFrameAuras[name] and Gladius.db.aurasFrameAuras[name] >= self.frame[unit].priority) then
@@ -93,12 +100,12 @@ function ClassIcon:UpdateAura(unit)
 	end
 	-- buffs
 	index = 1
-	while (true) do
+	while true do
 		local name, _, icon, _, _, duration, expires, _, _ = UnitAura(unit, index, "HELPFUL")
-		if (not name) then
+		if not name then
 			break
 		end
-		if (Gladius.db.aurasFrameAuras[name] and Gladius.db.aurasFrameAuras[name] >= self.frame[unit].priority) then
+		if Gladius.db.aurasFrameAuras[name] and Gladius.db.aurasFrameAuras[name] >= self.frame[unit].priority then
 			aura = name
 			self.frame[unit].icon = icon
 			self.frame[unit].timeleft = duration
@@ -107,10 +114,10 @@ function ClassIcon:UpdateAura(unit)
 		end
 		index = index + 1
 	end
-	if (aura) then
+	if aura then
 		-- display aura
 		self.frame[unit].texture:SetTexture(self.frame[unit].icon)
-		if (Gladius.db.classIconCrop) then
+		if Gladius.db.classIconCrop then
 			self.frame[unit].texture:SetTexCoord(0.07, 0.93, 0.07, 0.93)
 		else
 			self.frame[unit].texture:SetTexCoord(0, 1, 0, 1)
@@ -119,32 +126,32 @@ function ClassIcon:UpdateAura(unit)
 		local start = GetTime() - (self.frame[unit].timeleft - timeLeft)
 		--self.frame[unit].timeleft = timeLeft
 		Gladius:Call(Gladius.modules.Timer, "SetTimer", self.frame[unit], self.frame[unit].timeleft, start)
-	elseif (not aura and self.frame[unit].priority > 0) then
+	elseif not aura and self.frame[unit].priority > 0 then
 		-- reset
 		self.frame[unit].priority = 0
 		self:SetClassIcon(unit)
-	elseif (not aura) then
+	elseif not aura then
 		self:SetClassIcon(unit)
 	end
 end
 
 function ClassIcon:SetClassIcon(unit)
-	if (not self.frame[unit]) then
+	if not self.frame[unit] then
 		return
 	end
 	Gladius:Call(Gladius.modules.Timer, "HideTimer", self.frame[unit])
 	-- get unit class
 	local class
-	if (not Gladius.test) then
+	if not Gladius.test then
 		class = select(2, UnitClass(unit))
 	else
 		class = Gladius.testing[unit].unitClass
 	end
-	if (class) then
+	if class then
 		self.frame[unit].texture:SetTexture("Interface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes")
 		local left, right, top, bottom = unpack(CLASS_BUTTONS[class])
 		-- Crop class icon borders
-		if (Gladius.db.classIconCrop) then
+		if Gladius.db.classIconCrop then
 			left = left + (right - left) * 0.07
 			right = right - (right - left) * 0.07
 			top = top + (bottom - top) * 0.07
@@ -156,7 +163,7 @@ end
 
 function ClassIcon:CreateFrame(unit)
 	local button = Gladius.buttons[unit]
-	if (not button) then
+	if not button then
 		return
 	end
 	-- create frame
@@ -172,7 +179,7 @@ function ClassIcon:Update(unit)
 	-- TODO: check why we need this >_<
 	self.frame = self.frame or { }
 	-- create frame
-	if (not self.frame[unit]) then
+	if not self.frame[unit] then
 		self:CreateFrame(unit)
 	end
 	-- update frame
@@ -181,12 +188,12 @@ function ClassIcon:Update(unit)
 	self.frame[unit]:SetPoint(Gladius.db.classIconAnchor, parent, Gladius.db.classIconRelativePoint, Gladius.db.classIconOffsetX, Gladius.db.classIconOffsetY)
 	-- frame level
 	self.frame[unit]:SetFrameLevel(Gladius.db.classIconFrameLevel)
-	if (Gladius.db.classIconAdjustSize) then
+	if Gladius.db.classIconAdjustSize then
 		local height = false
 		-- need to rethink that
 		--[[for _, module in pairs(Gladius.modules) do
-			if (module:GetAttachTo() == self.name) then
-			height = false
+			if module:GetAttachTo() == self.name then
+				height = false
 			end
 		end]]
 		if (height) then
@@ -203,8 +210,8 @@ function ClassIcon:Update(unit)
 	self.frame[unit].texture:SetTexture("Interface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes")
 	-- set frame mouse-interactable area
 	local left, right, top, bottom = Gladius.buttons[unit]:GetHitRectInsets()
-	if (self:GetAttachTo() == "Frame") then
-		if (strfind(Gladius.db.classIconRelativePoint, "LEFT")) then
+	if self:GetAttachTo() == "Frame" then
+		if strfind(Gladius.db.classIconRelativePoint, "LEFT") then
 			left = - self.frame[unit]:GetWidth() + Gladius.db.classIconOffsetX
 		else
 			right = - self.frame[unit]:GetWidth() + - Gladius.db.classIconOffsetX
@@ -221,7 +228,7 @@ function ClassIcon:Update(unit)
 			end
 		end]]
 		-- top / bottom
-		if (self.frame[unit]:GetHeight() > Gladius.buttons[unit]:GetHeight()) then
+		if self.frame[unit]:GetHeight() > Gladius.buttons[unit]:GetHeight() then
 			bottom = -(self.frame[unit]:GetHeight() - Gladius.buttons[unit]:GetHeight()) + Gladius.db.classIconOffsetY
 		end
 		Gladius.buttons[unit]:SetHitRectInsets(left, right, 0, 0)
@@ -239,7 +246,7 @@ function ClassIcon:Update(unit)
 	self.frame[unit].normalTexture:SetVertexColor(Gladius.db.classIconGlossColor.r, Gladius.db.classIconGlossColor.g, Gladius.db.classIconGlossColor.b, Gladius.db.classIconGloss and Gladius.db.classIconGlossColor.a or 0)
 	self.frame[unit].texture:SetTexCoord(left, right, top, bottom)
 	-- cooldown
-	if (Gladius.db.classIconCooldown) then
+	if Gladius.db.classIconCooldown then
 		self.frame[unit].cooldown:Show()
 	else
 		self.frame[unit].cooldown:Hide()
@@ -276,7 +283,7 @@ end
 function ClassIcon:Test(unit)
 	Gladius.db.aurasFrameAuras = Gladius.db.aurasFrameAuras or Gladius.modules["Auras"]:GetAuraList()
 	local aura
-	if (unit == "arena1") then
+	if unit == "arena1" then
 		aura = "Ice Block"
 		self.frame[unit].icon = select(3, GetSpellInfo(45438))
 		self.frame[unit].timeleft = 10
@@ -290,7 +297,7 @@ function ClassIcon:Test(unit)
 			self.frame[unit].texture:SetTexCoord(0, 1, 0, 1)
 		end
 		Gladius:Call(Gladius.modules.Timer, "SetTimer", self.frame[unit], self.frame[unit].timeleft)
-	elseif (unit == "arena2") then
+	elseif unit == "arena2" then
 		aura = "Pain Suppression"
 		self.frame[unit].icon = select(3, GetSpellInfo(33206))
 		self.frame[unit].timeleft = 8
@@ -304,7 +311,7 @@ function ClassIcon:Test(unit)
 			self.frame[unit].texture:SetTexCoord(0, 1, 0, 1)
 		end
 		Gladius:Call(Gladius.modules.Timer, "SetTimer", self.frame[unit], self.frame[unit].timeleft)
-	elseif (unit == "arena3") then
+	elseif unit == "arena3" then
 		aura = "Smoke Bomb"
 		self.frame[unit].timeleft = 0
 		self.frame[unit].icon = select(3, GetSpellInfo(76577))
@@ -439,7 +446,9 @@ function ClassIcon:GetOptions()
 							hidden = function()
 								return not Gladius.db.advancedOptions
 							end,
-							min = 1, max = 5, step = 1,
+							min = 1,
+							max = 5,
+							step = 1,
 							width = "double",
 							order = 30,
 						},
@@ -465,7 +474,9 @@ function ClassIcon:GetOptions()
 							type = "range",
 							name = L["Class Icon Size"],
 							desc = L["Size of the class icon"],
-							min = 10, max = 100, step = 1,
+							min = 10,
+							max = 100,
+							step = 1,
 							disabled = function()
 								return Gladius.dbi.profile.classIconAdjustSize or not Gladius.dbi.profile.modules[self.name]
 							end,
@@ -580,7 +591,9 @@ function ClassIcon:GetOptions()
 							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							min = - 50, max = 50, step = 1,
+							min = - 50,
+							max = 50,
+							step = 1,
 							order = 25,
 						},
 					},
