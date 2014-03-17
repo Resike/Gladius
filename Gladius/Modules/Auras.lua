@@ -6,10 +6,18 @@ local L = Gladius.L
 local LSM
 
 -- global functions
-local strfind = string.find
-local pairs = pairs
-local UnitAura, GetSpellInfo = UnitAura, GetSpellInfo
+local _G = _G
 local ceil = math.ceil
+local pairs = pairs
+local rawget = rawget
+local setmetatable = setmetatable
+local strfind = string.find
+
+local CreateFrame = CreateFrame
+local GameTooltip = GameTooltip
+local GetSpellInfo = GetSpellInfo
+local GetSpellTexture = GetSpellTexture
+local UnitAura = UnitAura
 
 local Auras = Gladius:NewModule("Auras", false, true, {
 	aurasBuffsAttachTo = "CastBar",
@@ -75,7 +83,7 @@ function Auras:OnDisable()
 end
 
 function Auras:SetTemplate(template)
-	if (template == 1) then
+	if template == 1 then
 		Gladius.db.aurasBuffsGrow = "DOWNRIGHT"
 		Gladius.db.aurasBuffsAttachTo = "CastBar"
 		Gladius.db.aurasBuffsRelativePoint = "BOTTOMLEFT"
@@ -105,10 +113,10 @@ end
 
 function Auras:GetIndicatorHeight()
 	local height = 0
-	if (Gladius.db.aurasBuffs) then
+	if Gladius.db.aurasBuffs then
 		height = height + Gladius.db.aurasBuffsHeight * ceil(Gladius.db.aurasBuffsMax / Gladius.db.aurasBuffsPerColumn)
 	end
-	if (Gladius.db.aurasDebuffs) then
+	if Gladius.db.aurasDebuffs then
 		height = height + Gladius.db.aurasDebuffsHeight * ceil(Gladius.db.aurasDebuffsMax / Gladius.db.aurasDebuffsPerColumn)
 	end
 	return height
@@ -118,16 +126,16 @@ function Auras:UNIT_AURA(event, unit)
 	if unit == nil then
 		return
 	end
-	if (not strfind(unit, "arena") or strfind(unit, "pet")) then
+	if not strfind(unit, "arena") or strfind(unit, "pet") then
 		return
 	end
 	-- buff frame
 	for i = 1, 40 do
 		local name, rank, icon, count, dispelType, duration, expires, caster, isStealable = UnitAura(unit, i, "HELPFUL")
-		if (not self.buffFrame[unit]) or (not self.buffFrame[unit][i]) then
+		if not self.buffFrame[unit] or not self.buffFrame[unit][i] then
 			break
 		end
-		if (name) then
+		if name then
 			self.buffFrame[unit][i].texture:SetTexture(icon)
 			Gladius:Call(Gladius.modules.Timer, "SetTimer", self.buffFrame[unit][i], duration)
 			self.buffFrame[unit][i]:Show()
@@ -138,10 +146,10 @@ function Auras:UNIT_AURA(event, unit)
 	-- debuff frame
 	for i = 1, 40 do
 		local name, rank, icon, count, dispelType, duration, expires, caster, isStealable = UnitAura(unit, i, "HARMFUL")
-		if (not self.debuffFrame[unit]) or (not self.debuffFrame[unit][i]) then
+		if not self.debuffFrame[unit] or not self.debuffFrame[unit][i] then
 			break
 		end
-		if (name) then
+		if name then
 			self.debuffFrame[unit][i].texture:SetTexture(icon)
 			Gladius:Call(Gladius.modules.Timer, "SetTimer", self.debuffFrame[unit][i], duration)
 			self.debuffFrame[unit][i]:Show()
@@ -152,18 +160,18 @@ function Auras:UNIT_AURA(event, unit)
 end
 
 local function updateTooltip(f, unit, index, filter)
-	if (GameTooltip:IsOwned(f)) then
+	if GameTooltip:IsOwned(f) then
 		GameTooltip:SetUnitAura(unit, index, filter)
 	end
 end
 
 function Auras:CreateFrame(unit)
 	local button = Gladius.buttons[unit]
-	if (not button) then
+	if not button then
 		return
 	end
 	-- create buff frame
-	if (not self.buffFrame[unit] and Gladius.db.aurasBuffs) then
+	if not self.buffFrame[unit] and Gladius.db.aurasBuffs then
 		self.buffFrame[unit] = CreateFrame("Frame", "Gladius"..self.name.."BuffFrame"..unit, button)
 		for i = 1, 40 do
 			self.buffFrame[unit][i] = CreateFrame("CheckButton", "Gladius"..self.name.."BuffFrameIcon"..i..unit, button, "ActionButtonTemplate")
@@ -187,7 +195,7 @@ function Auras:CreateFrame(unit)
 		end
 	end
 	-- create debuff frame
-	if (not self.debuffFrame[unit] and Gladius.db.aurasDebuffs) then
+	if not self.debuffFrame[unit] and Gladius.db.aurasDebuffs then
 		self.debuffFrame[unit] = CreateFrame("Frame", "Gladius"..self.name.."DebuffFrame"..unit, button)
 		self.debuffFrame[unit]:EnableMouse(false)
 		for i = 1, 40 do
@@ -211,7 +219,7 @@ function Auras:CreateFrame(unit)
 			Gladius:Call(Gladius.modules.Timer, "RegisterTimer", self.debuffFrame[unit][i])
 		end
 	end
-	if (not Gladius.test) then
+	if not Gladius.test then
 		self:UNIT_AURA(nil, unit)
 	end
 end
@@ -219,11 +227,11 @@ end
 function Auras:Update(unit)
 	Gladius.db.aurasFrameAuras = Gladius.db.aurasFrameAuras or self:GetAuraList()
 	-- create frame
-	if (not self.buffFrame[unit] or not self.debuffFrame[unit]) then
+	if not self.buffFrame[unit] or not self.debuffFrame[unit] then
 		self:CreateFrame(unit)
 	end
 	-- update buff frame 
-	if (Gladius.db.aurasBuffs) then
+	if Gladius.db.aurasBuffs then
 		self.buffFrame[unit]:ClearAllPoints()
 		-- anchor point 
 		local parent = Gladius:GetParent(unit, Gladius.db.aurasBuffsAttachTo)
@@ -236,23 +244,23 @@ function Auras:Update(unit)
 		local start, startAnchor = 1, self.buffFrame[unit]
 		-- grow anchor
 		local grow1, grow2, grow3, startRelPoint
-		if (Gladius.db.aurasBuffsGrow == "DOWNRIGHT") then
+		if Gladius.db.aurasBuffsGrow == "DOWNRIGHT" then
 			grow1, grow2, grow3, startRelPoint = "TOPLEFT", "BOTTOMLEFT", "TOPRIGHT", "TOPLEFT"
-		elseif (Gladius.db.aurasBuffsGrow == "DOWNLEFT") then
+		elseif Gladius.db.aurasBuffsGrow == "DOWNLEFT" then
 			grow1, grow2, grow3, startRelPoint = "TOPRIGHT", "BOTTOMRIGHT", "TOPLEFT", "TOPRIGHT"
-		elseif (Gladius.db.aurasBuffsGrow == "UPRIGHT") then
+		elseif Gladius.db.aurasBuffsGrow == "UPRIGHT" then
 			grow1, grow2, grow3, startRelPoint = "BOTTOMLEFT", "TOPLEFT", "BOTTOMRIGHT", "BOTTOMLEFT"
-		elseif (Gladius.db.aurasBuffsGrow == "UPLEFT") then
+		elseif Gladius.db.aurasBuffsGrow == "UPLEFT" then
 			grow1, grow2, grow3, startRelPoint = "BOTTOMRIGHT", "TOPRIGHT", "BOTTOMLEFT", "BOTTOMRIGHT"
 		end
 		for i = 1, 40 do
 			self.buffFrame[unit][i]:ClearAllPoints()
-			if (Gladius.db.aurasBuffsMax >= i) then
-				if (start == 1) then
-					anchor, parent, relativePoint, offsetX, offsetY = grow1, startAnchor, startRelPoint, 0, strfind(Gladius.db.aurasBuffsGrow, "DOWN") and -Gladius.db.aurasBuffsSpacingY or Gladius.db.aurasBuffsSpacingY
+			if Gladius.db.aurasBuffsMax >= i then
+				if start == 1 then
+					anchor, parent, relativePoint, offsetX, offsetY = grow1, startAnchor, startRelPoint, 0, strfind(Gladius.db.aurasBuffsGrow, "DOWN") and - Gladius.db.aurasBuffsSpacingY or Gladius.db.aurasBuffsSpacingY
 				else
-					anchor, parent, relativePoint, offsetX, offsetY = grow1, self.buffFrame[unit][i-1], grow3, strfind(Gladius.db.aurasBuffsGrow, "LEFT") and -Gladius.db.aurasBuffsSpacingX or Gladius.db.aurasBuffsSpacingX, 0
-					if (start == Gladius.db.aurasBuffsPerColumn) then
+					anchor, parent, relativePoint, offsetX, offsetY = grow1, self.buffFrame[unit][i - 1], grow3, strfind(Gladius.db.aurasBuffsGrow, "LEFT") and - Gladius.db.aurasBuffsSpacingX or Gladius.db.aurasBuffsSpacingX, 0
+					if start == Gladius.db.aurasBuffsPerColumn then
 						start = 0
 						startAnchor = self.buffFrame[unit][i - Gladius.db.aurasBuffsPerColumn + 1]
 						startRelPoint = grow2
@@ -279,7 +287,7 @@ function Auras:Update(unit)
 		self.buffFrame[unit]:Hide()
 	end
 	-- update debuff frame
-	if (Gladius.db.aurasDebuffs) then
+	if Gladius.db.aurasDebuffs then
 		self.debuffFrame[unit]:ClearAllPoints()
 		-- anchor point 
 		local parent = Gladius:GetParent(unit, Gladius.db.aurasDebuffsAttachTo)
@@ -292,23 +300,23 @@ function Auras:Update(unit)
 		local start, startAnchor = 1, self.debuffFrame[unit]
 		-- grow anchor
 		local grow1, grow2, grow3, startRelPoint
-		if (Gladius.db.aurasDebuffsGrow == "DOWNRIGHT") then
+		if Gladius.db.aurasDebuffsGrow == "DOWNRIGHT" then
 			grow1, grow2, grow3, startRelPoint = "TOPLEFT", "BOTTOMLEFT", "TOPRIGHT", "TOPLEFT"
-		elseif (Gladius.db.aurasDebuffsGrow == "DOWNLEFT") then
+		elseif Gladius.db.aurasDebuffsGrow == "DOWNLEFT" then
 			grow1, grow2, grow3, startRelPoint = "TOPRIGHT", "BOTTOMRIGHT", "TOPLEFT", "TOPRIGHT"
-		elseif (Gladius.db.aurasDebuffsGrow == "UPRIGHT") then
+		elseif Gladius.db.aurasDebuffsGrow == "UPRIGHT" then
 			grow1, grow2, grow3, startRelPoint = "BOTTOMLEFT", "TOPLEFT", "BOTTOMRIGHT", "BOTTOMLEFT"
-		elseif (Gladius.db.aurasDebuffsGrow == "UPLEFT") then
+		elseif Gladius.db.aurasDebuffsGrow == "UPLEFT" then
 			grow1, grow2, grow3, startRelPoint = "BOTTOMRIGHT", "TOPRIGHT", "BOTTOMLEFT", "BOTTOMRIGHT"
 		end	
 		for i = 1, 40 do
 			self.debuffFrame[unit][i]:ClearAllPoints()
-			if (Gladius.db.aurasDebuffsMax >= i) then
-				if (start == 1) then
+			if Gladius.db.aurasDebuffsMax >= i then
+				if start == 1 then
 					anchor, parent, relativePoint, offsetX, offsetY = grow1, startAnchor, startRelPoint, 0, strfind(Gladius.db.aurasDebuffsGrow, "DOWN") and - Gladius.db.aurasDebuffsSpacingY or Gladius.db.aurasDebuffsSpacingY
 				else
 					anchor, parent, relativePoint, offsetX, offsetY = grow1, self.debuffFrame[unit][i - 1], grow3, strfind(Gladius.db.aurasDebuffsGrow, "LEFT") and - Gladius.db.aurasDebuffsSpacingX or Gladius.db.aurasDebuffsSpacingX, 0
-					if (start == Gladius.db.aurasDebuffsPerColumn) then
+					if start == Gladius.db.aurasDebuffsPerColumn then
 						start = 0
 						startAnchor = self.debuffFrame[unit][i - Gladius.db.aurasDebuffsPerColumn + 1]
 						startRelPoint = grow2
@@ -335,7 +343,7 @@ function Auras:Update(unit)
 		self.debuffFrame[unit]:Hide()
 	end
 	-- event
-	if (not Gladius.db.aurasDebuffs and not Gladius.db.aurasBuffs) then
+	if not Gladius.db.aurasDebuffs and not Gladius.db.aurasBuffs then
 		self:UnregisterAllEvents()
 	else
 		self:RegisterEvent("UNIT_AURA")
@@ -345,14 +353,14 @@ end
 function Auras:Show(unit)
 	-- show/hide buff frame
 	if Gladius.db.aurasBuffs then
-		if (self.buffFrame[unit]) then
+		if self.buffFrame[unit] then
 			self.buffFrame[unit]:Show()
 			for i = 1, Gladius.db.aurasBuffsMax do
 				self.buffFrame[unit][i]:Show()
 			end
 		end
 	else
-		if (self.buffFrame[unit]) then
+		if self.buffFrame[unit] then
 			self.buffFrame[unit]:Hide()
 			for i = 1, Gladius.db.aurasBuffsMax do
 				self.buffFrame[unit][i]:Hide()
@@ -361,14 +369,14 @@ function Auras:Show(unit)
 	end
 	-- show/hide debuff frame
 	if Gladius.db.aurasDebuffs then
-		if (self.debuffFrame[unit]) then
+		if self.debuffFrame[unit] then
 			self.debuffFrame[unit]:Show()
 			for i = 1, Gladius.db.aurasDebuffsMax do
 				self.debuffFrame[unit][i]:Show()
 			end
 		end
 	else
-		if (self.debuffFrame[unit]) then
+		if self.debuffFrame[unit] then
 			self.debuffFrame[unit]:Hide()
 			for i = 1, Gladius.db.aurasDebuffsMax do
 				self.debuffFrame[unit][i]:Hide()
@@ -378,7 +386,7 @@ function Auras:Show(unit)
 end
 
 function Auras:Reset(unit)
-	if (self.buffFrame[unit]) then
+	if self.buffFrame[unit] then
 		-- hide buff frame
 		self.buffFrame[unit]:Hide()
 		for i = 1, 40 do
@@ -386,7 +394,7 @@ function Auras:Reset(unit)
 			self.buffFrame[unit][i]:Hide()
 		end
 	end
-	if (self.debuffFrame[unit]) then
+	if self.debuffFrame[unit] then
 		-- hide debuff frame
 		self.debuffFrame[unit]:Hide()
 		for i = 1, 40 do
@@ -399,14 +407,14 @@ end
 function Auras:Test(unit)
 	-- test buff frame
 	local testBuff = GetSpellTexture(21562)
-	if (self.buffFrame[unit]) then
+	if self.buffFrame[unit] then
 		for i = 1, Gladius.db.aurasBuffsMax do
 			self.buffFrame[unit][i].texture:SetTexture(testBuff)
 		end
 	end
 	-- test debuff frame
 	local testDebuff = GetSpellTexture(589)
-	if (self.debuffFrame[unit]) then
+	if self.debuffFrame[unit] then
 		for i = 1, Gladius.db.aurasDebuffsMax do
 			self.debuffFrame[unit][i].texture:SetTexture(testDebuff)
 		end
@@ -470,7 +478,9 @@ function Auras:GetOptions()
 									type = "range",
 									name = L["Aura Icons Per Column"],
 									desc = L["Number of aura icons per column"],
-									min = 1, max = 50, step = 1,
+									min = 1,
+									max = 50,
+									step = 1,
 									disabled = function()
 										return not Gladius.dbi.profile.modules[self.name]
 									end,
@@ -480,7 +490,9 @@ function Auras:GetOptions()
 									type = "range",
 									name = L["Aura Icons Max"],
 									desc = L["Number of max buffs"],
-									min = 1, max = 40, step = 1,
+									min = 1,
+									max = 40,
+									step = 1,
 									disabled = function()
 										return not Gladius.dbi.profile.modules[self.name]
 									end,
@@ -536,7 +548,9 @@ function Auras:GetOptions()
 									type = "range",
 									name = L["Aura Icon Width"],
 									desc = L["Width of the aura icons"],
-									min = 10, max = 100, step = 1,
+									min = 10,
+									max = 100,
+									step = 1,
 									disabled = function()
 										return not Gladius.dbi.profile.modules[self.name]
 									end,
@@ -546,7 +560,9 @@ function Auras:GetOptions()
 									type = "range",
 									name = L["Aura Icon Height"],
 									desc = L["Height of the aura icon"],
-									min = 10, max = 100, step = 1,
+									min = 10,
+									max = 100,
+									step = 1,
 									disabled = function()
 										return not Gladius.dbi.profile.modules[self.name]
 									end,
@@ -562,7 +578,9 @@ function Auras:GetOptions()
 									type = "range",
 									name = L["Auras Spacing Vertical"],
 									desc = L["Vertical spacing of the auras"],
-									min = 0, max = 30, step = 1,
+									min = 0,
+									max = 30,
+									step = 1,
 									disabled = function()
 										return not Gladius.dbi.profile.modules[self.name]
 									end,
@@ -575,7 +593,9 @@ function Auras:GetOptions()
 									disabled = function()
 										return not Gladius.dbi.profile.modules[self.name]
 									end,
-									min = 0, max = 30, step = 1,
+									min = 0,
+									max = 30,
+									step = 1,
 									order = 20,
 								},
 							},
@@ -643,7 +663,9 @@ function Auras:GetOptions()
 									type = "range",
 									name = L["Auras Offset X"],
 									desc = L["X offset of the auras"],
-									min = - 100, max = 100, step = 1,
+									min = - 100,
+									max = 100,
+									step = 1,
 									disabled = function()
 										return not Gladius.dbi.profile.modules[self.name]
 									end,
@@ -656,7 +678,9 @@ function Auras:GetOptions()
 									disabled = function()
 										return not Gladius.dbi.profile.modules[self.name]
 									end,
-									min = - 50, max = 50, step = 1,
+									min = - 50,
+									max = 50,
+									step = 1,
 									order = 25,
 								},
 							},
@@ -728,12 +752,13 @@ function Auras:GetOptions()
 									type = "select",
 									name = L["Auras Column Grow"],
 									desc = L["Grow direction of the auras"],
-									values = function() return {
-										["UPLEFT"] = L["Up Left"],
-										["UPRIGHT"] = L["Up Right"],
-										["DOWNLEFT"] = L["Down Left"],
-										["DOWNRIGHT"] = L["Down Right"],
-									}
+									values = function()
+										return {
+											["UPLEFT"] = L["Up Left"],
+											["UPRIGHT"] = L["Up Right"],
+											["DOWNLEFT"] = L["Down Left"],
+											["DOWNRIGHT"] = L["Down Right"],
+										}
 									end,
 									disabled = function()
 										return not Gladius.dbi.profile.modules[self.name]
@@ -750,7 +775,9 @@ function Auras:GetOptions()
 									type = "range",
 									name = L["Aura Icons Per Column"],
 									desc = L["Number of aura icons per column"],
-									min = 1, max = 50, step = 1,
+									min = 1,
+									max = 50,
+									step = 1,
 									disabled = function()
 										return not Gladius.dbi.profile.modules[self.name]
 									end,
@@ -760,7 +787,9 @@ function Auras:GetOptions()
 									type = "range",
 									name = L["Aura Icons Max"],
 									desc = L["Number of max Debuffs"],
-									min = 1, max = 40, step = 1,
+									min = 1,
+									max = 40,
+									step = 1,
 									disabled = function()
 										return not Gladius.dbi.profile.modules[self.name]
 									end,
@@ -816,7 +845,9 @@ function Auras:GetOptions()
 									type = "range",
 									name = L["Aura Icon Width"],
 									desc = L["Width of the aura icons"],
-									min = 10, max = 100, step = 1,
+									min = 10,
+									max = 100,
+									step = 1,
 									disabled = function()
 										return not Gladius.dbi.profile.modules[self.name]
 									end,
@@ -826,7 +857,9 @@ function Auras:GetOptions()
 									type = "range",
 									name = L["Aura Icon Height"],
 									desc = L["Height of the aura icon"],
-									min = 10, max = 100, step = 1,
+									min = 10,
+									max = 100,
+									step = 1,
 									disabled = function()
 										return not Gladius.dbi.profile.modules[self.name]
 									end,
@@ -842,7 +875,9 @@ function Auras:GetOptions()
 									type = "range",
 									name = L["Auras Spacing Vertical"],
 									desc = L["Vertical spacing of the auras"],
-									min = 0, max = 30, step = 1,
+									min = 0,
+									max = 30,
+									step = 1,
 									disabled = function()
 										return not Gladius.dbi.profile.modules[self.name]
 									end,
@@ -855,7 +890,9 @@ function Auras:GetOptions()
 									disabled = function()
 										return not Gladius.dbi.profile.modules[self.name]
 									end,
-									min = 0, max = 30, step = 1,
+									min = 0,
+									max = 30,
+									step = 1,
 									order = 20,
 								},
 							},
@@ -923,7 +960,9 @@ function Auras:GetOptions()
 									type = "range",
 									name = L["Auras Offset X"],
 									desc = L["X offset of the auras"],
-									min = - 100, max = 100, step = 1,
+									min = - 100,
+									max = 100,
+									step = 1,
 									disabled = function()
 										return not Gladius.dbi.profile.modules[self.name]
 									end,
@@ -936,7 +975,9 @@ function Auras:GetOptions()
 									disabled = function()
 										return not Gladius.dbi.profile.modules[self.name]
 									end,
-									min = - 50, max = 50, step = 1,
+									min = - 50,
+									max = 50,
+									step = 1,
 									order = 25,
 								},
 							},
@@ -1032,7 +1073,7 @@ function Auras:GetOptions()
 		},
 	}
 	-- set auras
-	if (not Gladius.db.aurasFrameAuras) then
+	if not Gladius.db.aurasFrameAuras then
 		Gladius.db.aurasFrameAuras = self:GetAuraList()
 	end
 	for aura, priority in pairs(Gladius.db.aurasFrameAuras) do
@@ -1042,7 +1083,7 @@ function Auras:GetOptions()
 end
 
 local function setAura(info, value)
-	if (info[#(info)] == "name") then
+	if info[#(info)] == "name" then
 		-- create new aura
 		Gladius.options.args["ClassIcon"].args.auraList.args[value] = ClassIcon:SetupAura(value, Gladius.dbi.profile.aurasFrameAuras[info[#(info) - 1]])
 		Gladius.dbi.profile.aurasFrameAuras[value] = Gladius.dbi.profile.aurasFrameAuras[info[#(info) - 1]]
@@ -1058,7 +1099,7 @@ local function setAura(info, value)
 end
 
 local function getAura(info)
-	if (info[#(info)] == "name") then
+	if info[#(info)] == "name" then
 		return info[#(info) - 1]
 	else
 		return Gladius.dbi.profile.aurasFrameAuras[info[#(info) - 1]]
