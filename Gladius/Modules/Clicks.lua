@@ -5,8 +5,8 @@ end
 local L = Gladius.L
 
 -- global functions
-local strfind = string.find
 local pairs = pairs
+local string = string
 
 local Clicks = Gladius:NewModule("Clicks", false, false, {
 	clickAttributes = {
@@ -23,8 +23,8 @@ end
 function Clicks:OnDisable()
 	-- Iterate over all the secure frames and disable any attributes
 	for _, t in pairs(self.secureFrames) do
-		for frame,_ in pairs(t) do
-			for _,attr in pairs(Gladius.dbi.profile.clickAttributes) do
+		for frame, _ in pairs(t) do
+			for _, attr in pairs(Gladius.dbi.profile.clickAttributes) do
 				frame:SetAttribute(attr.modifier.."type"..attr.button, nil)
 			end
 		end
@@ -39,10 +39,10 @@ end
 -- Registers a secure frame and immediately applies
 -- click actions to it
 function Clicks:RegisterSecureFrame(unit, frame)
-	if (not self.secureFrames[unit]) then
-		self.secureFrames[unit] = {}
+	if not self.secureFrames[unit] then
+		self.secureFrames[unit] = { }
 	end
-	if (not self.secureFrames[unit][frame]) then
+	if not self.secureFrames[unit][frame] then
 		self.secureFrames[unit][frame] = true
 		self:ApplyAttributes(unit, frame)
 	end
@@ -56,7 +56,7 @@ function Clicks:GetSecureFrames(unit)
 	-- Find secure frames in other modules
 	for m, _ in pairs(Gladius.modules) do
 		local frame = Gladius:GetParent(unit, m)
-		if (frame and frame.secure) then
+		if frame and frame.secure then
 			self:RegisterSecureFrame(unit, frame.secure)
 		end
 	end
@@ -76,9 +76,9 @@ function Clicks:ApplyAttributes(unit, frame)
 	frame:SetAttribute("unit", unit)
 	for _, attr in pairs(Gladius.dbi.profile.clickAttributes) do
 		frame:SetAttribute(attr.modifier.."type"..attr.button, attr.action)
-		if (attr.action == "macro" and attr.macro ~= "") then
+		if attr.action == "macro" and attr.macro ~= "" then
 			frame:SetAttribute(attr.modifier.."macrotext"..attr.button, string.gsub(attr.macro, "*unit", unit))
-		elseif (attr.action == "spell" and attr.macro ~= "") then
+		elseif attr.action == "spell" and attr.macro ~= "" then
 			frame:SetAttribute(attr.modifier.."spell"..attr.button, attr.macro)
 		end
 	end
@@ -158,7 +158,7 @@ function Clicks:GetOptions()
 							order = 30,
 							func = function()
 								local attr = addAttrMod ~= "" and CLICK_MODIFIERS[addAttrMod]..CLICK_BUTTONS[addAttrButton] or CLICK_BUTTONS[addAttrButton]
-								if (not Gladius.db.clickAttributes[attr]) then
+								if not Gladius.db.clickAttributes[attr] then
 									-- add to db
 									Gladius.db.clickAttributes[attr] = {
 										button = addAttrButton, 
