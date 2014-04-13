@@ -89,7 +89,7 @@ function ClassIcon:UpdateAura(unit)
 		if not name then
 			break
 		end
-		if (Gladius.db.aurasFrameAuras[name] and Gladius.db.aurasFrameAuras[name] >= self.frame[unit].priority) then
+		if Gladius.db.aurasFrameAuras[name] and Gladius.db.aurasFrameAuras[name] >= self.frame[unit].priority then
 			aura = name
 			self.frame[unit].icon = icon
 			self.frame[unit].timeleft = duration
@@ -196,7 +196,7 @@ function ClassIcon:Update(unit)
 				height = false
 			end
 		end]]
-		if (height) then
+		if height then
 			self.frame[unit]:SetWidth(Gladius.buttons[unit].height)
 			self.frame[unit]:SetHeight(Gladius.buttons[unit].height)
 		else
