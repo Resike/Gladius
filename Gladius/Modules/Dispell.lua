@@ -8,10 +8,17 @@ local L = Gladius.L
 local LSM
 
 -- global functions
-local strfind = string.find
+local _G = _G
 local pairs = pairs
+local strfind = string.find
 local strformat = string.format
-local UnitName, UnitClass, UnitFactionGroup, UnitLevel = UnitName, UnitClass, UnitFactionGroup, UnitLevel
+
+local CreateFrame = CreateFrame
+local UnitClass = UnitClass
+local UnitFactionGroup = UnitFactionGroup
+local UnitGUID = UnitGUID
+local UnitLevel = UnitLevel
+local UnitName = UnitName
 
 local Dispell = Gladius:NewModule("Dispell", false, true, {
 	dispellAttachTo = "Frame",
@@ -42,7 +49,7 @@ function Dispell:OnEnable()
 	--self:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
 	self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 	LSM = Gladius.LSM
-	if (not self.frame) then
+	if not self.frame then
 		self.frame = { }
 	end
 end
@@ -63,7 +70,7 @@ function Dispell:GetFrame(unit)
 end
 
 function Dispell:SetTemplate(template)
-	if (template == 1) then
+	if template == 1 then
 		-- reset width
 		if (Gladius.db.targetBarAttachTo == "HealthBar" and not Gladius.db.healthBarAdjustWidth) then
 			Gladius.db.healthBarAdjustWidth = true
@@ -72,8 +79,8 @@ function Dispell:SetTemplate(template)
 		for k, v in pairs(self.defaults) do
 			Gladius.db[k] = v
 		end
-	elseif (template == 2) then
-		if (Gladius.db.modules["HealthBar"]) then
+	elseif template == 2 then
+		if Gladius.db.modules["HealthBar"] then
 			if (Gladius.db.healthBarAdjustWidth) then
 				Gladius.db.healthBarAdjustWidth = false
 				Gladius.db.healthBarWidth = Gladius.db.barWidth - Gladius.db.healthBarHeight
@@ -90,7 +97,7 @@ function Dispell:SetTemplate(template)
 			Gladius.db.dispellOffsetY = 0
 		end
 	else
-		if (Gladius.db.modules["PowerBar"]) then
+		if Gladius.db.modules["PowerBar"] then
 			if (Gladius.db.powerBarAdjustWidth) then
 				Gladius.db.powerBarAdjustWidth = false
 				Gladius.db.powerBarWidth = Gladius.db.powerBarWidth - Gladius.db.powerBarHeight
@@ -110,29 +117,26 @@ function Dispell:SetTemplate(template)
 end
 
 function Dispell:COMBAT_LOG_EVENT_UNFILTERED(event, ...)
-	if select(2, ...) == "SPELL_DISPEL" then
-		local spell = select(12, ...)
-		local unit = select(4, ...)
-		--[[if (not strfind(unit, "arena") or strfind(unit, "pet")) then
-			return
-		end]]
-		if (not(UnitGUID("arena1") == unit or UnitGUID("arena2") == unit or UnitGUID("arena3") == unit or UnitGUID("arena4") == unit or UnitGUID("arena5") == unit)) then
+	local _, eventType, _, sourceGUID, _, _, _, _, _, _, _, spellId = ...
+	if eventType == "SPELL_DISPEL" then
+		if not (UnitGUID("arena1") == sourceGUID or UnitGUID("arena2") == sourceGUID or UnitGUID("arena3") == sourceGUID or UnitGUID("arena4") == sourceGUID or UnitGUID("arena5") == sourceGUID) then
 			return
 		end
-		if (spell == 527 or spell == 4987 or spell == 77130 or spell == 88423) then
-			if UnitGUID("arena1") == unit then
-				self:UpdateDispell("arena1", 8) end
-			if UnitGUID("arena2") == unit then
-				self:UpdateDispell("arena2", 8) end
-			if UnitGUID("arena3") == unit then
-				self:UpdateDispell("arena3", 8) end
-			if UnitGUID("arena4") == unit then
-				self:UpdateDispell("arena4", 8) end
-			if UnitGUID("arena5") == unit then
-				self:UpdateDispell("arena5", 8) end
+		if spellId == 527 or spellId == 4987 or spellId == 77130 or spellId == 88423 or spellId == 115450 then
+			if UnitGUID("arena1") == sourceGUID then
+				self:UpdateDispell("arena1", 8)
+			elseif UnitGUID("arena2") == sourceGUID then
+				self:UpdateDispell("arena2", 8)
+			elseif UnitGUID("arena3") == sourceGUID then
+				self:UpdateDispell("arena3", 8)
+			elseif UnitGUID("arena4") == sourceGUID then
+				self:UpdateDispell("arena4", 8)
+			elseif UnitGUID("arena5") == sourceGUID then
+				self:UpdateDispell("arena5", 8)
+			end
 		end
 		--wotf
-		--[[if (spell == GetSpellInfo(7744)) then
+		--[[if spellId == GetSpellInfo(7744) then
 			self:UpdateDispell(unit, 45)
 		end]]
 	end
@@ -140,24 +144,24 @@ end
 
 function Dispell:UpdateDispell(unit, duration)
 	-- grid style icon
-	if (Gladius.db.dispellGridStyleIcon) then
+	if Gladius.db.dispellGridStyleIcon then
 		self.frame[unit].texture:SetVertexColor(Gladius.db.dispellGridStyleIconUsedColor.r, Gladius.db.dispellGridStyleIconUsedColor.g, Gladius.db.dispellGridStyleIconUsedColor.b, Gladius.db.dispellGridStyleIconUsedColor.a)
 	end
 	-- announcement
-	if (Gladius.db.announcements.dispell) then
+	if Gladius.db.announcements.dispell then
 		Gladius:Call(Gladius.modules.Announcements, "Send", strformat(L["DISPELL USED: %s (%s)"], UnitName(unit) or "test", UnitClass(unit) or "test"), 2, unit)
 	end
-	if (Gladius.db.announcements.dispell or Gladius.db.dispellGridStyleIcon) then
+	if Gladius.db.announcements.dispell or Gladius.db.dispellGridStyleIcon then
 		self.frame[unit].timeleft = duration
 		self.frame[unit]:SetScript("OnUpdate", function(f, elapsed)
 			self.frame[unit].timeleft = self.frame[unit].timeleft - elapsed
-			if (self.frame[unit].timeleft <= 0) then
+			if self.frame[unit].timeleft <= 0 then
 				-- dispell
-				if (Gladius.db.dispellGridStyleIcon) then
+				if Gladius.db.dispellGridStyleIcon then
 					self.frame[unit].texture:SetVertexColor(Gladius.db.dispellGridStyleIconColor.r, Gladius.db.dispellGridStyleIconColor.g, Gladius.db.dispellGridStyleIconColor.b, Gladius.db.dispellGridStyleIconColor.a)
 				end
 				-- announcement
-				if (Gladius.db.announcements.dispell) then
+				if Gladius.db.announcements.dispell then
 					Gladius:Call(Gladius.modules.Announcements, "Send", strformat(L["DISPELL READY: %s (%s)"], UnitName(unit) or "", UnitClass(unit) or ""), 2, unit)
 				end
 				self.frame[unit]:SetScript("OnUpdate", nil)
@@ -170,7 +174,7 @@ end
 
 function Dispell:CreateFrame(unit)
 	local button = Gladius.buttons[unit]
-	if (not button) then
+	if not button then
 		return
 	end
 	-- create frame
@@ -184,7 +188,7 @@ end
 
 function Dispell:Update(unit)
 	-- create frame
-	if (not self.frame[unit]) then
+	if not self.frame[unit] then
 		self:CreateFrame(unit)
 	end
 	-- update frame
@@ -194,8 +198,8 @@ function Dispell:Update(unit)
 	self.frame[unit]:SetPoint(Gladius.db.dispellAnchor, parent, Gladius.db.dispellRelativePoint, Gladius.db.dispellOffsetX, Gladius.db.dispellOffsetY)
 	-- frame level
 	self.frame[unit]:SetFrameLevel(Gladius.db.dispellFrameLevel)
-	if (Gladius.db.dispellAdjustSize) then
-		if (self:GetAttachTo() == "Frame") then
+	if Gladius.db.dispellAdjustSize then
+		if self:GetAttachTo() == "Frame" then
 			local height = false
 			-- need to rethink that
 			--[[for _, module in pairs(Gladius.modules) do
@@ -203,7 +207,7 @@ function Dispell:Update(unit)
 					height = false
 				end
 			end]]
-			if (height) then
+			if height then
 				self.frame[unit]:SetWidth(Gladius.buttons[unit].height)
 				self.frame[unit]:SetHeight(Gladius.buttons[unit].height)
 			else
@@ -219,27 +223,27 @@ function Dispell:Update(unit)
 		self.frame[unit]:SetHeight(Gladius.db.dispellSize)
 	end
 	-- set frame mouse-interactable area
-	if (self:GetAttachTo() == "Frame") then
+	if self:GetAttachTo() == "Frame" then
 	local left, right, top, bottom = Gladius.buttons[unit]:GetHitRectInsets()
-	if (strfind(Gladius.db.dispellRelativePoint, "LEFT")) then
-		left = -self.frame[unit]:GetWidth() + Gladius.db.dispellOffsetX
+	if strfind(Gladius.db.dispellRelativePoint, "LEFT") then
+		left = - self.frame[unit]:GetWidth() + Gladius.db.dispellOffsetX
 	else
-		right = -self.frame[unit]:GetWidth() + -Gladius.db.dispellOffsetX
+		right = - self.frame[unit]:GetWidth() + - Gladius.db.dispellOffsetX
 	end
 	-- search for an attached frame
 	--[[for _, module in pairs(Gladius.modules) do
-		if (module.attachTo and module:GetAttachTo() == self.name and module.frame and module.frame[unit]) then
+		if module.attachTo and module:GetAttachTo() == self.name and module.frame and module.frame[unit] then
 			local attachedPoint = module.frame[unit]:GetPoint()
-			if (strfind(Gladius.db.trinketRelativePoint, "LEFT") and (not attachedPoint or (attachedPoint and strfind(attachedPoint, "RIGHT")))) then
+			if strfind(Gladius.db.trinketRelativePoint, "LEFT" and (not attachedPoint or (attachedPoint and strfind(attachedPoint, "RIGHT")))) then
 				left = left - module.frame[unit]:GetWidth()
-			elseif (strfind(Gladius.db.trinketRelativePoint, "RIGHT") and (not attachedPoint or (attachedPoint and strfind(attachedPoint, "LEFT")))) then
+			elseif strfind(Gladius.db.trinketRelativePoint, "RIGHT" and (not attachedPoint or (attachedPoint and strfind(attachedPoint, "LEFT")))) then
 				right = right - module.frame[unit]:GetWidth()
 			end
 		end
 	end]]
 	-- top / bottom
-	if (self.frame[unit]:GetHeight() > Gladius.buttons[unit]:GetHeight()) then
-		bottom = -(self.frame[unit]:GetHeight() - Gladius.buttons[unit]:GetHeight()) + Gladius.db.dispellOffsetY
+	if self.frame[unit]:GetHeight() > Gladius.buttons[unit]:GetHeight() then
+		bottom = - (self.frame[unit]:GetHeight() - Gladius.buttons[unit]:GetHeight()) + Gladius.db.dispellOffsetY
 	end
 		Gladius.buttons[unit]:SetHitRectInsets(left, right, 0, 0)
 		Gladius.buttons[unit].secure:SetHitRectInsets(left, right, 0, 0)
@@ -253,14 +257,14 @@ function Dispell:Update(unit)
 	self.frame[unit].texture:ClearAllPoints()
 	self.frame[unit].texture:SetPoint("TOPLEFT", self.frame[unit], "TOPLEFT")
 	self.frame[unit].texture:SetPoint("BOTTOMRIGHT", self.frame[unit], "BOTTOMRIGHT")
-	if (not Gladius.db.dispellIconCrop and not Gladius.db.dispellGridStyleIcon) then
+	if not Gladius.db.dispellIconCrop and not Gladius.db.dispellGridStyleIcon then
 		self.frame[unit].texture:SetTexCoord(0, 1, 0, 1)
 	else
 		self.frame[unit].texture:SetTexCoord(0.07, 0.93, 0.07, 0.93)
 	end
 	self.frame[unit].normalTexture:SetVertexColor(Gladius.db.dispellGlossColor.r, Gladius.db.dispellGlossColor.g, Gladius.db.dispellGlossColor.b, Gladius.db.dispellGloss and Gladius.db.dispellGlossColor.a or 0)
 	-- cooldown
-	if (Gladius.db.dispellCooldown) then
+	if Gladius.db.dispellCooldown then
 		self.frame[unit].cooldown:Show()
 	else
 		self.frame[unit].cooldown:Hide()
@@ -272,42 +276,44 @@ function Dispell:Update(unit)
 end
 
 function Dispell:Show(unit)
-	local testing = Gladius.test
 	-- show frame
 	self.frame[unit]:SetAlpha(1)
-	if (Gladius.db.dispellGridStyleIcon) then
+	if Gladius.db.dispellGridStyleIcon then
 		self.frame[unit].texture:SetTexture(LSM:Fetch(LSM.MediaType.STATUSBAR, "minimalist"))
 		self.frame[unit].texture:SetVertexColor(Gladius.db.dispellGridStyleIconColor.r, Gladius.db.dispellGridStyleIconColor.g, Gladius.db.dispellGridStyleIconColor.b, Gladius.db.dispellGridStyleIconColor.a)
 	else
 		local dispellIcon
-		local playerClass, englishClass = UnitClass(unit)
-		if (not testing) then
-			if (englishClass == "PRIEST" ) then
+		local _, englishClass = UnitClass(unit)
+		local testing = Gladius.test
+		if not testing then
+			if englishClass == "PRIEST" then
 				dispellIcon = "Interface\\Icons\\spell_holy_dispelmagic"
-			elseif (englishClass == "SHAMAN" ) then
+			elseif englishClass == "SHAMAN" then
 				dispellIcon = "Interface\\Icons\\ability_shaman_cleansespirit"
-			elseif (englishClass == "PALADIN" ) then
+			elseif englishClass == "PALADIN" then
 				dispellIcon = "Interface\\Icons\\spell_holy_purify"
-			elseif (englishClass == "DRUID" ) then
+			elseif englishClass == "DRUID" then
 				dispellIcon = "Interface\\Icons\\ability_shaman_cleansespirit"
-			elseif (englishClass == "MAGE" ) then
+			elseif englishClass == "MAGE" then
 				dispellIcon = "Interface\\Icons\\spell_nature_removecurse"
+			elseif englishClass == "MONK" then
+				dispellIcon = "Interface\\Icons\\spell_holy_dispelmagic"
 			end
 		else
-			if (englishClass == "PRIEST" or unit == "arena1") then
-				dispellIcon = "Interface\\Icons\\spell_holy_dispelmagic"
-			elseif (englishClass == "SHAMAN" or unit == "arena2") then
-				dispellIcon = "Interface\\Icons\\ability_shaman_cleansespirit"
-			elseif (englishClass == "PALADIN" or unit == "arena3") then
-				dispellIcon = "Interface\\Icons\\spell_holy_purify"
-			elseif (englishClass == "DRUID" or unit == "arena4") then
-				dispellIcon = "Interface\\Icons\\ability_shaman_cleansespirit"
-			elseif (englishClass == "MAGE" or unit == "arena5") then
+			if englishClass == "PRIEST" or unit == "arena1" then
 				dispellIcon = "Interface\\Icons\\spell_nature_removecurse"
+			elseif englishClass == "SHAMAN" or unit == "arena2" then
+				dispellIcon = "Interface\\Icons\\spell_holy_dispelmagic"
+			elseif englishClass == "PALADIN" or unit == "arena3" then
+				dispellIcon = "Interface\\Icons\\spell_holy_purify"
+			elseif englishClass == "DRUID" or unit == "arena4" then
+				dispellIcon = "Interface\\Icons\\ability_shaman_cleansespirit"
+			elseif englishClass == "MAGE" or unit == "arena5" then
+				dispellIcon = "Interface\\Icons\\spell_holy_purify"
 			end
 		end
 		self.frame[unit].texture:SetTexture(dispellIcon)
-		if (Gladius.db.dispellIconCrop) then
+		if Gladius.db.dispellIconCrop then
 			self.frame[unit].texture:SetTexCoord(0.07, 0.93, 0.07, 0.93)
 		end
 		self.frame[unit].texture:SetVertexColor(1, 1, 1, 1)
@@ -315,18 +321,18 @@ function Dispell:Show(unit)
 end
 
 function Dispell:Reset(unit)
-	if (not self.frame[unit]) then
+	if not self.frame[unit] then
 		return
 	end
 	-- reset frame
 	local dispellIcon
-	if (UnitFactionGroup("player") == "Horde" and Gladius.db.dispellFaction) then
+	if UnitFactionGroup("player") == "Horde" and Gladius.db.dispellFaction then
 		dispellIcon = "Interface\\Icons\\INV_Jewelry_Necklace_38"
 	else
 		dispellIcon = "Interface\\Icons\\INV_Jewelry_Necklace_37"
 	end
 	self.frame[unit].texture:SetTexture(dispellIcon)
-	if (Gladius.db.dispellIconCrop) then
+	if Gladius.db.dispellIconCrop then
 		self.frame[unit].texture:SetTexCoord(0.07, 0.93, 0.07, 0.93)
 	end
 	self.frame[unit]:SetScript("OnUpdate", nil)
@@ -337,17 +343,15 @@ function Dispell:Reset(unit)
 end
 
 function Dispell:Test(unit)
-	-- test
-	if (unit == "arena1") then
+	if unit == "arena1" then
 		self:UpdateDispell(unit, 8)
-	end
-	if (unit == "arena2") then
+	elseif unit == "arena2" then
 		self:UpdateDispell(unit, 8)
-	end
-	if (unit == "arena3") then
+	elseif unit == "arena3" then
 		self:UpdateDispell(unit, 8)
-	end
-	if (unit == "arena4") then
+	elseif unit == "arena4" then
+		self:UpdateDispell(unit, 8)
+	elseif unit == "arena5" then
 		self:UpdateDispell(unit, 8)
 	end
 end
@@ -535,7 +539,9 @@ function Dispell:GetOptions()
 							hidden = function()
 								return not Gladius.db.advancedOptions
 							end,
-							min = 1, max = 5, step = 1,
+							min = 1,
+							max = 5,
+							step = 1,
 							width = "double",
 							order = 45,
 						},
@@ -561,7 +567,9 @@ function Dispell:GetOptions()
 							type = "range",
 							name = L["Dispell Size"],
 							desc = L["Size of the dispell"],
-							min = 10, max = 100, step = 1,
+							min = 10,
+							max = 100,
+							step = 1,
 							disabled = function()
 								return Gladius.dbi.profile.dispellAdjustSize or not Gladius.dbi.profile.modules[self.name]
 							end,
@@ -593,7 +601,7 @@ function Dispell:GetOptions()
 							type = "select",
 							name = L["Dispell Position"],
 							desc = L["Position of the dispell"],
-							values={["LEFT"] = L["Left"], ["RIGHT"] = L["Right"]},
+							values = {["LEFT"] = L["Left"], ["RIGHT"] = L["Right"]},
 							get = function()
 								return strfind(Gladius.db.dispellAnchor, "RIGHT") and "LEFT" or "RIGHT"
 							end,
@@ -661,7 +669,9 @@ function Dispell:GetOptions()
 							type = "range",
 							name = L["Dispell Offset X"],
 							desc = L["X offset of the dispell"],
-							min = - 100, max = 100, step = 1,
+							min = - 100,
+							max = 100,
+							step = 1,
 							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
@@ -674,7 +684,9 @@ function Dispell:GetOptions()
 							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							min = - 50, max = 50, step = 1,
+							min = - 50,
+							max = 50,
+							step = 1,
 							order = 25,
 						},
 					},
