@@ -115,7 +115,7 @@ function Trinket:UNIT_SPELLCAST_SUCCEEDED(event, unit, spell, rank)
 	end
 	-- wotf
 	if spell == GetSpellInfo(7744) then
-		self:UpdateTrinket(unit, 45)
+		self:UpdateTrinket(unit, 30)
 	end
 end
 
