@@ -1,6 +1,6 @@
 ﻿## Interface: 50400
-## Title: Gladius |cFF99CC01rev|r |cFFFF00003.2.4|r
-## Version: 3.2.4
+## Title: Gladius |cFF99CC01rev|r |cFFFF00003.2.5|r
+## Version: 3.2.5
 ## Notes: Arena enemy unit frames.
 ## Author: Resike and Firebunny. Original author: Proditor
 ## SavedVariables: Gladius2DB
@@ -29,4 +29,4 @@ Modules\Announcements.lua
 Modules\DRTracker.lua
 Modules\Timer.lua
 Modules\Layout.lua
-Modules\Dispell.lua
+Modules\Dispel.lua
