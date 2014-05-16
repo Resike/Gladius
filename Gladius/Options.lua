@@ -98,14 +98,6 @@ SlashCmdList["GLADIUS"] = function(msg)
 		else
 			Gladius:Print(L["You can't use this function inside arenas."])
 		end
-	elseif (msg == "" or msg == "options" or msg == "config" or msg == "ui") then
-		AceDialog = AceDialog or LibStub("AceConfigDialog-3.0")
-		AceRegistry = AceRegistry or LibStub("AceConfigRegistry-3.0")
-		if (not Gladius.options) then
-			Gladius:SetupOptions()
-			AceDialog:SetDefaultSize("Gladius", 830, 530)
-		end
-		AceDialog:Open("Gladius")
 	elseif (msg == "hide" or (msg:find("test") and Gladius.test)) then
 		-- reset test environment
 		Gladius.testCount = 0
@@ -121,6 +113,14 @@ SlashCmdList["GLADIUS"] = function(msg)
 	elseif (msg == "reset") then
 		-- reset profile
 		Gladius.dbi:ResetProfile()
+	else
+		AceDialog = AceDialog or LibStub("AceConfigDialog-3.0")
+		AceRegistry = AceRegistry or LibStub("AceConfigRegistry-3.0")
+		if (not Gladius.options) then
+			Gladius:SetupOptions()
+			AceDialog:SetDefaultSize("Gladius", 830, 530)
+		end
+		AceDialog:Open("Gladius")
 	end
 end
 

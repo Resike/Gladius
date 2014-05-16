@@ -8,8 +8,14 @@ local LSM
 local DRData = LibStub("DRData-1.0")
 
 -- global functions
-local strfind = string.find
+local _G = _G
 local pairs = pairs
+local strfind = string.find
+local unpack = unpack
+
+local CreateFontString = CreateFontString
+local CreateFrame = CreateFrame
+local GetSpellTexture = GetSpellTexture
 local GetTime = GetTime
 local UnitGUID = UnitGUID
 
@@ -21,7 +27,7 @@ local DRTracker = Gladius:NewModule("DRTracker", false, true, {
 	drTrackerMargin = 5,
 	drTrackerSize = 52,
 	drTrackerOffsetX = 0,
-	drTrackerOffsetY = - 5,
+	drTrackerOffsetY = -5,
 	drTrackerFrameLevel = 2,
 	drTrackerGloss = true,
 	drTrackerGlossColor = {r = 1, g = 1, b = 1, a = 0.4},
@@ -41,7 +47,7 @@ end
 function DRTracker:OnEnable()
 	self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 	LSM = Gladius.LSM
-	if (not self.frame) then
+	if not self.frame then
 		self.frame = { }
 	end 
 end
@@ -72,14 +78,16 @@ function DRTracker:UpdateIcon(unit, drCat)
 	tracked.normalTexture = _G[tracked:GetName().."NormalTexture"]
 	tracked.cooldown = _G[tracked:GetName().."Cooldown"]
 	-- cooldown
-	if (Gladius.db.drTrackerCooldown) then
+	if Gladius.db.drTrackerCooldown then
 		tracked.cooldown:Show()
 	else
 		tracked.cooldown:Hide()
 	end
 	tracked.cooldown:SetReverse(Gladius.db.drTrackerCooldownReverse)
 	Gladius:Call(Gladius.modules.Timer, "RegisterTimer", tracked, Gladius.db.drTrackerCooldown)
-	tracked.text = tracked:CreateFontString(nil, "OVERLAY")
+	if not tracked.text then
+		tracked.text = tracked:CreateFontString(nil, "OVERLAY")
+	end
 	tracked.text:SetDrawLayer("OVERLAY")
 	tracked.text:SetJustifyH("RIGHT")
 	tracked.text:SetPoint("BOTTOMRIGHT", tracked, -2, 0)
@@ -100,7 +108,7 @@ end
 
 function DRTracker:DRFaded(unit, spellID)
 	local drCat = DRData:GetSpellCategory(spellID)
-	if (Gladius.db.drCategories[drCat] == false) then
+	if Gladius.db.drCategories[drCat] == false then
 		return
 	end
 	local drTexts = {
@@ -109,18 +117,18 @@ function DRTracker:DRFaded(unit, spellID)
 		[0.25] = {"%", 1, 0, 0},
 		[0] = {"%", 1, 0, 0},
 	}
-	if (not self.frame[unit].tracker[drCat]) then
+	if not self.frame[unit].tracker[drCat] then
 		self.frame[unit].tracker[drCat] = CreateFrame("CheckButton", "Gladius"..self.name.."FrameCat"..drCat..unit, self.frame[unit], "ActionButtonTemplate")
 		self:UpdateIcon(unit, drCat)
 	end
 	local tracked = self.frame[unit].tracker[drCat]
 	tracked.active = true
-	if (tracked and tracked.reset <= GetTime()) then
+	if tracked and tracked.reset <= GetTime() then
 		tracked.diminished = 1
 	else
 		tracked.diminished = DRData:NextDR(tracked.diminished)
 	end
-	if (Gladius.test and tracked.diminished == 0) then
+	if Gladius.test and tracked.diminished == 0 then
 		tracked.diminished = 1
 	end
 	tracked.timeLeft = DRData:GetResetTime()
@@ -132,10 +140,10 @@ function DRTracker:DRFaded(unit, spellID)
 	Gladius:Call(Gladius.modules.Timer, "SetTimer", tracked, tracked.timeLeft)
 	tracked:SetScript("OnUpdate", function(f, elapsed)
 		f.timeLeft = f.timeLeft - elapsed
-		if (f.timeLeft <= 0) then
-			if (Gladius.test) then
+		if f.timeLeft <= 0 then
+			--[[if Gladius.test then
 				return
-			end
+			end]]
 			f.active = false
 			Gladius:Call(Gladius.modules.Timer, "HideTimer", f)
 			-- position icons
@@ -151,7 +159,7 @@ function DRTracker:SortIcons(unit)
 	for cat, frame in pairs(self.frame[unit].tracker) do
 		frame:ClearAllPoints()
 		frame:SetAlpha(0)
-		if (frame.active) then
+		if frame.active then
 			frame:SetPoint(Gladius.db.drTrackerAnchor, lastFrame, lastFrame == self.frame[unit] and Gladius.db.drTrackerAnchor or Gladius.db.drTrackerRelativePoint, strfind(Gladius.db.drTrackerAnchor,"LEFT") and Gladius.db.drTrackerMargin or - Gladius.db.drTrackerMargin, 0)
 			lastFrame = frame
 			frame:SetAlpha(1)
@@ -162,21 +170,21 @@ end
 function DRTracker:COMBAT_LOG_EVENT_UNFILTERED(event, timestamp, eventType, hideCaster, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags, spellID, spellName, spellSchool, auraType)
 	local unit
 	for u, _ in pairs(Gladius.buttons) do
-		if (UnitGUID(u) == destGUID) then
+		if UnitGUID(u) == destGUID then
 			unit = u
 		end
 	end
-	if (not unit) then
+	if not unit then
 		return
 	end
 	-- Enemy had a debuff refreshed before it faded, so fade + gain it quickly
-	if (eventType == "SPELL_AURA_REFRESH") then
-		if (auraType == "DEBUFF" and DRData:GetSpellCategory(spellID)) then
+	if eventType == "SPELL_AURA_REFRESH" then
+		if auraType == "DEBUFF" and DRData:GetSpellCategory(spellID) then
 			self:DRFaded(unit, spellID)
 		end
 	-- Buff or debuff faded from an enemy
-	elseif (eventType == "SPELL_AURA_REMOVED") then
-		if (auraType == "DEBUFF" and DRData:GetSpellCategory(spellID)) then
+	elseif eventType == "SPELL_AURA_REMOVED" then
+		if auraType == "DEBUFF" and DRData:GetSpellCategory(spellID) then
 			self:DRFaded(unit, spellID)
 		end
 	end
@@ -184,7 +192,7 @@ end
 
 function DRTracker:CreateFrame(unit)
 	local button = Gladius.buttons[unit]
-	if (not button) then
+	if not button then
 		return
 	end
 	-- create frame
@@ -193,7 +201,7 @@ end
 
 function DRTracker:Update(unit)
 	-- create frame
-	if (not self.frame[unit]) then
+	if not self.frame[unit] then
 		self:CreateFrame(unit)
 	end
 	-- update frame
@@ -203,16 +211,16 @@ function DRTracker:Update(unit)
 	self.frame[unit]:SetPoint(Gladius.db.drTrackerAnchor, parent, Gladius.db.drTrackerRelativePoint, Gladius.db.drTrackerOffsetX, Gladius.db.drTrackerOffsetY)
 	-- frame level
 	self.frame[unit]:SetFrameLevel(Gladius.db.drTrackerFrameLevel)
-	if (Gladius.db.drTrackerAdjustSize) then
-		if (self:GetAttachTo() == "Frame") then
+	if Gladius.db.drTrackerAdjustSize then
+		if self:GetAttachTo() == "Frame" then
 			local height = false
 			-- need to rethink that
 			--[[for _, module in pairs(Gladius.modules) do
-				if (module:GetAttachTo() == self.name) then
+				if module:GetAttachTo() == self.name then
 					height = false
 				end
 			end]]
-			if (height) then
+			if height then
 				self.frame[unit]:SetWidth(Gladius.buttons[unit].height)
 				self.frame[unit]:SetHeight(Gladius.buttons[unit].height)
 			else
@@ -228,7 +236,7 @@ function DRTracker:Update(unit)
 		self.frame[unit]:SetHeight(Gladius.db.drTrackerSize)
 	end
 	-- update icons
-	if (not self.frame[unit].tracker) then
+	if not self.frame[unit].tracker then
 		self.frame[unit].tracker = { }
 	else
 		for cat, frame in pairs(self.frame[unit].tracker) do
@@ -251,7 +259,7 @@ function DRTracker:Show(unit)
 end
 
 function DRTracker:Reset(unit)
-	if (not self.frame[unit]) then
+	if not self.frame[unit] then
 		return
 	end
 	-- hide icons
@@ -267,16 +275,9 @@ function DRTracker:Reset(unit)
 end
 
 function DRTracker:Test(unit)
-	if (not self.frame[unit].tracker[DRData:GetSpellCategory(64058)] or self.frame[unit].tracker[DRData:GetSpellCategory(64058)].active == false) then
-		self:DRFaded(unit, 64058)
-		self:DRFaded(unit, 118)
-		self:DRFaded(unit, 118)
-	end
-	if (not self.frame[unit].tracker[DRData:GetSpellCategory(33786)] or self.frame[unit].tracker[DRData:GetSpellCategory(33786)].active == false) then
-		self:DRFaded(unit, 33786)
-		self:DRFaded(unit, 33786)
-		self:DRFaded(unit, 33786)
-	end
+	self:DRFaded(unit, 33786)
+	self:DRFaded(unit, 64058)
+	self:DRFaded(unit, 118)
 end
 
 function DRTracker:GetOptions()
@@ -297,7 +298,9 @@ function DRTracker:GetOptions()
 							type = "range",
 							name = L["DRTracker Space"],
 							desc = L["Space between the icons"],
-							min = 0, max = 100, step = 1,
+							min = 0,
+							max = 100,
+							step = 1,
 							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
@@ -389,7 +392,9 @@ function DRTracker:GetOptions()
 							hidden = function()
 								return not Gladius.db.advancedOptions
 							end,
-							min = 1, max = 5, step = 1,
+							min = 1,
+							max = 5,
+							step = 1,
 							width = "double",
 							order = 35,
 						},
@@ -415,7 +420,9 @@ function DRTracker:GetOptions()
 							type = "range",
 							name = L["DRTracker Size"],
 							desc = L["Size of the drTracker"],
-							min = 10, max = 100, step = 1,
+							min = 10,
+							max = 100,
+							step = 1,
 							disabled = function()
 								return Gladius.dbi.profile.drTrackerAdjustSize or not Gladius.dbi.profile.modules[self.name]
 							end,
@@ -453,7 +460,9 @@ function DRTracker:GetOptions()
 							type = "range",
 							name = L["DR Text Size"],
 							desc = L["Text size of the DR text"],
-							min = 1, max = 20, step = 1,
+							min = 1,
+							max = 20,
+							step = 1,
 							disabled = function()
 								return not Gladius.dbi.profile.castText or not Gladius.dbi.profile.modules[self.name]
 							end,
@@ -552,7 +561,9 @@ function DRTracker:GetOptions()
 							type = "range",
 							name = L["DRTracker Offset X"],
 							desc = L["X offset of the drTracker"],
-							min = - 100, max = 100, step = 1,
+							min = - 100,
+							max = 100,
+							step = 1,
 							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
@@ -565,7 +576,9 @@ function DRTracker:GetOptions()
 							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							min = - 50, max = 50, step = 1,
+							min = - 50,
+							max = 50,
+							step = 1,
 							order = 25,
 						},
 					},
@@ -594,7 +607,7 @@ function DRTracker:GetOptions()
 			type = "toggle",
 			name = name,
 			get = function(info)
-				if (Gladius.dbi.profile.drCategories[info[#info]] == nil) then
+				if Gladius.dbi.profile.drCategories[info[#info]] == nil then
 					return true
 				else
 					return Gladius.dbi.profile.drCategories[info[#info]]
