@@ -171,7 +171,7 @@ function Gladius:SetupModule(key, module, order)
 		name = L[key],
 		desc = L[key.." settings"],
 		childGroups = "tab",
-		order =order,
+		order = order,
 		args = { },
 	}
 	-- set additional module options
@@ -183,7 +183,7 @@ function Gladius:SetupModule(key, module, order)
 	self.options.args[key].args.enable = {
 		type = "toggle",
 		name = L["Enable Module"],
-		set=function(info, v)
+		set = function(info, v)
 			local module = info[1]
 			self.dbi.profile.modules[module] = v
 			if (v) then
@@ -280,6 +280,7 @@ function Gladius:SetupOptions()
 										self.dbi.profile.growRight = true
 									end
 									self.dbi.profile.direction = value
+									Gladius:UpdateFrame()
 								end,
 							},
 							sep = {

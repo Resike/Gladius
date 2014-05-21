@@ -106,7 +106,7 @@ function Timer:HideTimer(frame)
 	if _G[frameName.."Cooldown"]:IsShown() then
 		_G[frameName.."Cooldown"]:SetAlpha(0)
 	end
-	if (self.frames[frameName]) then
+	if self.frames[frameName] then
 		self.frames[frameName]:SetScript("OnUpdate", nil)
 		self.frames[frameName].text:SetAlpha(0)
 	end

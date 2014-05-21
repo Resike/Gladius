@@ -1,0 +1,137 @@
+**3.2.6**
+* 
+
+**3.2.5**
+* DRData module updates.
+* Fixed an issue which caused excessive memory usage while acdjusting the "DR Text Size" slider.
+* DRData frames now will disapper in test mode, when their timer is up.
+* From now the main options will show up even when you enter any unknow slash commands.
+* Renamed Dispell moduel to Dipel.
+
+**3.2.4**
+* DRData library updates.
+
+**3.2.3**
+* Aura and spell updates.
+* Will of the Forsaken and PvP trinket share cooldown timer fix.
+* DRData library updates.
+
+**3.2.2**
+* Performance upgradements.
+* Added Monk's dispel spell.
+* Dispel module updates.
+
+**3.2.1**
+* Clicks module updates.
+
+**3.2.0**
+* Cast Bar module updates.
+
+**3.1.9**
+* Auras module updates.
+
+**3.1.8**
+* Curse Client latest version mismatch fix.
+
+**3.1.7**
+* Curse Client latest version mismatch fix.
+
+**3.1.6**
+* Fixed incorrect version number.
+* Announcement module updates.
+* Class Icon module updates.
+* Layout module updates.
+* Tags module updates.
+* Minor performance upgradements.
+
+**3.1.5**
+* Layout module updates.
+* Library updates.
+
+**3.1.4**
+* Fixed an issue which broke the addon's funcionality with Timer module disabled.
+* Timer module updates.
+* Upvalue updates.
+* Some other smaller fixes.
+
+**3.1.3**
+* Fixed a bug which caused frames to not to hide after left the arena.
+* Fixed a bug with Direction dropdown.
+* Fixed an issue with "Announcements" module.
+* Global cleanup.
+* Some other smaller fixes.
+
+**3.1.2**
+* Fixed a bug with Trinket module inside battlegrounds.
+* Trinket module updates.
+* Library updates.
+
+**3.1.1**
+* Announcements module updates.
+
+**3.1.0**
+* Added "Turn Evil" for auras.
+* Library updates.
+
+**3.0.9**
+* Minor fixes.
+
+**3.0.8**
+* Fixed a bug which crashed Tags module after you switched profiles.
+* Test function updates.
+* Some GUI changes and bugfixes.
+* German localization updates.
+* Library updates.
+* Other minor fixes.
+
+**3.0.7**
+* Removed Global Templates.
+
+**3.0.6**
+* Updated for 5.4.
+* Fixed a bug with the Tags module.
+* Added Monk "Resuscitate" spell to the Announces module.
+
+**3.0.5**
+* Fixed a bug with the Auras module.
+
+**3.0.4**
+* Fixed a bug with enable/disable Auras module functionality.
+* Fixed a bug with enable/disable Buffs button's functionality.
+* Fixed a bug with enable/disable Debuffs button's functionality.
+* Reduced maxium buffs/debuffs to show to 10.
+* Aura module improvements.
+* Localization updates.
+* Other minor fixes.
+
+**3.0.3**
+* Fixed a bug with the Auras module.
+* Other minor fixes.
+
+**3.0.2**
+* Fixed a bug which created invisible but clickable frames outside arenas.
+* Disabled test button functionality inside arenas.
+* Fixed a typo which didn't let "Layouts" module to load properly.
+* xCT and xCT+ support fix.
+* Library updates.
+* Some other smaller fixes.
+* Code cleanup.
+
+**3.0.1**
+* Reduced addon size by 30%.
+* Reduced memory usage.
+* Reduced CPU usage.
+* DRTracker fixes.
+* Healthbar fixes.
+* Aura updates.
+* Library updates.
+* Merged localizations.
+* Added koKR, zhCN and zhTW localizations.
+* Added support for xCT and xCT+.
+* Code cleanup.
+
+**3.0.0**
+* Updated for 5.2.
+* Spell updates.
+* Library updates.
+* Minor bug fixes.
