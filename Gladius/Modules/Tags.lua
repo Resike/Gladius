@@ -173,11 +173,6 @@ function Tags:CreateFrame(unit, text)
 	self.frame[unit][text] = button:CreateFontString("Gladius"..self.name..unit..text, "OVERLAY")
 end
 
-function Tags:OnProfileChanged()
-	Gladius.dbi.profile.tags = self:GetTags()
-	Gladius.dbi.profile.tagEvents = self:GetTagsEvents()
-end
-
 function Tags:UpdateText(unit, text)
 	if not self.frame[unit] then
 		return

@@ -59,6 +59,17 @@ function DRTracker:OnDisable()
 	end
 end
 
+function DRTracker:OnProfileChanged()
+	for unit, _ in pairs(self.frame) do
+		self:Reset(unit)
+	end
+	if Gladius.dbi.profile.modules["DRTracker"] then
+		Gladius:EnableModule("DRTracker")
+	else
+		Gladius:DisableModule("DRTracker")
+	end
+end
+
 function DRTracker:GetAttachTo()
 	return Gladius.db.drTrackerAttachTo
 end
@@ -615,6 +626,12 @@ function DRTracker:GetOptions()
 			end,
 			set = function(info, value)
 				Gladius.dbi.profile.drCategories[info[#info]] = value
+				if not value then
+					for unit, _ in pairs(self.frame) do
+						self:Reset(unit)
+					end
+				end
+				Gladius:UpdateFrame()
 			end,
 			disabled = function()
 				return not Gladius.dbi.profile.modules[self.name]

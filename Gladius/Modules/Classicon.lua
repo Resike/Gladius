@@ -71,7 +71,7 @@ function ClassIcon:UNIT_AURA(event, unit)
 end
 
 function ClassIcon:UpdateAura(unit)
-	if not self.frame[unit] or not Gladius.db.classIconImportantAuras then
+	if not self.frame[unit] then
 		return
 	end
 	if not Gladius.db.aurasFrameAuras then
@@ -291,7 +291,7 @@ function ClassIcon:Test(unit)
 		self.frame[unit].active = true
 		self.frame[unit].aura = aura
 		self.frame[unit].texture:SetTexture(self.frame[unit].icon)
-		if (Gladius.db.classIconCrop) then
+		if Gladius.db.classIconCrop then
 			self.frame[unit].texture:SetTexCoord(0.07, 0.93, 0.07, 0.93)
 		else
 			self.frame[unit].texture:SetTexCoord(0, 1, 0, 1)
@@ -305,7 +305,7 @@ function ClassIcon:Test(unit)
 		self.frame[unit].active = true
 		self.frame[unit].aura = aura
 		self.frame[unit].texture:SetTexture(self.frame[unit].icon)
-		if (Gladius.db.classIconCrop) then
+		if Gladius.db.classIconCrop then
 			self.frame[unit].texture:SetTexCoord(0.07, 0.93, 0.07, 0.93)
 		else
 			self.frame[unit].texture:SetTexCoord(0, 1, 0, 1)
@@ -319,7 +319,7 @@ function ClassIcon:Test(unit)
 		self.frame[unit].active = true
 		self.frame[unit].aura = aura
 		self.frame[unit].texture:SetTexture(self.frame[unit].icon)
-		if (Gladius.db.classIconCrop) then
+		if Gladius.db.classIconCrop then
 			self.frame[unit].texture:SetTexCoord(0.07, 0.93, 0.07, 0.93)
 		else
 			self.frame[unit].texture:SetTexCoord(0, 1, 0, 1)

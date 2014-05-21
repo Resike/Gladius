@@ -61,6 +61,14 @@ function Dispell:OnDisable()
 	end
 end
 
+function Dispell:OnProfileChanged()
+	if Gladius.dbi.profile.modules["Dispell"] then
+		Gladius:EnableModule("Dispell")
+	else
+		Gladius:DisableModule("Dispell")
+	end
+end
+
 function Dispell:GetAttachTo()
 	return Gladius.db.dispellAttachTo
 end

@@ -65,7 +65,7 @@ end
 function PowerBar:OnDisable()
 	self:UnregisterAllEvents()
 	for unit in pairs(self.frame) do
-	self.frame[unit]:SetAlpha(0)
+		self.frame[unit]:SetAlpha(0)
 	end
 end
 
