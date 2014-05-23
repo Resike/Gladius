@@ -68,16 +68,16 @@ end
 
 function Auras:OnDisable()
 	self:UnregisterAllEvents()
-	for unit in pairs(self.debuffFrame) do
-		self.debuffFrame[unit]:Hide()
-		for i = 1, Gladius.db.aurasDebuffsMax do
-			self.debuffFrame[unit][i]:Hide()
-		end
-	end
 	for unit in pairs(self.buffFrame) do
 		self.buffFrame[unit]:Hide()
-		for i = 1, Gladius.db.aurasBuffsMax do
+		for i = 1, 40 do
 			self.buffFrame[unit][i]:Hide()
+		end
+	end
+	for unit in pairs(self.debuffFrame) do
+		self.debuffFrame[unit]:Hide()
+		for i = 1, 40 do
+			self.debuffFrame[unit][i]:Hide()
 		end
 	end
 end
@@ -165,6 +165,11 @@ local function updateTooltip(f, unit, index, filter)
 	end
 end
 
+function ASD()
+	local spellName, spellRank, spellID = GameTooltip:GetSpell()
+	print(spellName, spellRank, spellID)
+end
+
 function Auras:CreateFrame(unit)
 	local button = Gladius.buttons[unit]
 	if not button then
@@ -173,15 +178,23 @@ function Auras:CreateFrame(unit)
 	-- create buff frame
 	if not self.buffFrame[unit] and Gladius.db.aurasBuffs then
 		self.buffFrame[unit] = CreateFrame("Frame", "Gladius"..self.name.."BuffFrame"..unit, button)
+		self.buffFrame[unit]:EnableMouse(false)
 		for i = 1, 40 do
 			self.buffFrame[unit][i] = CreateFrame("CheckButton", "Gladius"..self.name.."BuffFrameIcon"..i..unit, button, "ActionButtonTemplate")
-			self.buffFrame[unit][i]:SetScript("OnEnter", function(f)
-				GameTooltip:SetUnitAura(unit, i, "HELPFUL")
-				f:SetScript("OnUpdate", function(f)
-					updateTooltip(f, unit, i, "HELPFUL")
-				end)
+			self.buffFrame[unit][i].tooltip = CreateFrame("Frame", nil, self.buffFrame[unit][i])
+			self.buffFrame[unit][i].tooltip:SetAllPoints(self.buffFrame[unit][i])
+			self.buffFrame[unit][i].tooltip:SetScript("OnEnter", function(f)
+				GameTooltip:SetOwner(self.buffFrame[unit][i], "ANCHOR_RIGHT")
+				if Gladius.test then
+					GameTooltip:SetSpellByID(21562)
+				else
+					GameTooltip:SetUnitAura(unit, i, "HELPFUL")
+					f:SetScript("OnUpdate", function(f)
+						updateTooltip(f, unit, i, "HELPFUL")
+					end)
+				end
 			end)
-			self.buffFrame[unit][i]:SetScript("OnLeave", function(f)
+			self.buffFrame[unit][i].tooltip:SetScript("OnLeave", function(f)
 				f:SetScript("OnUpdate", nil)
 				GameTooltip:Hide()
 			end)
@@ -200,13 +213,20 @@ function Auras:CreateFrame(unit)
 		self.debuffFrame[unit]:EnableMouse(false)
 		for i = 1, 40 do
 			self.debuffFrame[unit][i] = CreateFrame("CheckButton", "Gladius"..self.name.."DebuffFrameIcon"..i..unit, button, "ActionButtonTemplate")
-			self.debuffFrame[unit][i]:SetScript("OnEnter", function(f)
-				GameTooltip:SetUnitAura(unit, i, "HARMFUL")
-				f:SetScript("OnUpdate", function(f)
-					updateTooltip(f, unit, i, "HARMFUL")
-				end)
+			self.debuffFrame[unit][i].tooltip = CreateFrame("Frame", nil, self.debuffFrame[unit][i])
+			self.debuffFrame[unit][i].tooltip:SetAllPoints(self.debuffFrame[unit][i])
+			self.debuffFrame[unit][i].tooltip:SetScript("OnEnter", function(f)
+				GameTooltip:SetOwner(self.debuffFrame[unit][i], "ANCHOR_RIGHT")
+				if Gladius.test then
+					GameTooltip:SetSpellByID(589)
+				else
+					GameTooltip:SetUnitAura(unit, i, "HARMFUL")
+					f:SetScript("OnUpdate", function(f)
+						updateTooltip(f, unit, i, "HARMFUL")
+					end)
+				end
 			end)
-			self.debuffFrame[unit][i]:SetScript("OnLeave", function(f)
+			self.debuffFrame[unit][i].tooltip:SetScript("OnLeave", function(f)
 				f:SetScript("OnUpdate", nil)
 				GameTooltip:Hide()
 			end)
@@ -358,11 +378,14 @@ function Auras:Show(unit)
 			for i = 1, Gladius.db.aurasBuffsMax do
 				self.buffFrame[unit][i]:Show()
 			end
+			for i = Gladius.db.aurasBuffsMax + 1, 40 do
+				self.buffFrame[unit][i]:Hide()
+			end
 		end
 	else
 		if self.buffFrame[unit] then
 			self.buffFrame[unit]:Hide()
-			for i = 1, Gladius.db.aurasBuffsMax do
+			for i = 1, 40 do
 				self.buffFrame[unit][i]:Hide()
 			end
 		end
@@ -374,11 +397,14 @@ function Auras:Show(unit)
 			for i = 1, Gladius.db.aurasDebuffsMax do
 				self.debuffFrame[unit][i]:Show()
 			end
+			for i = Gladius.db.aurasDebuffsMax + 1, 40 do
+				self.debuffFrame[unit][i]:Hide()
+			end
 		end
 	else
 		if self.debuffFrame[unit] then
 			self.debuffFrame[unit]:Hide()
-			for i = 1, Gladius.db.aurasDebuffsMax do
+			for i = 1, 40 do
 				self.debuffFrame[unit][i]:Hide()
 			end
 		end
@@ -960,7 +986,7 @@ function Auras:GetOptions()
 									type = "range",
 									name = L["Auras Offset X"],
 									desc = L["X offset of the auras"],
-									min = - 100,
+									min = -100,
 									max = 100,
 									step = 1,
 									disabled = function()
@@ -975,7 +1001,7 @@ function Auras:GetOptions()
 									disabled = function()
 										return not Gladius.dbi.profile.modules[self.name]
 									end,
-									min = - 50,
+									min = -50,
 									max = 50,
 									step = 1,
 									order = 25,
