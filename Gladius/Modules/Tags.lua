@@ -132,6 +132,11 @@ function Tags:OnDisable()
 	end
 end
 
+function Tags:OnProfileChanged()
+	Gladius.dbi.profile.tags = self:GetTags()
+	Gladius.dbi.profile.tagEvents = self:GetTagsEvents()
+end
+
 function Tags:GetAttachTo()
 	return ""
 end

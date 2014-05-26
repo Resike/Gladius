@@ -211,6 +211,15 @@ function Gladius:OnInitialize()
 	self.dbi.RegisterCallback(self, "OnProfileChanged", "OnProfileChanged")
 	self.dbi.RegisterCallback(self, "OnProfileCopied", "OnProfileChanged")
 	self.dbi.RegisterCallback(self, "OnProfileReset", "OnProfileChanged")
+	-- dispel module updates (3.2.6)
+	for k, v in pairs(self.dbi["profiles"]) do
+		if self.dbi["profiles"][k]["modules"] then
+			if self.dbi["profiles"][k]["modules"]["Dispell"] ~= nil then
+				self.dbi["profiles"][k]["modules"]["Dispel"] = self.dbi["profiles"][k]["modules"]["Dispell"]
+			end
+			self.dbi["profiles"][k]["modules"]["Dispell"] = nil
+		end
+	end
 	local SML = LibStub:GetLibrary("LibSharedMedia-3.0")
 	SML:Register(SML.MediaType.STATUSBAR, "Smooth", "Interface\\Addons\\Gladius\\Images\\Smooth")
 	self.db = setmetatable(self.dbi.profile, {
@@ -247,7 +256,7 @@ function Gladius:OnInitialize()
 			return t["arena1"]
 		end
 	})
-	-- spec detection
+	-- spec detection (old)
 	--self.specSpells = self:GetSpecList()
 	-- buttons
 	self.buttons = { }

@@ -83,7 +83,7 @@ function Timer:SetTimer(frame, duration, start)
 	self.frames[frameName].text:SetAlpha(1)
 	_G[frameName.."Cooldown"]:SetCooldown(start, duration)
 	_G[frameName.."Cooldown"]:SetAlpha(self.frames[frameName].showSpiral and 1 or 0)
-	if duration > 0 then
+	if duration > 0 and not Gladius.db.timerOmniCC and not self.frames[frameName].hideTimer then
 		self.frames[frameName]:SetScript("OnUpdate", function(f, elapsed)
 			f.duration = f.duration - elapsed
 			if f.duration <= 0 then
@@ -112,7 +112,7 @@ function Timer:HideTimer(frame)
 	end
 end
 
-function Timer:RegisterTimer(frame, showSpiral)
+function Timer:RegisterTimer(frame, showSpiral, hideTimer)
 	if not self.frames then
 		return
 	end
@@ -123,7 +123,8 @@ function Timer:RegisterTimer(frame, showSpiral)
 		self.frames[frameName].text = self.frames[frameName]:CreateFontString("Gladius"..self.name..frameName.."Text", "OVERLAY")
 	end
 	self.frames[frameName].showSpiral = showSpiral or false
-	if not Gladius.db.timerOmniCC then
+	self.frames[frameName].hideTimer = hideTimer or false
+	if not Gladius.db.timerOmniCC and not hideTimer then
 		_G[frameName.."Cooldown"].noCooldownCount = true
 		self.frames[frameName].text:Show()
 	else

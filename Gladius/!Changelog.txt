@@ -1,5 +1,19 @@
 **3.2.6**
-* 
+* Drastically reduced cpu usage on some cases. (~80%)
+* Module file name updates.
+* Auras module updates.
+* Added tooltips for Buffs/Debuffs.
+* Added cooldown model for Buffs/Debuffs.
+* Cooldown model can be enabled/disabled/reversed on the Buffs/Debuffs tab.
+* Buff/Debuff timers can be disabled on the Buffs/Debuffs tab.
+* Fixed an issue which caused buff/debuff frames to overlap on each other.
+* Dispel module updates.
+* Timer module updates.
+* Dispel module should get properly updated on profile changes.
+* DR Tracker module should get properly updated on profile changes.
+* DR Tracker frames will properly hide/show when it's category is disabled/enabled.
+* Tags module should get properly updated on profile changes.
+* Removed old spec detection.
 
 **3.2.5**
 * DRData module updates.
