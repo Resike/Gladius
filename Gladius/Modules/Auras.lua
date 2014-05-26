@@ -35,6 +35,9 @@ local Auras = Gladius:NewModule("Auras", false, true, {
 	aurasBuffsOffsetY = 0,
 	aurasBuffsGloss = false,
 	aurasBuffsGlossColor = {r = 1, g = 1, b = 1, a = 0.4},
+	aurasBuffsTrackerCooldown = true,
+	aurasBuffsTrackerCooldownReverse = true,
+	aurasBuffsHideTimer = true,
 	aurasDebuffsAttachTo = "ClassIcon",
 	aurasDebuffsAnchor = "BOTTOMLEFT",
 	aurasDebuffsRelativePoint = "TOPLEFT",
@@ -50,6 +53,9 @@ local Auras = Gladius:NewModule("Auras", false, true, {
 	aurasDebuffsOffsetY = 0,
 	aurasDebuffsGloss = false,
 	aurasDebuffsGlossColor = {r = 1, g = 1, b = 1, a = 0.4},
+	aurasDebuffsTrackerCooldown = true,
+	aurasDebuffsTrackerCooldownReverse = true,
+	aurasDebuffsHideTimer = true,
 	aurasImportantAuras = true,
 	aurasFrameAuras = nil,
 },
@@ -130,7 +136,7 @@ function Auras:UNIT_AURA(event, unit)
 		return
 	end
 	-- buff frame
-	for i = 1, 40 do
+	for i = 1, Gladius.db.aurasBuffsMax do
 		local name, rank, icon, count, dispelType, duration, expires, caster, isStealable = UnitAura(unit, i, "HELPFUL")
 		if not self.buffFrame[unit] or not self.buffFrame[unit][i] then
 			break
@@ -144,7 +150,7 @@ function Auras:UNIT_AURA(event, unit)
 		end
 	end
 	-- debuff frame
-	for i = 1, 40 do
+	for i = 1, Gladius.db.aurasDebuffsMax do
 		local name, rank, icon, count, dispelType, duration, expires, caster, isStealable = UnitAura(unit, i, "HARMFUL")
 		if not self.debuffFrame[unit] or not self.debuffFrame[unit][i] then
 			break
@@ -163,11 +169,6 @@ local function updateTooltip(f, unit, index, filter)
 	if GameTooltip:IsOwned(f) then
 		GameTooltip:SetUnitAura(unit, index, filter)
 	end
-end
-
-function ASD()
-	local spellName, spellRank, spellID = GameTooltip:GetSpell()
-	print(spellName, spellRank, spellID)
 end
 
 function Auras:CreateFrame(unit)
@@ -203,8 +204,8 @@ function Auras:CreateFrame(unit)
 			self.buffFrame[unit][i].texture = _G[self.buffFrame[unit][i]:GetName().."Icon"]
 			self.buffFrame[unit][i].normalTexture = _G[self.buffFrame[unit][i]:GetName().."NormalTexture"]
 			self.buffFrame[unit][i].cooldown = _G[self.buffFrame[unit][i]:GetName().."Cooldown"]
-			self.buffFrame[unit][i].cooldown:SetReverse(false)
-			Gladius:Call(Gladius.modules.Timer, "RegisterTimer", self.buffFrame[unit][i])
+			self.buffFrame[unit][i].cooldown:SetReverse(Gladius.db.aurasBuffsTrackerCooldownReverse)
+			Gladius:Call(Gladius.modules.Timer, "RegisterTimer", self.buffFrame[unit][i], Gladius.db.aurasBuffsTrackerCooldown, Gladius.db.aurasBuffsHideTimer)
 		end
 	end
 	-- create debuff frame
@@ -235,8 +236,8 @@ function Auras:CreateFrame(unit)
 			self.debuffFrame[unit][i].texture = _G[self.debuffFrame[unit][i]:GetName().."Icon"]
 			self.debuffFrame[unit][i].normalTexture = _G[self.debuffFrame[unit][i]:GetName().."NormalTexture"]
 			self.debuffFrame[unit][i].cooldown = _G[self.debuffFrame[unit][i]:GetName().."Cooldown"]
-			self.debuffFrame[unit][i].cooldown:SetReverse(false)
-			Gladius:Call(Gladius.modules.Timer, "RegisterTimer", self.debuffFrame[unit][i])
+			self.debuffFrame[unit][i].cooldown:SetReverse(Gladius.db.aurasDebuffsTrackerCooldownReverse)
+			Gladius:Call(Gladius.modules.Timer, "RegisterTimer", self.debuffFrame[unit][i], Gladius.db.aurasDebuffsTrackerCooldown, Gladius.db.aurasDebuffsHideTimer)
 		end
 	end
 	if not Gladius.test then
@@ -273,7 +274,7 @@ function Auras:Update(unit)
 		elseif Gladius.db.aurasBuffsGrow == "UPLEFT" then
 			grow1, grow2, grow3, startRelPoint = "BOTTOMRIGHT", "TOPRIGHT", "BOTTOMLEFT", "BOTTOMRIGHT"
 		end
-		for i = 1, 40 do
+		for i = 1, Gladius.db.aurasBuffsMax do
 			self.buffFrame[unit][i]:ClearAllPoints()
 			if Gladius.db.aurasBuffsMax >= i then
 				if start == 1 then
@@ -329,7 +330,7 @@ function Auras:Update(unit)
 		elseif Gladius.db.aurasDebuffsGrow == "UPLEFT" then
 			grow1, grow2, grow3, startRelPoint = "BOTTOMRIGHT", "TOPRIGHT", "BOTTOMLEFT", "BOTTOMRIGHT"
 		end	
-		for i = 1, 40 do
+		for i = 1, Gladius.db.aurasDebuffsMax do
 			self.debuffFrame[unit][i]:ClearAllPoints()
 			if Gladius.db.aurasDebuffsMax >= i then
 				if start == 1 then
@@ -436,6 +437,9 @@ function Auras:Test(unit)
 	if self.buffFrame[unit] then
 		for i = 1, Gladius.db.aurasBuffsMax do
 			self.buffFrame[unit][i].texture:SetTexture(testBuff)
+			self.buffFrame[unit][i].cooldown:SetReverse(Gladius.db.aurasBuffsTrackerCooldownReverse)
+			Gladius:Call(Gladius.modules.Timer, "RegisterTimer", self.buffFrame[unit][i], Gladius.db.aurasBuffsTrackerCooldown, Gladius.db.aurasBuffsHideTimer)
+			Gladius:Call(Gladius.modules.Timer, "SetTimer", self.buffFrame[unit][i], 10)
 		end
 	end
 	-- test debuff frame
@@ -443,6 +447,9 @@ function Auras:Test(unit)
 	if self.debuffFrame[unit] then
 		for i = 1, Gladius.db.aurasDebuffsMax do
 			self.debuffFrame[unit][i].texture:SetTexture(testDebuff)
+			self.debuffFrame[unit][i].cooldown:SetReverse(Gladius.db.aurasDebuffsTrackerCooldownReverse)
+			Gladius:Call(Gladius.modules.Timer, "RegisterTimer", self.debuffFrame[unit][i], Gladius.db.aurasDebuffsTrackerCooldown, Gladius.db.aurasDebuffsHideTimer)
+			Gladius:Call(Gladius.modules.Timer, "SetTimer", self.debuffFrame[unit][i], 10)
 		end
 	end
 end
@@ -560,6 +567,48 @@ function Auras:GetOptions()
 										return not Gladius.db.advancedOptions
 									end,
 									order = 30,
+								},
+								sep3 = {
+									type = "description",
+									name = "",
+									width = "full",
+									order = 32,
+								},
+								aurasBuffsTrackerCooldown = {
+									type = "toggle",
+									name = L["Buffs Cooldown Spiral"],
+									desc = L["Display the cooldown spiral for buffs"],
+									disabled = function()
+										return not Gladius.dbi.profile.modules[self.name]
+									end,
+									hidden = function()
+										return not Gladius.db.advancedOptions
+									end,
+									order = 35,
+								},
+								aurasBuffsTrackerCooldownReverse = {
+									type = "toggle",
+									name = L["Buffs Cooldown Reverse"],
+									desc = L["Invert the dark/bright part of the cooldown spiral"],
+									disabled = function()
+										return not Gladius.dbi.profile.modules[self.name]
+									end,
+									hidden = function()
+										return not Gladius.db.advancedOptions
+									end,
+									order = 40,
+								},
+								aurasBuffsHideTimer = {
+									type = "toggle",
+									name = L["Hide Buff Timers"],
+									desc = L["Hides the default timer on the buff frames."],
+									disabled = function()
+										return not Gladius.dbi.profile.modules[self.name]
+									end,
+									hidden = function()
+										return not Gladius.db.advancedOptions
+									end,
+									order = 45,
 								},
 							},
 						},
@@ -857,6 +906,48 @@ function Auras:GetOptions()
 										return not Gladius.db.advancedOptions
 									end,
 									order = 30,
+								},
+								sep3 = {
+									type = "description",
+									name = "",
+									width = "full",
+									order = 32,
+								},
+								aurasDebuffsTrackerCooldown = {
+									type = "toggle",
+									name = L["Debuffs Cooldown Spiral"],
+									desc = L["Display the cooldown spiral for debuffs"],
+									disabled = function()
+										return not Gladius.dbi.profile.modules[self.name]
+									end,
+									hidden = function()
+										return not Gladius.db.advancedOptions
+									end,
+									order = 35,
+								},
+								aurasDebuffsTrackerCooldownReverse = {
+									type = "toggle",
+									name = L["Debuffs Cooldown Reverse"],
+									desc = L["Invert the dark/bright part of the cooldown spiral"],
+									disabled = function()
+										return not Gladius.dbi.profile.modules[self.name]
+									end,
+									hidden = function()
+										return not Gladius.db.advancedOptions
+									end,
+									order = 40,
+								},
+								aurasDebuffsHideTimer = {
+									type = "toggle",
+									name = L["Hide Debuff Timers"],
+									desc = L["Hides the default timer on the debuff frames."],
+									disabled = function()
+										return not Gladius.dbi.profile.modules[self.name]
+									end,
+									hidden = function()
+										return not Gladius.db.advancedOptions
+									end,
+									order = 45,
 								},
 							},
 						},

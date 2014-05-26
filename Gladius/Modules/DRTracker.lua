@@ -152,13 +152,12 @@ function DRTracker:DRFaded(unit, spellID)
 	tracked:SetScript("OnUpdate", function(f, elapsed)
 		f.timeLeft = f.timeLeft - elapsed
 		if f.timeLeft <= 0 then
-			--[[if Gladius.test then
-				return
-			end]]
 			f.active = false
 			Gladius:Call(Gladius.modules.Timer, "HideTimer", f)
 			-- position icons
 			self:SortIcons(unit)
+			-- reset script
+			tracked:SetScript("OnUpdate", nil)
 		end
 	end)
 	tracked:SetAlpha(1)
@@ -264,7 +263,6 @@ function DRTracker:Update(unit)
 end
 
 function DRTracker:Show(unit)
-	local testing = Gladius.test
 	-- show frame
 	self.frame[unit]:SetAlpha(1)
 end

@@ -14,15 +14,15 @@ Gladius.lua
 Localizations.lua
 Options.lua
 
-Modules\Healthbar.lua
-Modules\Powerbar.lua
-Modules\Castbar.lua
+Modules\HealthBar.lua
+Modules\PowerBar.lua
+Modules\CastBar.lua
 Modules\Auras.lua
-Modules\Classicon.lua
+Modules\ClassIcon.lua
 Modules\Trinket.lua
 Modules\Highlight.lua
 Modules\Clicks.lua
-Modules\Targetbar.lua
+Modules\TargetBar.lua
 Modules\Tags.lua
 Modules\Announcements.lua
 Modules\DRTracker.lua
