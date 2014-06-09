@@ -180,6 +180,13 @@ function Dispel:UpdateDispel(unit, duration)
 	Gladius:Call(Gladius.modules.Timer, "SetTimer", self.frame[unit], duration)
 end
 
+function Dispel:UpdateColors(unit)
+	if Gladius.db.dispellGridStyleIcon then
+		self.frame[unit].texture:SetVertexColor(Gladius.db.dispellGridStyleIconUsedColor.r, Gladius.db.dispellGridStyleIconUsedColor.g, Gladius.db.dispellGridStyleIconUsedColor.b, Gladius.db.dispellGridStyleIconUsedColor.a)
+	end
+	self.frame[unit].normalTexture:SetVertexColor(Gladius.db.dispellGlossColor.r, Gladius.db.dispellGlossColor.g, Gladius.db.dispellGlossColor.b, Gladius.db.dispellGloss and Gladius.db.dispellGlossColor.a or 0)
+end
+
 function Dispel:CreateFrame(unit)
 	local button = Gladius.buttons[unit]
 	if not button then
@@ -293,31 +300,38 @@ function Dispel:Show(unit)
 		local dispellIcon
 		local _, englishClass = UnitClass(unit)
 		local testing = Gladius.test
+		local spec = Gladius.buttons[unit].spec
 		if not testing then
 			if englishClass == "PRIEST" then
-				dispellIcon = "Interface\\Icons\\spell_holy_dispelmagic"
+				if spec == "Discipline" or spec == "Holy" then
+					dispellIcon = "Interface\\Icons\\spell_holy_dispelmagic" -- OK
+				end
 			elseif englishClass == "SHAMAN" then
-				dispellIcon = "Interface\\Icons\\ability_shaman_cleansespirit"
+				dispellIcon = "Interface\\Icons\\ability_shaman_cleansespirit" -- OK
 			elseif englishClass == "PALADIN" then
-				dispellIcon = "Interface\\Icons\\spell_holy_purify"
+				dispellIcon = "Interface\\Icons\\spell_holy_purify" -- OK
 			elseif englishClass == "DRUID" then
-				dispellIcon = "Interface\\Icons\\ability_shaman_cleansespirit"
+				if spec == "Restoration" then
+					dispellIcon = "Interface\\Icons\\ability_shaman_cleansespirit" -- OK
+				else
+					dispellIcon = "Interface\\Icons\\spell_holy_removecurse" -- OK
+				end
 			elseif englishClass == "MAGE" then
-				dispellIcon = "Interface\\Icons\\spell_nature_removecurse"
+				dispellIcon = "Interface\\Icons\\spell_nature_removecurse" -- OK
 			elseif englishClass == "MONK" then
-				dispellIcon = "Interface\\Icons\\spell_holy_dispelmagic"
+				dispellIcon = "Interface\\Icons\\spell_holy_dispelmagic" -- OK
 			end
 		else
-			if englishClass == "PRIEST" or unit == "arena1" then
+			if unit == "arena1" then
 				dispellIcon = "Interface\\Icons\\spell_nature_removecurse"
-			elseif englishClass == "SHAMAN" or unit == "arena2" then
+			elseif unit == "arena2" then
 				dispellIcon = "Interface\\Icons\\spell_holy_dispelmagic"
-			elseif englishClass == "PALADIN" or unit == "arena3" then
+			elseif unit == "arena3" then
 				dispellIcon = "Interface\\Icons\\spell_holy_purify"
-			elseif englishClass == "DRUID" or unit == "arena4" then
+			elseif unit == "arena4" then
 				dispellIcon = "Interface\\Icons\\ability_shaman_cleansespirit"
-			elseif englishClass == "MAGE" or unit == "arena5" then
-				dispellIcon = "Interface\\Icons\\spell_holy_purify"
+			elseif unit == "arena5" then
+				dispellIcon = "Interface\\Icons\\spell_holy_removecurse"
 			end
 		end
 		self.frame[unit].texture:SetTexture(dispellIcon)
@@ -692,7 +706,7 @@ function Dispel:GetOptions()
 							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							min = - 50,
+							min = -50,
 							max = 50,
 							step = 1,
 							order = 25,

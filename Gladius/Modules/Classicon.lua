@@ -70,6 +70,10 @@ function ClassIcon:UNIT_AURA(event, unit)
 	self:UpdateAura(unit)
 end
 
+function ClassIcon:UpdateColors(unit)
+	self.frame[unit].normalTexture:SetVertexColor(Gladius.db.classIconGlossColor.r, Gladius.db.classIconGlossColor.g, Gladius.db.classIconGlossColor.b, Gladius.db.classIconGloss and Gladius.db.classIconGlossColor.a or 0)
+end
+
 function ClassIcon:UpdateAura(unit)
 	if not self.frame[unit] then
 		return
@@ -298,9 +302,9 @@ function ClassIcon:Test(unit)
 		end
 		Gladius:Call(Gladius.modules.Timer, "SetTimer", self.frame[unit], self.frame[unit].timeleft)
 	elseif unit == "arena2" then
-		aura = "Pain Suppression"
-		self.frame[unit].icon = select(3, GetSpellInfo(33206))
-		self.frame[unit].timeleft = 8
+		aura = "Deterrence"
+		self.frame[unit].icon = select(3, GetSpellInfo(19263))
+		self.frame[unit].timeleft = 5
 		self.frame[unit].priority = Gladius.db.aurasFrameAuras[unit]
 		self.frame[unit].active = true
 		self.frame[unit].aura = aura

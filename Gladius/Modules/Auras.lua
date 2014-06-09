@@ -78,12 +78,14 @@ function Auras:OnDisable()
 		self.buffFrame[unit]:Hide()
 		for i = 1, 40 do
 			self.buffFrame[unit][i]:Hide()
+			self.buffFrame[unit][i].tooltip:Hide()
 		end
 	end
 	for unit in pairs(self.debuffFrame) do
 		self.debuffFrame[unit]:Hide()
 		for i = 1, 40 do
 			self.debuffFrame[unit][i]:Hide()
+			self.debuffFrame[unit][i].tooltip:Hide()
 		end
 	end
 end
@@ -145,8 +147,10 @@ function Auras:UNIT_AURA(event, unit)
 			self.buffFrame[unit][i].texture:SetTexture(icon)
 			Gladius:Call(Gladius.modules.Timer, "SetTimer", self.buffFrame[unit][i], duration)
 			self.buffFrame[unit][i]:Show()
+			--self.buffFrame[unit][i].tooltip:Show()
 		else
 			self.buffFrame[unit][i]:Hide()
+			--self.buffFrame[unit][i].tooltip:Hide()
 		end
 	end
 	-- debuff frame
@@ -159,8 +163,10 @@ function Auras:UNIT_AURA(event, unit)
 			self.debuffFrame[unit][i].texture:SetTexture(icon)
 			Gladius:Call(Gladius.modules.Timer, "SetTimer", self.debuffFrame[unit][i], duration)
 			self.debuffFrame[unit][i]:Show()
+			--self.debuffFrame[unit][i].tooltip:Show()
 		else
 			self.debuffFrame[unit][i]:Hide()
+			--self.debuffFrame[unit][i].tooltip:Hide()
 		end
 	end
 end
@@ -168,6 +174,19 @@ end
 local function updateTooltip(f, unit, index, filter)
 	if GameTooltip:IsOwned(f) then
 		GameTooltip:SetUnitAura(unit, index, filter)
+	end
+end
+
+function Auras:UpdateColors(unit)
+	if Gladius.db.aurasBuffs then
+		for i = 1, Gladius.db.aurasBuffsMax do
+			self.buffFrame[unit][i].normalTexture:SetVertexColor(Gladius.db.aurasBuffsGlossColor.r, Gladius.db.aurasBuffsGlossColor.g, Gladius.db.aurasBuffsGlossColor.b, Gladius.db.aurasBuffsGloss and Gladius.db.aurasBuffsGlossColor.a or 0)
+		end
+	end
+	if Gladius.db.aurasDebuffs then
+		for i = 1, Gladius.db.aurasDebuffsMax do
+			self.debuffFrame[unit][i].normalTexture:SetVertexColor(Gladius.db.aurasDebuffsGlossColor.r, Gladius.db.aurasDebuffsGlossColor.g, Gladius.db.aurasDebuffsGlossColor.b, Gladius.db.aurasDebuffsGloss and Gladius.db.aurasDebuffsGlossColor.a or 0)
+		end
 	end
 end
 
@@ -301,8 +320,7 @@ function Auras:Update(unit)
 			self.buffFrame[unit][i].texture:ClearAllPoints()
 			self.buffFrame[unit][i].texture:SetPoint("TOPLEFT", self.buffFrame[unit][i], "TOPLEFT")
 			self.buffFrame[unit][i].texture:SetPoint("BOTTOMRIGHT", self.buffFrame[unit][i], "BOTTOMRIGHT")
-			self.buffFrame[unit][i].normalTexture:SetVertexColor(Gladius.db.aurasBuffsGlossColor.r, Gladius.db.aurasBuffsGlossColor.g,
-			Gladius.db.aurasBuffsGlossColor.b, Gladius.db.aurasBuffsGloss and Gladius.db.aurasBuffsGlossColor.a or 0)
+			self.buffFrame[unit][i].normalTexture:SetVertexColor(Gladius.db.aurasBuffsGlossColor.r, Gladius.db.aurasBuffsGlossColor.g, Gladius.db.aurasBuffsGlossColor.b, Gladius.db.aurasBuffsGloss and Gladius.db.aurasBuffsGlossColor.a or 0)
 		end
 		-- hide
 		self.buffFrame[unit]:Hide()
@@ -357,8 +375,7 @@ function Auras:Update(unit)
 			self.debuffFrame[unit][i].texture:ClearAllPoints()
 			self.debuffFrame[unit][i].texture:SetPoint("TOPLEFT", self.debuffFrame[unit][i], "TOPLEFT")
 			self.debuffFrame[unit][i].texture:SetPoint("BOTTOMRIGHT", self.debuffFrame[unit][i], "BOTTOMRIGHT")
-			self.debuffFrame[unit][i].normalTexture:SetVertexColor(Gladius.db.aurasDebuffsGlossColor.r, Gladius.db.aurasDebuffsGlossColor.g,
-			Gladius.db.aurasDebuffsGlossColor.b, Gladius.db.aurasDebuffsGloss and Gladius.db.aurasDebuffsGlossColor.a or 0)
+			self.debuffFrame[unit][i].normalTexture:SetVertexColor(Gladius.db.aurasDebuffsGlossColor.r, Gladius.db.aurasDebuffsGlossColor.g, Gladius.db.aurasDebuffsGlossColor.b, Gladius.db.aurasDebuffsGloss and Gladius.db.aurasDebuffsGlossColor.a or 0)
 		end
 		-- hide
 		self.debuffFrame[unit]:Hide()
