@@ -217,6 +217,17 @@ local function CastUpdate(self, elapsed)
 	end
 end
 
+function CastBar:UpdateColors(unit)
+	local color = Gladius.db.castBarColor
+	self.frame[unit]:SetStatusBarColor(color.r, color.g, color.b, color.a)
+	local color = Gladius.db.castTextColor
+	self.frame[unit].castText:SetTextColor(color.r, color.g, color.b, color.a)
+	local color = Gladius.db.castTimeTextColor
+	self.frame[unit].timeText:SetTextColor(color.r, color.g, color.b, color.a)
+	self.frame[unit].icon.bg:SetVertexColor(Gladius.db.castBarBackgroundColor.r, Gladius.db.castBarBackgroundColor.g, Gladius.db.castBarBackgroundColor.b, Gladius.db.castIcon and Gladius.db.castBarBackgroundColor.a or 0)
+	self.frame[unit].background:SetVertexColor(Gladius.db.castBarBackgroundColor.r, Gladius.db.castBarBackgroundColor.g, Gladius.db.castBarBackgroundColor.b, Gladius.db.castBarBackgroundColor.a)
+end
+
 function CastBar:Update(unit)
 	-- check parent module
 	if not Gladius:GetModule(Gladius.db.castBarAttachTo) then
@@ -464,6 +475,9 @@ function CastBar:GetOptions()
 							name = L["Cast Bar Icon"],
 							desc = L["Toggle the cast icon"],
 							disabled = function()
+								for unit, _ in pairs(Gladius.buttons) do
+									self:UpdateColors(unit)
+								end
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
 							order = 25,

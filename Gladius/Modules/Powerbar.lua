@@ -89,7 +89,6 @@ function PowerBar:UpdatePower(unit, power, maxPower, powerType)
 	if (not self.frame[unit]) then
 		return
 	end
-	local testing = Gladius.test
 	if (not self.frame[unit]) then
 		if (not Gladius.buttons[unit]) then
 			Gladius:UpdateUnit(unit)
@@ -110,6 +109,23 @@ function PowerBar:UpdatePower(unit, power, maxPower, powerType)
 		local color = self:GetBarColor(powerType)
 		self.frame[unit]:SetStatusBarColor(color.r, color.g, color.b)
 	end
+end
+
+function PowerBar:UpdateColors(unit)
+	local powerType
+	if (not Gladius.testing) then
+		powerType = UnitPowerType(unit)
+	else
+		powerType = Gladius.testing[unit].powerType
+	end
+	if (not Gladius.db.powerBarDefaultColor) then
+		local color = Gladius.db.powerBarColor
+		self.frame[unit]:SetStatusBarColor(color.r, color.g, color.b, color.a)
+	else
+		local color = self:GetBarColor(powerType)
+		self.frame[unit]:SetStatusBarColor(color.r, color.g, color.b)
+	end
+	self.frame[unit].background:SetVertexColor(Gladius.db.powerBarBackgroundColor.r, Gladius.db.powerBarBackgroundColor.g, Gladius.db.powerBarBackgroundColor.b, Gladius.db.powerBarBackgroundColor.a)
 end
 
 function PowerBar:CreateBar(unit)
@@ -212,7 +228,6 @@ function PowerBar:GetBarColor(powerType)
 end
 
 function PowerBar:Show(unit)
-	local testing = Gladius.test
 	-- show frame
 	self.frame[unit]:SetAlpha(1)
 	if (not Gladius.test) then
@@ -229,12 +244,9 @@ function PowerBar:Reset(unit)
 end
 
 function PowerBar:Test(unit)
-	-- set test values
-	local maxPower, power
-	-- power type
 	local powerType = Gladius.testing[unit].powerType
-	maxPower = Gladius.testing[unit].maxPower
-	power = Gladius.testing[unit].power
+	local maxPower = Gladius.testing[unit].maxPower
+	local power = Gladius.testing[unit].power
 	self:UpdatePower(unit, power, maxPower, powerType)
 end
 

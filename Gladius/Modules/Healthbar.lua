@@ -6,9 +6,16 @@ local L = Gladius.L
 local LSM
 
 -- global functions
-local strfind = string.find
 local pairs = pairs
-local UnitHealth, UnitHealthMax, UnitClass = UnitHealth, UnitHealthMax, UnitClass
+local select = select
+local strfind = string.find
+
+local CreateFrame = CreateFrame
+local UnitClass = UnitClass
+local UnitHealth = UnitHealth
+local UnitHealthMax = UnitHealthMax
+
+local RAID_CLASS_COLORS = RAID_CLASS_COLORS
 
 local HealthBar = Gladius:NewModule("HealthBar", true, true, {
 	healthBarAttachTo = "Frame",
@@ -44,6 +51,8 @@ local HealthBar = Gladius:NewModule("HealthBar", true, true, {
 	healthBarColorRogue = RAID_CLASS_COLORS["ROGUE"],
 	healthBarUseDefaultColorDeathknight = true,
 	healthBarColorDeathknight = RAID_CLASS_COLORS["DEATHKNIGHT"],
+	healthBarUseDefaultColorMonk = true,
+	healthBarColorMonk = RAID_CLASS_COLORS["MONK"],
 })
 
 function HealthBar:OnEnable()
@@ -51,12 +60,12 @@ function HealthBar:OnEnable()
 	self:RegisterEvent("UNIT_MAXHEALTH", "UNIT_HEALTH")
 	LSM = Gladius.LSM
 	-- set frame type
-	if (Gladius.db.healthBarAttachTo == "Frame" or strfind(Gladius.db.healthBarRelativePoint, "BOTTOM")) then
+	if Gladius.db.healthBarAttachTo == "Frame" or strfind(Gladius.db.healthBarRelativePoint, "BOTTOM") then
 		self.isBar = true
 	else
 		self.isBar = false
 	end
-	if (not self.frame) then
+	if not self.frame then
 		self.frame = { }
 	end
 end
@@ -77,7 +86,7 @@ function HealthBar:GetFrame(unit)
 end
 
 function HealthBar:UNIT_HEALTH(event, unit)
-	if (not strfind(unit, "arena") or strfind(unit, "pet")) then
+	if not strfind(unit, "arena") or strfind(unit, "pet") then
 		return
 	end
 	local health, maxHealth = UnitHealth(unit), UnitHealthMax(unit)
@@ -85,29 +94,49 @@ function HealthBar:UNIT_HEALTH(event, unit)
 end
 
 function HealthBar:UpdateHealth(unit, health, maxHealth)
-	if (not self.frame[unit]) then
-		if (not Gladius.buttons[unit]) then
+	if not self.frame[unit] then
+		if not Gladius.buttons[unit] then
 			Gladius:UpdateUnit(unit)
 		else
 			self:Update(unit)
 		end
 	end
 	-- update min max values
-	if (self.frame[unit] == nil) then
+	if self.frame[unit] == nil then
 		return
 	end
 	self.frame[unit]:SetMinMaxValues(0, maxHealth)
 	-- inverse bar
-	if (Gladius.db.healthBarInverse) then
+	if Gladius.db.healthBarInverse then
 		self.frame[unit]:SetValue(maxHealth - health)
 	else
 		self.frame[unit]:SetValue(health)
 	end
 end
 
+function HealthBar:UpdateColors(unit)
+	local testing = Gladius.test
+	-- get unit class
+	local class
+	if not testing then
+		class = select(2, UnitClass(unit))
+	else
+		class = Gladius.testing[unit].unitClass
+	end
+	-- set color
+	if not Gladius.db.healthBarClassColor then
+		local color = Gladius.db.healthBarColor
+		self.frame[unit]:SetStatusBarColor(color.r, color.g, color.b, color.a)
+	else
+		local color = self:GetBarColor(class)
+		self.frame[unit]:SetStatusBarColor(color.r, color.g, color.b, color.a or 1)
+	end
+	self.frame[unit].background:SetVertexColor(Gladius.db.healthBarBackgroundColor.r, Gladius.db.healthBarBackgroundColor.g, Gladius.db.healthBarBackgroundColor.b, Gladius.db.healthBarBackgroundColor.a)
+end
+
 function HealthBar:CreateBar(unit)
 	local button = Gladius.buttons[unit]
-	if (not button) then
+	if not button then
 		return
 	end
 	-- create bar + text
@@ -118,19 +147,19 @@ end
 
 function HealthBar:Update(unit)
 	-- check parent module
-	if (not Gladius:GetModule(Gladius.db.castBarAttachTo)) then
-		if (self.frame[unit]) then
+	if not Gladius:GetModule(Gladius.db.castBarAttachTo) then
+		if self.frame[unit] then
 			self.frame[unit]:Hide()
 		end
 		return
 	end
 	-- create power bar
-	if (not self.frame[unit]) then
+	if not self.frame[unit] then
 		self:CreateBar(unit)
 	end
 	-- set bar type 
 	local parent = Gladius:GetParent(unit, Gladius.db.healthBarAttachTo)
-	if (Gladius.db.healthBarAttachTo == "Frame" or strfind(Gladius.db.healthBarRelativePoint, "BOTTOM")) then
+	if Gladius.db.healthBarAttachTo == "Frame" or strfind(Gladius.db.healthBarRelativePoint, "BOTTOM") then
 		self.isBar = true
 	else
 		self.isBar = false
@@ -139,8 +168,8 @@ function HealthBar:Update(unit)
 	self.frame[unit]:ClearAllPoints()
 	local width = Gladius.db.healthBarAdjustWidth and Gladius.db.barWidth or Gladius.db.healthBarWidth
 	-- add width of the widget if attached to an widget
-	if (Gladius.db.healthBarAttachTo ~= "Frame" and not strfind(Gladius.db.healthBarRelativePoint,"BOTTOM") and Gladius.db.healthBarAdjustWidth) then
-		if (not Gladius:GetModule(Gladius.db.healthBarAttachTo).frame[unit]) then
+	if Gladius.db.healthBarAttachTo ~= "Frame" and not strfind(Gladius.db.healthBarRelativePoint,"BOTTOM") and Gladius.db.healthBarAdjustWidth then
+		if not Gladius:GetModule(Gladius.db.healthBarAttachTo).frame[unit] then
 			Gladius:GetModule(Gladius.db.healthBarAttachTo):Update(unit)
 		end
 		width = width + Gladius:GetModule(Gladius.db.healthBarAttachTo).frame[unit]:GetWidth()
@@ -175,25 +204,27 @@ function HealthBar:Update(unit)
 end
 
 function HealthBar:GetBarColor(class)
-	if (class == "PRIEST" and not Gladius.db.healthBarUseDefaultColorPriest) then
+	if class == "PRIEST" and not Gladius.db.healthBarUseDefaultColorPriest then
 		return Gladius.db.healthBarColorPriest
-	elseif (class == "PALADIN" and not Gladius.db.healthBarUseDefaultColorPaladin) then
+	elseif class == "PALADIN" and not Gladius.db.healthBarUseDefaultColorPaladin then
 		return Gladius.db.healthBarUseDefaultColorPaladin
-	elseif (class == "SHAMAN" and not Gladius.db.healthBarUseDefaultColorShaman) then
+	elseif class == "SHAMAN" and not Gladius.db.healthBarUseDefaultColorShaman then
 		return Gladius.db.healthBarColorShaman
-	elseif (class == "DRUID" and not Gladius.db.healthBarUseDefaultColorDruid) then
+	elseif class == "DRUID" and not Gladius.db.healthBarUseDefaultColorDruid then
 		return Gladius.db.healthBarColorDruid
-	elseif (class == "MAGE" and not Gladius.db.healthBarUseDefaultColorMage) then
+	elseif class == "MAGE" and not Gladius.db.healthBarUseDefaultColorMage then
 		return Gladius.db.healthBarColorMage
-	elseif (class == "WARLOCK" and not Gladius.db.healthBarUseDefaultColorWarlock) then
+	elseif class == "WARLOCK" and not Gladius.db.healthBarUseDefaultColorWarlock then
 		return Gladius.db.healthBarColorWarlock
-	elseif (class == "HUNTER" and not Gladius.db.healthBarUseDefaultColorHunter) then
+	elseif class == "HUNTER" and not Gladius.db.healthBarUseDefaultColorHunter then
 		return Gladius.db.healthBarColorHunter
-	elseif (class == "WARRIOR" and not Gladius.db.healthBarUseDefaultColorWarrior) then
+	elseif class == "WARRIOR" and not Gladius.db.healthBarUseDefaultColorWarrior then
 		return Gladius.db.healthBarColorWarrior
-	elseif (class == "ROGUE" and not Gladius.db.healthBarUseDefaultColorRogue) then
+	elseif class == "ROGUE" and not Gladius.db.healthBarUseDefaultColorRogue then
 		return Gladius.db.healthBarColorRogue
-	elseif (class == "DEATHKNIGHT" and not Gladius.db.healthBarUseDefaultColorDeathknight) then
+	elseif class == "DEATHKNIGHT" and not Gladius.db.healthBarUseDefaultColorDeathknight then
+		return Gladius.db.healthBarColorDeathknight
+	elseif class == "MONK" and not Gladius.db.healthBarUseDefaultColorMonk then
 		return Gladius.db.healthBarColorDeathknight
 	end
 	return RAID_CLASS_COLORS[class]
@@ -205,13 +236,13 @@ function HealthBar:Show(unit)
 	self.frame[unit]:SetAlpha(1)
 	-- get unit class
 	local class
-	if (not testing) then
+	if not testing then
 		class = select(2, UnitClass(unit))
 	else
 		class = Gladius.testing[unit].unitClass
 	end
 	-- set color
-	if (not Gladius.db.healthBarClassColor) then
+	if not Gladius.db.healthBarClassColor then
 		local color = Gladius.db.healthBarColor
 		self.frame[unit]:SetStatusBarColor(color.r, color.g, color.b, color.a)
 	else
@@ -219,13 +250,13 @@ function HealthBar:Show(unit)
 		self.frame[unit]:SetStatusBarColor(color.r, color.g, color.b, color.a or 1)
 	end
 	-- call event
-	if (not Gladius.test) then
+	if not Gladius.test then
 		self:UNIT_HEALTH("UNIT_HEALTH", unit)
 	end
 end
 
 function HealthBar:Reset(unit)
-	if (not self.frame[unit]) then
+	if not self.frame[unit] then
 		return
 	end
 	-- reset bar
@@ -366,7 +397,9 @@ function HealthBar:GetOptions()
 							type = "range",
 							name = L["Health bar width"],
 							desc = L["Width of the health bar"],
-							min = 10, max = 500, step = 1,
+							min = 10,
+							max = 500,
+							step = 1,
 							disabled = function()
 								return Gladius.dbi.profile.healthBarAdjustWidth or not Gladius.dbi.profile.modules[self.name]
 							end,
@@ -376,7 +409,9 @@ function HealthBar:GetOptions()
 							type = "range",
 							name = L["Health bar height"],
 							desc = L["Height of the health bar"],
-							min = 10, max = 200, step = 1,
+							min = 10,
+							max = 200,
+							step = 1,
 							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
@@ -403,7 +438,7 @@ function HealthBar:GetOptions()
 							end,
 							set = function(info, value)
 							local key = info.arg or info[#info]
-								if (strfind(Gladius.db.healthBarRelativePoint, "BOTTOM")) then
+								if strfind(Gladius.db.healthBarRelativePoint, "BOTTOM") then
 									self.isBar = true
 								else
 									self.isBar = false
@@ -457,7 +492,9 @@ function HealthBar:GetOptions()
 							type = "range",
 							name = L["Health bar offset X"],
 							desc = L["X offset of the health bar"],
-							min = - 100, max = 100, step = 1,
+							min = - 100,
+							max = 100,
+							step = 1,
 							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
@@ -470,7 +507,9 @@ function HealthBar:GetOptions()
 							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							min = - 100, max = 100, step = 1,
+							min = - 100,
+							max = 100,
+							step = 1,
 							order = 25,
 						},
 					},
@@ -768,6 +807,35 @@ function HealthBar:GetOptions()
 						return not Gladius.dbi.profile.modules[self.name]
 					end,
 					order = 95,
+				},
+				sep10 = {
+					type = "description",
+					name = "",
+					width = "full",
+					order = 97,
+				},
+				healthBarUseDefaultColorMonk = {
+					type = "toggle",
+					name = L["Default monk color"],
+					desc = L["Toggle default monk color"],
+					disabled = function()
+						return not Gladius.dbi.profile.modules[self.name]
+					end,
+					order = 100,
+				},
+				healthBarColorMonk = {
+					type = "color",
+					name = L["Monk color"],
+					get = function(info)
+						return Gladius:GetColorOption(info)
+					end,
+					set = function(info, r, g, b, a)
+						return Gladius:SetColorOption(info, r, g, b, 1)
+					end,
+					disabled = function()
+						return not Gladius.dbi.profile.modules[self.name]
+					end,
+					order = 105,
 				},
 			},
 		},

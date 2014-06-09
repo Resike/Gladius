@@ -78,6 +78,13 @@ function DRTracker:GetFrame(unit)
 	return self.frame[unit]
 end
 
+function DRTracker:UpdateColors(unit)
+	for cat, frame in pairs(self.frame[unit].tracker) do
+		local tracked = self.frame[unit].tracker[cat]
+		tracked.normalTexture:SetVertexColor(Gladius.db.drTrackerGlossColor.r, Gladius.db.drTrackerGlossColor.g, Gladius.db.drTrackerGlossColor.b, Gladius.db.drTrackerGloss and Gladius.db.drTrackerGlossColor.a or 0)
+		tracked.text:SetTextColor(Gladius.db.drFontColor.r, Gladius.db.drFontColor.g, Gladius.db.drFontColor.b, Gladius.db.drFontColor.a)
+	end
+end
 function DRTracker:UpdateIcon(unit, drCat)
 	local tracked = self.frame[unit].tracker[drCat]
 	tracked:EnableMouse(false)
@@ -114,7 +121,7 @@ function DRTracker:UpdateIcon(unit, drCat)
 	tracked.texture:SetPoint("TOPLEFT", tracked, "TOPLEFT")
 	tracked.texture:SetPoint("BOTTOMRIGHT", tracked, "BOTTOMRIGHT")
 	tracked.texture:SetTexCoord(0.07, 0.93, 0.07, 0.93)
-	tracked.normalTexture:SetVertexColor(Gladius.db.trinketGlossColor.r, Gladius.db.trinketGlossColor.g, Gladius.db.trinketGlossColor.b, Gladius.db.trinketGloss and Gladius.db.trinketGlossColor.a or 0)
+	tracked.normalTexture:SetVertexColor(Gladius.db.drTrackerGlossColor.r, Gladius.db.drTrackerGlossColor.g, Gladius.db.drTrackerGlossColor.b, Gladius.db.drTrackerGloss and Gladius.db.drTrackerGlossColor.a or 0)
 end
 
 function DRTracker:DRFaded(unit, spellID)
@@ -449,7 +456,7 @@ function DRTracker:GetOptions()
 					end,
 					order = 3,
 					args = {
-						drFontColor = {
+						--[[drFontColor = {
 							type = "color",
 							name = L["DR Text Color"],
 							desc = L["Text color of the DR text"],
@@ -464,7 +471,7 @@ function DRTracker:GetOptions()
 								return not Gladius.dbi.profile.castText or not Gladius.dbi.profile.modules[self.name]
 							end,
 							order = 10,
-						},
+						},]]
 						drFontSize = {
 							type = "range",
 							name = L["DR Text Size"],

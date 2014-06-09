@@ -246,9 +246,9 @@ function Gladius:OnInitialize()
 	self.testCount = 0
 	self.testing = setmetatable({
 		["arena1"] = {health = 400000, maxHealth = 400000, power = 300000, maxPower = 300000, powerType = 0, unitClass = "MAGE", unitRace = "Draenei", unitSpec = "Frost"},
-		["arena2"] = {health = 380000, maxHealth = 400000, power = 100000, maxPower = 300000, powerType = 2, unitClass = "PRIEST", unitRace = "Night Elf", unitSpec = "Discipline"},
+		["arena2"] = {health = 380000, maxHealth = 400000, power = 100, maxPower = 120, powerType = 2, unitClass = "HUNTER", unitRace = "Night Elf", unitSpec = "Survival"},
 		["arena3"] = {health = 240000, maxHealth = 400000, power = 90, maxPower = 130, powerType = 3, unitClass = "ROGUE", unitRace = "Human", unitSpec = "Combat"},
-		["arena4"] = {health = 200000, maxHealth = 400000, power = 80, maxPower = 100, powerType = 6, unitClass = "DEATHKNIGHT", unitRace = "Dwarf", unitSpec = "Unholy"},
+		["arena4"] = {health = 200000, maxHealth = 400000, power = 60, maxPower = 100, powerType = 6, unitClass = "DEATHKNIGHT", unitRace = "Dwarf", unitSpec = "Unholy"},
 		["arena5"] = {health = 150000, maxHealth = 400000, power = 30, maxPower = 100, powerType = 1, unitClass = "WARRIOR", unitRace = "Gnome", unitSpec = "Arms"},
 	},
 	{
@@ -265,7 +265,7 @@ end
 function Gladius:OnEnable()
 	-- register the appropriate events that fires when you enter an arena
 	self:RegisterEvent("ZONE_CHANGED_NEW_AREA")
-	self:RegisterEvent("PLAYER_ENTERING_WORLD", "ZONE_CHANGED_NEW_AREA")
+	self:RegisterEvent("PLAYER_ENTERING_WORLD")
 	self:RegisterEvent("ARENA_PREP_OPPONENT_SPECIALIZATIONS")
 	-- enable modules
 	for moduleName, module in pairs(self.modules) do
@@ -377,7 +377,7 @@ function Gladius:LeftArena()
 	-- unregister combat events
 	self:UnregisterAllEvents()
 	self:RegisterEvent("ZONE_CHANGED_NEW_AREA")
-	self:RegisterEvent("PLAYER_ENTERING_WORLD", "ZONE_CHANGED_NEW_AREA")
+	self:RegisterEvent("PLAYER_ENTERING_WORLD")
 end
 
 function Gladius:UNIT_NAME_UPDATE(event, unit)
@@ -427,6 +427,10 @@ function Gladius:UpdateFrame()
 	end
 end
 
+function Gladius:UpdateColors()
+	self.background:SetBackdropColor(self.db.backgroundColor.r, self.db.backgroundColor.g, self.db.backgroundColor.b, self.db.backgroundColor.a)
+end
+
 function Gladius:HideFrame()
 	-- hide units
 	for unit, _ in pairs(self.buttons) do
@@ -445,6 +449,10 @@ function Gladius:HideFrame()
 end
 
 function Gladius:UpdateUnit(unit, module)
+	--[[local instanceType = select(2, IsInInstance())
+	if instanceType ~= "arena" then
+		return
+	end]]
 	if not strfind(unit, "arena") or strfind(unit, "pet") then
 		return
 	end
@@ -588,7 +596,7 @@ function Gladius:UpdateUnit(unit, module)
 		self.anchor.text:SetPoint("CENTER", self.anchor, "CENTER")
 		self.anchor.text:SetFont(self.LSM:Fetch(self.LSM.MediaType.FONT, Gladius.db.globalFont), (Gladius.db.useGlobalFontSize and Gladius.db.globalFontSize or 11))
 		self.anchor.text:SetTextColor(1, 1, 1, 1)
-		self.anchor.text:SetShadowOffset(1, - 1)
+		self.anchor.text:SetShadowOffset(1, -1)
 		self.anchor.text:SetShadowColor(0, 0, 0, 1)
 		self.anchor.text:SetText(L["Gladius Anchor - click to move"])
 		if self.db.groupButtons and not self.db.locked then
