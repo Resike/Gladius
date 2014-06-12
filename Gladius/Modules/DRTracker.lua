@@ -29,7 +29,7 @@ local DRTracker = Gladius:NewModule("DRTracker", false, true, {
 	drTrackerOffsetX = 0,
 	drTrackerOffsetY = -5,
 	drTrackerFrameLevel = 2,
-	drTrackerGloss = true,
+	drTrackerGloss = false,
 	drTrackerGlossColor = {r = 1, g = 1, b = 1, a = 0.4},
 	drTrackerCooldown = false,
 	drTrackerCooldownReverse = false,
@@ -85,6 +85,7 @@ function DRTracker:UpdateColors(unit)
 		tracked.text:SetTextColor(Gladius.db.drFontColor.r, Gladius.db.drFontColor.g, Gladius.db.drFontColor.b, Gladius.db.drFontColor.a)
 	end
 end
+
 function DRTracker:UpdateIcon(unit, drCat)
 	local tracked = self.frame[unit].tracker[drCat]
 	tracked:EnableMouse(false)
@@ -131,7 +132,7 @@ function DRTracker:DRFaded(unit, spellID)
 	end
 	local drTexts = {
 		[1] = {"\194\189", 0, 1, 0},
-		[0.5] = {"\194\188", 1, 0.65,0},
+		[0.5] = {"\194\188", 1, 0.65, 0},
 		[0.25] = {"%", 1, 0, 0},
 		[0] = {"%", 1, 0, 0},
 	}

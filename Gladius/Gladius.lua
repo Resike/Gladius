@@ -265,7 +265,7 @@ end
 function Gladius:OnEnable()
 	-- register the appropriate events that fires when you enter an arena
 	self:RegisterEvent("ZONE_CHANGED_NEW_AREA")
-	self:RegisterEvent("PLAYER_ENTERING_WORLD")
+	self:RegisterEvent("PLAYER_ENTERING_WORLD", "ZONE_CHANGED_NEW_AREA")
 	self:RegisterEvent("ARENA_PREP_OPPONENT_SPECIALIZATIONS")
 	-- enable modules
 	for moduleName, module in pairs(self.modules) do
@@ -327,6 +327,7 @@ function Gladius:ZONE_CHANGED_NEW_AREA()
 	-- check if we are entering or leaving an arena 
 	if type == "arena" then
 		self:JoinedArena()
+		--self:SendMessage("GLADIUS_SPEC_UPDATE", nil, unit)
 	elseif type ~= "arena" and self.instanceType == "arena" then
 		self:LeftArena()
 	end
@@ -343,8 +344,8 @@ function Gladius:JoinedArena()
 	self:RegisterEvent("UNIT_HEALTH") 
 	self:RegisterEvent("UNIT_MAXHEALTH", "UNIT_HEALTH")
 	-- spec detection
-	self:RegisterEvent("UNIT_AURA") 
-	self:RegisterEvent("UNIT_SPELLCAST_START")
+	--self:RegisterEvent("UNIT_AURA")
+	--self:RegisterEvent("UNIT_SPELLCAST_START")
 	-- reset test
 	self.test = false
 	self.testCount = 0
@@ -768,7 +769,7 @@ function Gladius:CreateButton(unit)
 	end
 end
 
-function Gladius:UNIT_AURA(event, unit)
+--[[function Gladius:UNIT_AURA(event, unit)
 	if not strfind(unit, "arena") or strfind(unit, "pet") then
 		return
 	end
@@ -781,10 +782,10 @@ function Gladius:UNIT_AURA(event, unit)
 		if not name then
 			break
 		end
-		--[[if self.specSpells[name] and self.buttons[unitCaster] and self.buttons[unitCaster].spec == "" then
+		if self.buttons[unitCaster] and self.buttons[unitCaster].spec == "" then
 			--self.buttons[unitCaster].spec = self.specSpells[name]
-			self:SendMessage("GLADIUS_SPEC_UPDATE", unitCaster)
-		end]]
+			self:SendMessage("GLADIUS_SPEC_UPDATE", nil, unitCaster)
+		end
 		index = index + 1
 		-- Update spec from API
 		local numOpps = GetNumArenaOpponentSpecs()
@@ -806,10 +807,10 @@ function Gladius:UNIT_SPELLCAST_START(event, unit)
 		self:ShowUnit(unit)
 	end
 	local spell = UnitCastingInfo(unit)
-	--[[if self.specSpells[spell] and self.buttons[unit].spec == "" then
+	if self.buttons[unit].spec == "" then
 		--self.buttons[unit].spec = self.specSpells[spell]
-		self:SendMessage("GLADIUS_SPEC_UPDATE", unit)
-	end]]
+		self:SendMessage("GLADIUS_SPEC_UPDATE", nil, unit)
+	end
 	-- Update spec from API
 	local numOpps = GetNumArenaOpponentSpecs()
 	for i = 1, numOpps do
@@ -819,7 +820,7 @@ function Gladius:UNIT_SPELLCAST_START(event, unit)
 			Gladius.buttons["arena"..i].spec = spec
 		end
 	end
-end
+end]]
 
 function Gladius:UNIT_HEALTH(event, unit)
 	if not strfind(unit, "arena") or strfind(unit, "pet") then
@@ -833,12 +834,12 @@ function Gladius:UNIT_HEALTH(event, unit)
 		self:UpdateAlpha(unit, 0.5)
 	end
 	-- Update spec from API
-	local numOpps = GetNumArenaOpponentSpecs()
+	--[[local numOpps = GetNumArenaOpponentSpecs()
 	for i = 1, numOpps do
 		local specID = GetArenaOpponentSpec(i)
 		if specID > 0 then
 			local _, spec, _, specIcon, _, _, class = GetSpecializationInfoByID(specID)
 			Gladius.buttons["arena"..i].spec = spec
 		end
-	end
+	end]]
 end

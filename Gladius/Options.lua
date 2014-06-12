@@ -213,7 +213,7 @@ function Gladius:SetupModule(key, module, order)
 			end
 			self:UpdateFrame()
 		end,
-		get=function(info)
+		get = function(info)
 			local module = info[1]
 			return self.dbi.profile.modules[module]
 		end,
@@ -224,7 +224,7 @@ function Gladius:SetupModule(key, module, order)
 		type = "execute",
 		name = L["Reset Module"],
 		func = function()
-			for k,v in pairs(module.defaults) do
+			for k, v in pairs(module.defaults) do
 				self.dbi.profile[k] = v
 			end
 			Gladius:UpdateFrame()
