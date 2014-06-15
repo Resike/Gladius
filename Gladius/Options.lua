@@ -146,18 +146,7 @@ end
 
 function Gladius:SetColorOption(info, r, g, b, a)
 	local key = info.arg or info[#info]
-	if self.dbi.profile[key].r ~= r then
-		self.dbi.profile[key].r = r
-	end
-	if self.dbi.profile[key].g ~= g then
-		self.dbi.profile[key].g = g
-	end
-	if self.dbi.profile[key].b ~= b then
-		self.dbi.profile[key].b = b
-	end
-	if self.dbi.profile[key].a ~= a then
-		self.dbi.profile[key].a = a
-	end
+	self.dbi.profile[key].r, self.dbi.profile[key].g, self.dbi.profile[key].b, self.dbi.profile[key].a = r, g, b, a
 	if (info[1] == "general") then
 		self:UpdateColors()
 	elseif (info[1] == "Auras") or (info[1] == "CastBar") or (info[1] == "ClassIcon") or (info[1] == "Dispel") or (info[1] == "DRTracker") or (info[1] == "HealthBar") or (info[1] == "PowerBar") then
