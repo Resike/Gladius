@@ -378,7 +378,7 @@ function Gladius:LeftArena()
 	-- unregister combat events
 	self:UnregisterAllEvents()
 	self:RegisterEvent("ZONE_CHANGED_NEW_AREA")
-	self:RegisterEvent("PLAYER_ENTERING_WORLD")
+	self:RegisterEvent("PLAYER_ENTERING_WORLD", "ZONE_CHANGED_NEW_AREA")
 end
 
 function Gladius:UNIT_NAME_UPDATE(event, unit)
@@ -776,7 +776,7 @@ function Gladius:UNIT_AURA(event, unit)
 	if not self.buttons[unit] or self.buttons[unit]:GetAlpha() < 1 then
 		self:ShowUnit(unit)
 	end
-	local index = 1
+	--[[local index = 1
 	while true do
 		local name, rank, icon, count, debuffType, duration, expirationTime, unitCaster, isStealable = UnitAura(unit, index, "HELPFUL")
 		if not name then
@@ -796,7 +796,7 @@ function Gladius:UNIT_AURA(event, unit)
 				Gladius.buttons["arena"..i].spec = spec
 			end
 		end
-	end
+	end]]
 end
 
 function Gladius:UNIT_SPELLCAST_START(event, unit)
@@ -807,7 +807,7 @@ function Gladius:UNIT_SPELLCAST_START(event, unit)
 		self:ShowUnit(unit)
 	end
 	local spell = UnitCastingInfo(unit)
-	if self.buttons[unit].spec == "" then
+	--[[if self.buttons[unit].spec == "" then
 		--self.buttons[unit].spec = self.specSpells[spell]
 		--self:SendMessage("GLADIUS_SPEC_UPDATE", nil, unit)
 	end
@@ -819,7 +819,7 @@ function Gladius:UNIT_SPELLCAST_START(event, unit)
 			local _, spec, _, specIcon, _, _, class = GetSpecializationInfoByID(specID)
 			Gladius.buttons["arena"..i].spec = spec
 		end
-	end
+	end]]
 end
 
 function Gladius:UNIT_HEALTH(event, unit)
@@ -834,12 +834,12 @@ function Gladius:UNIT_HEALTH(event, unit)
 		self:UpdateAlpha(unit, 0.5)
 	end
 	-- Update spec from API
-	local numOpps = GetNumArenaOpponentSpecs()
+	--[[local numOpps = GetNumArenaOpponentSpecs()
 	for i = 1, numOpps do
 		local specID = GetArenaOpponentSpec(i)
 		if specID > 0 then
 			local _, spec, _, specIcon, _, _, class = GetSpecializationInfoByID(specID)
 			Gladius.buttons["arena"..i].spec = spec
 		end
-	end
-end
+	end]]
+en
