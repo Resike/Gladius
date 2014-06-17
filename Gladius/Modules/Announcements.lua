@@ -80,7 +80,8 @@ function Announcements:Show(unit)
 end
 
 function Announcements:UNIT_NAME_UPDATE(event, unit)
-	if not strfind(unit, "arena") or strfind(unit, "pet") then
+	local _, instanceType = IsInInstance()
+	if instanceType ~= "arena" or not strfind(unit, "arena") or strfind(unit, "pet") then
 		return
 	end
 	if not Gladius.db.announcements.enemies or not UnitName(unit) then
@@ -97,7 +98,8 @@ function Announcements:UNIT_NAME_UPDATE(event, unit)
 end
 
 --[[function Announcements:GLADIUS_SPEC_UPDATE(event, unit)
-	if not strfind(unit, "arena") or strfind(unit, "pet") or not Gladius.db.announcements.spec then
+	local _, instanceType = IsInInstance()
+	if instanceType ~= "arena" or not strfind(unit, "arena") or strfind(unit, "pet") or not Gladius.db.announcements.spec then
 		return
 	end
 	self:Send(string.format(L["SPEC DETECTED: %s (%s)"], UnitName(unit), Gladius.buttons[unit].spec), 2, unit)

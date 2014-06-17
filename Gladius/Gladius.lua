@@ -806,8 +806,8 @@ function Gladius:UNIT_SPELLCAST_START(event, unit)
 	if not self.buttons[unit] or self.buttons[unit]:GetAlpha() < 1 then
 		self:ShowUnit(unit)
 	end
-	local spell = UnitCastingInfo(unit)
-	--[[if self.buttons[unit].spec == "" then
+	--[[local spell = UnitCastingInfo(unit)
+	if self.buttons[unit].spec == "" then
 		--self.buttons[unit].spec = self.specSpells[spell]
 		--self:SendMessage("GLADIUS_SPEC_UPDATE", nil, unit)
 	end
@@ -842,4 +842,4 @@ function Gladius:UNIT_HEALTH(event, unit)
 			Gladius.buttons["arena"..i].spec = spec
 		end
 	end]]
-en
+end
