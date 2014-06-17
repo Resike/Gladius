@@ -1,3 +1,19 @@
+**3.2.7**
+* Fixed an issue which caused too many actions and spammed errors inside arenas.
+* Updating colors with the color picker won't murder your fps anymore. (Not all of them are fixed yet.)
+* Fixed an issuw which caused DRTracer "Gloss Color" not to work.
+* "DRTraceker Gloss" options is now false by default.
+* "DR Text Color" color picker is removed.
+* Updated Dispel icons, different specs with no dispel will no longer have a Dispel icon. (Like Shadow Priest.)
+* Color pickers will no longer generte useless CPU usage while the mouse is not moving on them.
+* Removed old spec detection functions.
+* Updated "HealthBar" module.
+* Adde Monk's class color picker option into the "HealthBar" module.
+* Some upvalue changes.
+* Fixed a typo in "Subtlety".
+* Localization updates.
+* Test mode updates.
+
 **3.2.6**
 * Drastically reduced cpu usage on some cases. (~80%)
 * Module file name updates.
