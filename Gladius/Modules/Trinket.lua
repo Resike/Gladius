@@ -262,16 +262,32 @@ function Trinket:Show(unit)
 	else
 		local trinketIcon
 		if not testing then
-			if UnitFactionGroup(unit) == "Horde" and Gladius.db.trinketFaction then
-				trinketIcon = UnitLevel(unit) == 80 and "Interface\\Icons\\INV_Jewelry_Necklace_38" or "Interface\\Icons\\INV_Jewelry_TrinketPVP_02"
+			if Gladius.db.trinketFaction then
+				if UnitFactionGroup(unit) == "Horde" then
+					trinketIcon = "Interface\\Icons\\INV_Jewelry_Necklace_38"
+				else
+					trinketIcon = "Interface\\Icons\\INV_Jewelry_Necklace_37"
+				end
 			else
-				trinketIcon = UnitLevel(unit) == 80 and "Interface\\Icons\\INV_Jewelry_Necklace_37" or "Interface\\Icons\\INV_Jewelry_TrinketPVP_01"
+				if UnitFactionGroup(unit) == "Horde" then
+					trinketIcon = "Interface\\Icons\\INV_Jewelry_TrinketPVP_02"
+				else
+					trinketIcon = "Interface\\Icons\\INV_Jewelry_TrinketPVP_01"
+				end
 			end
 		else
-			if UnitFactionGroup("player") == "Horde" and Gladius.db.trinketFaction then
-				trinketIcon = "Interface\\Icons\\INV_Jewelry_Necklace_38"
+			if Gladius.db.trinketFaction then
+				if UnitFactionGroup("player") == "Horde" then
+					trinketIcon = "Interface\\Icons\\INV_Jewelry_Necklace_38"
+				else
+					trinketIcon = "Interface\\Icons\\INV_Jewelry_Necklace_37"
+				end
 			else
-				trinketIcon = "Interface\\Icons\\INV_Jewelry_Necklace_37"
+				if UnitFactionGroup("player") == "Horde" then
+					trinketIcon = "Interface\\Icons\\INV_Jewelry_TrinketPVP_02"
+				else
+					trinketIcon = "Interface\\Icons\\INV_Jewelry_TrinketPVP_01"
+				end
 			end
 		end
 		self.frame[unit].texture:SetTexture(trinketIcon)
