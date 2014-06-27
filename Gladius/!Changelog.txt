@@ -1,3 +1,6 @@
+**3.2.8**
+* Fixed an issue with trinket icon update in test mode.
+
 **3.2.7**
 * Fixed an issue which caused too many actions and spammed errors inside arenas.
 * Updating colors with the color picker won't murder your fps anymore. (Not all of them are fixed yet.)
