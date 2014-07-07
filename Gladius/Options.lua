@@ -22,7 +22,7 @@ Gladius.defaults = {
 		growRight = false,
 		growLeft = false,
 		groupButtons = true,
-		advancedOptions = false,
+		advancedOptions = true,
 		backgroundColor = {r = 0, g = 0, b = 0, a = 0.4},
 		backgroundPadding = 5,
 		bottomMargin = 20,
@@ -51,10 +51,10 @@ local function pairsByKeys(t, f)
 end
 
 function Gladius:SetTemplate(template)
-	if (template == 1) then
+	if template == 1 then
 		-- classic Gladius1 template
 		print("Gladius:", "Template not available!")
-	elseif (template == 2) then
+	elseif template == 2 then
 		-- reset to default
 		Gladius.dbi:ResetProfile()
 	else
@@ -65,18 +65,18 @@ end
 
 SLASH_GLADIUS1 = "/gladius"
 SlashCmdList["GLADIUS"] = function(msg)
-	if (msg:find("test") and not Gladius.test) then
+	if msg:find("test") and not Gladius.test then
 		if Gladius.instanceType ~= "arena" then
 			local test
-			if (msg == "test2") then
+			if msg == "test2" then
 				test = 2
-			elseif (msg == "test3") then
+			elseif msg == "test3" then
 				test = 3
-			elseif (msg == "test5") then
+			elseif msg == "test5" then
 				test = 5
 			else
 				test = tonumber(msg:match("^test (.+)"))
-				if (not test or test > 5 or test < 2 or test == 4) then
+				if not test or test > 5 or test < 2 or test == 4 then
 					test = 5
 				end
 			end
@@ -85,10 +85,10 @@ SlashCmdList["GLADIUS"] = function(msg)
 			Gladius:HideFrame()
 			-- create and update buttons on first launch
 			for i = 1, test do
-				if (not Gladius.buttons["arena"..i]) then
+				if not Gladius.buttons["arena"..i] then
 					Gladius:UpdateUnit("arena"..i)
 				end
-				if (Gladius.buttons["arena"..i]) then
+				if Gladius.buttons["arena"..i] then
 					Gladius.buttons["arena"..i]:RegisterForDrag("LeftButton")
 					Gladius.buttons["arena"..i]:Show()
 				end
@@ -98,25 +98,25 @@ SlashCmdList["GLADIUS"] = function(msg)
 		else
 			Gladius:Print(L["You can't use this function inside arenas."])
 		end
-	elseif (msg == "hide" or (msg:find("test") and Gladius.test)) then
+	elseif msg == "hide" or (msg:find("test") and Gladius.test) then
 		-- reset test environment
 		Gladius.testCount = 0
 		Gladius.test = false
 		for i = 1, 5 do
-			if (Gladius.buttons["arena"..i]) then
+			if Gladius.buttons["arena"..i] then
 				Gladius.buttons["arena"..i]:RegisterForDrag()
 				Gladius.buttons["arena"..i]:Hide()
 			end
 		end
 		-- hide buttons
 		Gladius:HideFrame()
-	elseif (msg == "reset") then
+	elseif msg == "reset" then
 		-- reset profile
 		Gladius.dbi:ResetProfile()
 	else
 		AceDialog = AceDialog or LibStub("AceConfigDialog-3.0")
 		AceRegistry = AceRegistry or LibStub("AceConfigRegistry-3.0")
-		if (not Gladius.options) then
+		if not Gladius.options then
 			Gladius:SetupOptions()
 			AceDialog:SetDefaultSize("Gladius", 830, 530)
 		end
@@ -125,14 +125,14 @@ SlashCmdList["GLADIUS"] = function(msg)
 end
 
 local function getOption(info)
-	return (info.arg and Gladius.dbi.profile[info.arg] or Gladius.dbi.profile[info[#info]])
+	return info.arg and Gladius.dbi.profile[info.arg] or Gladius.dbi.profile[info[#info]]
 end
 
 local function setOption(info, value)
 	local key = info[#info]
 	Gladius.dbi.profile[key] = value
 	info = info.arg and info.arg or info[1]
-	if (info == "general") then
+	if info == "general" then
 		Gladius:UpdateFrame()
 	else
 		Gladius:UpdateFrame(info)
@@ -158,9 +158,9 @@ function Gladius:SetColorOption(info, r, g, b, a)
 	if self.dbi.profile[key].a ~= a then
 		self.dbi.profile[key].a = a
 	end
-	if (info[1] == "general") then
+	if info[1] == "general" then
 		self:UpdateColors()
-	elseif (info[1] == "Auras") or (info[1] == "CastBar") or (info[1] == "ClassIcon") or (info[1] == "Dispel") or (info[1] == "DRTracker") or (info[1] == "HealthBar") or (info[1] == "PowerBar") then
+	elseif info[1] == "Auras" or info[1] == "CastBar" or info[1] == "ClassIcon" or info[1] == "Dispel" or info[1] == "DRTracker" or info[1] == "HealthBar" or info[1] == "PowerBar" then
 		local m = self:GetModule(info[1])
 		for unit, _ in pairs(self.buttons) do
 			self:Call(m, "UpdateColors", unit)
@@ -192,7 +192,7 @@ function Gladius:SetupModule(key, module, order)
 	}
 	-- set additional module options
 	local options = module:GetOptions()
-	if (type(options) == "table") then
+	if type(options) == "table" then
 		self.options.args[key].args = options
 	end
 	-- set enable module option
@@ -202,7 +202,7 @@ function Gladius:SetupModule(key, module, order)
 		set = function(info, v)
 			local module = info[1]
 			self.dbi.profile.modules[module] = v
-			if (v) then
+			if v then
 				self:EnableModule(module)
 				-- evil haxx
 				self:Call(self.modules[module], "OnEnable")
@@ -346,7 +346,9 @@ function Gladius:SetupOptions()
 								type = "range",
 								name = L["Background Padding"],
 								desc = L["Padding of the background"],
-								min = 0, max = 100, step = 1,
+								min = 0,
+								max = 100,
+								step = 1,
 								disabled = function()
 									return not self.dbi.profile.groupButtons
 								end,
@@ -362,7 +364,9 @@ function Gladius:SetupOptions()
 								type = "range",
 								name = L["Bottom Margin"],
 								desc = L["Margin between each button"],
-								min = 0, max = 300, step = 1,
+								min = 0,
+								max = 300,
+								step = 1,
 								disabled = function()
 									return not self.dbi.profile.groupButtons
 								end,
@@ -382,16 +386,18 @@ function Gladius:SetupOptions()
 								type = "range",
 								name = L["Bar width"],
 								desc = L["Width of the module bars"],
-								min = 10, max = 500, step = 1,
+								min = 10,
+								max = 500,
+								step = 1,
 								order = 1,
 							},
 							frameScale = {
 								type = "range",
 								name = L["Frame scale"],
 								desc = L["Scale of the frame"],
-								min = .1,
+								min = 0.1,
 								max = 2,
-								step = .1,
+								step = 0.1,
 								order = 5,
 							},
 						},
@@ -418,7 +424,9 @@ function Gladius:SetupOptions()
 								disabled = function()
 									return not self.db.useGlobalFontSize
 								end,
-								min = 1, max = 20, step = 1,
+								min = 1,
+								max = 20,
+								step = 1,
 								order = 5,
 							},
 							sep = {

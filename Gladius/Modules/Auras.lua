@@ -56,7 +56,6 @@ local Auras = Gladius:NewModule("Auras", false, true, {
 	aurasDebuffsTrackerCooldown = true,
 	aurasDebuffsTrackerCooldownReverse = true,
 	aurasDebuffsHideTimer = true,
-	aurasImportantAuras = true,
 	aurasFrameAuras = nil,
 },
 {
