@@ -1,3 +1,11 @@
+**3.2.9**
+* Fixed an issue with the "Class Icon Important Auras" check button's functionality.
+* Added an options "Class Icon Spec Icon" to show the specialization icons, instead of the class icon in the Class Icon module.
+* "Advanced Options" is enabled by default from now.
+* Some other smaller fixes.
+* Options module updates.
+* Localization updates.
+
 **3.2.8**
 * Fixed an issue with trinket icon update in test mode.
 
