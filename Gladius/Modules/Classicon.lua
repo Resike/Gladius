@@ -34,6 +34,7 @@ local ClassIcon = Gladius:NewModule("ClassIcon", false, true, {
 	classIconCrop = false,
 	classIconCooldown = false,
 	classIconCooldownReverse = false,
+	classIconShowSpec = false,
 })
 
 function ClassIcon:OnEnable()
@@ -146,22 +147,41 @@ function ClassIcon:SetClassIcon(unit)
 	Gladius:Call(Gladius.modules.Timer, "HideTimer", self.frame[unit])
 	-- get unit class
 	local class
+	local specIcon
 	if not Gladius.test then
 		class = select(2, UnitClass(unit))
+		specIcon = Gladius.buttons[unit].specIcon
 	else
 		class = Gladius.testing[unit].unitClass
+		local _, _, _, icon = GetSpecializationInfoByID(Gladius.testing[unit].unitSpecId)
+		specIcon = icon
 	end
-	if class then
-		self.frame[unit].texture:SetTexture("Interface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes")
-		local left, right, top, bottom = unpack(CLASS_BUTTONS[class])
-		-- Crop class icon borders
-		if Gladius.db.classIconCrop then
-			left = left + (right - left) * 0.07
-			right = right - (right - left) * 0.07
-			top = top + (bottom - top) * 0.07
-			bottom = bottom - (bottom - top) * 0.07
+	if Gladius.db.classIconShowSpec then
+		if specIcon then
+			self.frame[unit].texture:SetTexture(specIcon)
+			local left, right, top, bottom = 0, 1, 0, 1
+			-- Crop class icon borders
+			if Gladius.db.classIconCrop then
+				left = left + (right - left) * 0.07
+				right = right - (right - left) * 0.07
+				top = top + (bottom - top) * 0.07
+				bottom = bottom - (bottom - top) * 0.07
+			end
+			self.frame[unit].texture:SetTexCoord(left, right, top, bottom)
 		end
-		self.frame[unit].texture:SetTexCoord(left, right, top, bottom)
+	else
+		if class then
+			self.frame[unit].texture:SetTexture("Interface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes")
+			local left, right, top, bottom = unpack(CLASS_BUTTONS[class])
+			-- Crop class icon borders
+			if Gladius.db.classIconCrop then
+				left = left + (right - left) * 0.07
+				right = right - (right - left) * 0.07
+				top = top + (bottom - top) * 0.07
+				bottom = bottom - (bottom - top) * 0.07
+			end
+			self.frame[unit].texture:SetTexCoord(left, right, top, bottom)
+		end
 	end
 end
 
@@ -285,6 +305,9 @@ function ClassIcon:Reset(unit)
 end
 
 function ClassIcon:Test(unit)
+	if not Gladius.db.classIconImportantAuras then
+		return
+	end
 	Gladius.db.aurasFrameAuras = Gladius.db.aurasFrameAuras or Gladius.modules["Auras"]:GetAuraList()
 	local aura
 	if unit == "arena1" then
@@ -396,6 +419,18 @@ function ClassIcon:GetOptions()
 								return not Gladius.db.advancedOptions
 							end,
 							order = 15,
+						},
+						classIconShowSpec = {
+							type = "toggle",
+							name = L["Class Icon Spec Icon"],
+							desc = L["Shows the specialization icon instead of the class icon"],
+							disabled = function()
+								return not Gladius.dbi.profile.modules[self.name]
+							end,
+							hidden = function()
+								return not Gladius.db.advancedOptions
+							end,
+							order = 16,
 						},
 						sep2 = {
 							type = "description",

@@ -245,11 +245,11 @@ function Gladius:OnInitialize()
 	self.test = false
 	self.testCount = 0
 	self.testing = setmetatable({
-		["arena1"] = {health = 400000, maxHealth = 400000, power = 300000, maxPower = 300000, powerType = 0, unitClass = "MAGE", unitRace = "Draenei", unitSpec = "Frost"},
-		["arena2"] = {health = 380000, maxHealth = 400000, power = 100, maxPower = 120, powerType = 2, unitClass = "HUNTER", unitRace = "Night Elf", unitSpec = "Survival"},
-		["arena3"] = {health = 240000, maxHealth = 400000, power = 90, maxPower = 130, powerType = 3, unitClass = "ROGUE", unitRace = "Human", unitSpec = "Combat"},
-		["arena4"] = {health = 200000, maxHealth = 400000, power = 60, maxPower = 100, powerType = 6, unitClass = "DEATHKNIGHT", unitRace = "Dwarf", unitSpec = "Unholy"},
-		["arena5"] = {health = 150000, maxHealth = 400000, power = 30, maxPower = 100, powerType = 1, unitClass = "WARRIOR", unitRace = "Gnome", unitSpec = "Arms"},
+		["arena1"] = {health = 400000, maxHealth = 400000, power = 300000, maxPower = 300000, powerType = 0, unitClass = "MAGE", unitRace = "Draenei", unitSpec = "Frost", unitSpecId = 64},
+		["arena2"] = {health = 380000, maxHealth = 400000, power = 100, maxPower = 120, powerType = 2, unitClass = "HUNTER", unitRace = "Night Elf", unitSpec = "Survival", unitSpecId = 255},
+		["arena3"] = {health = 240000, maxHealth = 400000, power = 90, maxPower = 130, powerType = 3, unitClass = "ROGUE", unitRace = "Human", unitSpec = "Combat", unitSpecId = 260},
+		["arena4"] = {health = 200000, maxHealth = 400000, power = 60, maxPower = 100, powerType = 6, unitClass = "DEATHKNIGHT", unitRace = "Dwarf", unitSpec = "Unholy", unitSpecId = 252},
+		["arena5"] = {health = 150000, maxHealth = 400000, power = 30, maxPower = 100, powerType = 1, unitClass = "WARRIOR", unitRace = "Gnome", unitSpec = "Arms", unitSpecId = 71},
 	},
 	{
 		__index = function(t, k)
@@ -476,6 +476,7 @@ function Gladius:UpdateUnit(unit, module)
 			local _, spec, _, specIcon, _, _, class = GetSpecializationInfoByID(specID)
 			if Gladius.buttons["arena"..i] then
 				Gladius.buttons["arena"..i].spec = spec
+				Gladius.buttons["arena"..i].specIcon = specIcon
 			end
 		end
 	end
@@ -654,6 +655,7 @@ function Gladius:ShowUnit(unit, testing, module)
 		if specID > 0 then
 			local _, spec, _, specIcon, _, _, class = GetSpecializationInfoByID(specID)
 			Gladius.buttons["arena"..i].spec = spec
+			Gladius.buttons["arena"..i].specIcon = specIcon
 		end
 	end
 	self.background:SetHeight(self.buttons[unit]:GetHeight() * maxHeight + self.db.bottomMargin * (maxHeight - 1) + self.db.backgroundPadding * 2)
