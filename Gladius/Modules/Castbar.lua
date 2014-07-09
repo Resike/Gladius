@@ -153,7 +153,7 @@ function CastBar:UNIT_SPELLCAST_CHANNEL_START(event, unit)
 	if self.frame[unit] == nil then
 		return
 	end
-	local spell, rank, displayName, icon, startTime, endTime, isTradeSkill = UnitChannelInfo(unit)
+	local spell, rank, displayName, icon, startTime, endTime, isTradeSkill, notInterruptible = UnitChannelInfo(unit)
 	if spell then
 		self.frame[unit].isChanneling = true
 		self.frame[unit].value = ((endTime / 1000) - GetTime())
@@ -162,6 +162,11 @@ function CastBar:UNIT_SPELLCAST_CHANNEL_START(event, unit)
 		self.frame[unit]:SetValue(self.frame[unit].value)
 		self.frame[unit].timeText:SetText(self.frame[unit].maxValue)
 		self.frame[unit].icon:SetTexture(icon)
+		if notInterruptible then
+			self.frame[unit]:SetStatusBarTexture(LSM:Fetch(LSM.MediaType.STATUSBAR, "CastBarLockFull"))
+		else
+			self.frame[unit]:SetStatusBarTexture(LSM:Fetch(LSM.MediaType.STATUSBAR, Gladius.db.castBarTexture))
+		end
 		if rank ~= "" then
 			self.frame[unit].castText:SetFormattedText("%s (%s)", spell, rank)
 		else
