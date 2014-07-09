@@ -55,6 +55,8 @@ function CastBar:OnEnable()
 	self:RegisterEvent("UNIT_SPELLCAST_CHANNEL_START")
 	self:RegisterEvent("UNIT_SPELLCAST_CHANNEL_UPDATE", "UNIT_SPELLCAST_DELAYED")
 	self:RegisterEvent("UNIT_SPELLCAST_CHANNEL_STOP", "UNIT_SPELLCAST_STOP")
+	self:RegisterEvent("UNIT_SPELLCAST_INTERRUPTIBLE")
+	self:RegisterEvent("UNIT_SPELLCAST_NOT_INTERRUPTIBLE")
 	LSM = Gladius.LSM
 	-- set frame type
 	--[[if (Gladius.db.castBarAttachTo == "Frame" or Gladius:GetModule(Gladius.db.castBarAttachTo).isBar) then
@@ -98,7 +100,7 @@ function CastBar:UNIT_SPELLCAST_START(event, unit)
 	if self.frame[unit] == nil then
 		return
 	end
-	local spell, rank, displayName, icon, startTime, endTime, isTradeSkill = UnitCastingInfo(unit)
+	local spell, rank, displayName, icon, startTime, endTime, isTradeSkill, _, notInterruptible= UnitCastingInfo(unit)
 	if spell then
 		self.frame[unit].isCasting = true
 		self.frame[unit].value = (GetTime() - (startTime / 1000))
@@ -107,11 +109,40 @@ function CastBar:UNIT_SPELLCAST_START(event, unit)
 		self.frame[unit]:SetValue(self.frame[unit].value)
 		self.frame[unit].timeText:SetText(self.frame[unit].maxValue)
 		self.frame[unit].icon:SetTexture(icon)
+		if notInterruptible then
+			self.frame[unit]:SetStatusBarTexture(LSM:Fetch(LSM.MediaType.STATUSBAR, "CastBarLockFull"))
+		else
+			self.frame[unit]:SetStatusBarTexture(LSM:Fetch(LSM.MediaType.STATUSBAR, Gladius.db.castBarTexture))
+		end
 		if rank ~= "" then
 			self.frame[unit].castText:SetFormattedText("%s (%s)", spell, rank)
 		else
 			self.frame[unit].castText:SetText(spell)
 		end
+	end
+end
+
+function CastBar:UNIT_SPELLCAST_INTERRUPTIBLE(event, unit)
+	if not strfind(unit, "arena") or strfind(unit, "pet") then
+		return
+	end
+	if self.frame[unit] == nil then
+		return
+	end
+	if self.frame[unit].isChanneling or self.frame[unit].isCasting then
+		self.frame[unit]:SetStatusBarTexture(LSM:Fetch(LSM.MediaType.STATUSBAR, Gladius.db.castBarTexture))
+	end
+end
+
+function CastBar:UNIT_SPELLCAST_NOT_INTERRUPTIBLE(event, unit)
+	if not strfind(unit, "arena") or strfind(unit, "pet") then
+		return
+	end
+	if self.frame[unit] == nil then
+		return
+	end
+	if self.frame[unit].isChanneling or self.frame[unit].isCasting then
+		self.frame[unit]:SetStatusBarTexture(LSM:Fetch(LSM.MediaType.STATUSBAR, "CastBarLockFull"))
 	end
 end
 
@@ -377,6 +408,25 @@ function CastBar:Test(unit)
 		self.frame[unit].icon:SetTexture(texture)
 		if Gladius.db.castText then
 			self.frame[unit].castText:SetText(L["Example Spell Name"])
+		else
+			self.frame[unit].castText:SetText("")
+		end
+	elseif unit == "arena2" then
+		self.frame[unit].isCasting = true
+		self.frame[unit].value = Gladius.db.castBarInverse and 0 or 1
+		self.frame[unit].maxValue = 1
+		self.frame[unit]:SetMinMaxValues(0, self.frame[unit].maxValue)
+		self.frame[unit]:SetValue(self.frame[unit].value)
+		self.frame[unit]:SetStatusBarTexture(LSM:Fetch(LSM.MediaType.STATUSBAR, "CastBarLockFull"))
+		if Gladius.db.castTimeText then
+			self.frame[unit].timeText:SetFormattedText("%.1f", self.frame[unit].maxValue - self.frame[unit].value)
+		else
+			self.frame[unit].timeText:SetText("")
+		end
+		local texture = select(3, GetSpellInfo(1))
+		self.frame[unit].icon:SetTexture(texture)
+		if Gladius.db.castText then
+			self.frame[unit].castText:SetText(L["Uninterruptible Spell"])
 		else
 			self.frame[unit].castText:SetText("")
 		end
