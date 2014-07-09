@@ -17,7 +17,7 @@ local UnitName = UnitName
 local UnitClass = UnitClass
 
 local FlameShock = Gladius:NewModule("FlameShock", false, true, {
-	FlameShockAttachTo = "Dispell",
+	FlameShockAttachTo = "Dispel",
 	FlameShockAnchor = "TOPLEFT",
 	FlameShockRelativePoint = "TOPRIGHT",
 	FlameShockGridStyleIcon = false,
