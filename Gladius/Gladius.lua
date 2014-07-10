@@ -164,7 +164,7 @@ function Gladius:GetParent(unit, module)
 		return self.buttons[unit]
 	else
 		-- get parent module frame
-		local m = self:GetModule(module, true)
+		local m = self:GetModule(module)
 		if m and type(m.GetFrame) == "function" then
 			-- return frame as parent, if parent module is not enabled
 			if not m:IsEnabled() then
@@ -220,8 +220,8 @@ function Gladius:OnInitialize()
 			self.dbi["profiles"][k]["modules"]["Dispell"] = nil
 		end
 	end
-	local SML = LibStub:GetLibrary("LibSharedMedia-3.0")
-	SML:Register(SML.MediaType.STATUSBAR, "Smooth", "Interface\\Addons\\Gladius\\Images\\Smooth")
+	--local SML = LibStub:GetLibrary("LibSharedMedia-3.0")
+	--SML:Register(SML.MediaType.STATUSBAR, "Smooth", "Interface\\Addons\\Gladius\\Images\\Smooth")
 	self.db = setmetatable(self.dbi.profile, {
 		__newindex = function(t, index, value)
 		if type(value) == "table" then
@@ -240,7 +240,9 @@ function Gladius:OnInitialize()
 	L = self.L
 	-- libsharedmedia
 	self.LSM = LibStub("LibSharedMedia-3.0")
-	self.LSM:Register("statusbar", "minimalist", "Interface\\Addons\\Gladius\\Images\\Minimalist")
+	self.LSM:Register(self.LSM.MediaType.STATUSBAR, "Bars", "Interface\\AddOns\\Gladius\\Images\\Bars")
+	self.LSM:Register(self.LSM.MediaType.STATUSBAR, "Minimalist", "Interface\\AddOns\\Gladius\\Images\\Minimalist")
+	self.LSM:Register(self.LSM.MediaType.STATUSBAR, "Smooth", "Interface\\AddOns\\Gladius\\Images\\Smooth")
 	-- test environment
 	self.test = false
 	self.testCount = 0

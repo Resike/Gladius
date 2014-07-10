@@ -20,7 +20,7 @@ local TargetBar = Gladius:NewModule("TargetBar", true, true, {
 	targetBarColor = {r = 1, g = 1, b = 1, a = 1},
 	targetBarClassColor = true,
 	targetBarBackgroundColor = {r = 1, g = 1, b = 1, a = 0.3},
-	targetBarTexture = "minimalist",
+	targetBarTexture = "Minimalist",
 	targetBarIconPosition = "LEFT",
 	targetBarIcon = true,
 	targetBarIconCrop = false,
@@ -61,7 +61,7 @@ function TargetBar:OnDisable()
 	end
 end
 
-function TargetBar:SetTemplate(template)
+--[[function TargetBar:SetTemplate(template)
 	if (template == 1) then
 		-- reset width
 		if (Gladius.db.targetBarAttachTo == "HealthBar" and not Gladius.db.healthBarAdjustWidth) then
@@ -95,7 +95,7 @@ function TargetBar:SetTemplate(template)
 	else
 		self.isBar = false
 	end
-end
+end]]
 
 function TargetBar:GetAttachTo()
 	return Gladius.db.targetBarAttachTo

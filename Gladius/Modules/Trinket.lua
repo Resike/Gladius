@@ -20,7 +20,7 @@ local Trinket = Gladius:NewModule("Trinket", false, true, {
 	trinketGridStyleIconUsedColor = {r = 1, g = 0, b = 0, a = 1},
 	trinketAdjustSize = true,
 	trinketSize = 52,
-	trinketOffsetX = 1,
+	trinketOffsetX = 0,
 	trinketOffsetY = 0,
 	trinketFrameLevel = 2,
 	trinketIconCrop = false,
@@ -57,7 +57,7 @@ function Trinket:GetFrame(unit)
 	return self.frame[unit]
 end
 
-function Trinket:SetTemplate(template)
+--[[function Trinket:SetTemplate(template)
 	if template == 1 then
 		-- reset width
 		if Gladius.db.targetBarAttachTo == "HealthBar" and not Gladius.db.healthBarAdjustWidth then
@@ -102,7 +102,7 @@ function Trinket:SetTemplate(template)
 			Gladius.db.trinketOffsetY = 0
 		end
 	end
-end
+end]]
 
 function Trinket:UNIT_SPELLCAST_SUCCEEDED(event, unit, spell, rank)
 	local _, instanceType = IsInInstance()
@@ -257,7 +257,7 @@ function Trinket:Show(unit)
 	-- show frame
 	self.frame[unit]:SetAlpha(1)
 	if Gladius.db.trinketGridStyleIcon then
-		self.frame[unit].texture:SetTexture(LSM:Fetch(LSM.MediaType.STATUSBAR, "minimalist"))
+		self.frame[unit].texture:SetTexture(LSM:Fetch(LSM.MediaType.STATUSBAR, "Minimalist"))
 		self.frame[unit].texture:SetVertexColor(Gladius.db.trinketGridStyleIconColor.r, Gladius.db.trinketGridStyleIconColor.g, Gladius.db.trinketGridStyleIconColor.b, Gladius.db.trinketGridStyleIconColor.a)
 	else
 		local trinketIcon

@@ -55,13 +55,19 @@ function Highlight:OnEnable()
 	self:RegisterEvent("PLAYER_TARGET_CHANGED", "UNIT_TARGET")
 	LSM = Gladius.LSM
 	-- frame
-	if (not self.frame) then
-	self.frame = { }
+	if not self.frame then
+		self.frame = { }
 	end
 end
 
 function Highlight:OnDisable()
 	for unit in pairs(self.frame) do
+		local button = Gladius.buttons[unit]
+		local secure = button.secure
+		button:SetScript("OnEnter", nil)
+		button:SetScript("OnLeave", nil)
+		secure:SetScript("OnEnter", nil)
+		secure:SetScript("OnLeave", nil)
 		self.frame[unit]:SetAlpha(0)
 	end
 end
@@ -85,33 +91,33 @@ function Highlight:UNIT_TARGET(event, unit)
 	for arenaUnit, frame in pairs(self.frame) do
 		-- reset
 		self:Reset(arenaUnit)
-		if (targetGUID and UnitGUID(arenaUnit) == targetGUID and unit ~= "") then 
+		if targetGUID and UnitGUID(arenaUnit) == targetGUID and unit ~= "" then 
 			-- main assist
-			if (Gladius.db.highlightAssist and GetPartyAssignment("MAINASSIST", unit) == 1) then
-				if (frame.priority < Gladius.db.highlightTargetPriority) then
+			if Gladius.db.highlightAssist and GetPartyAssignment("MAINASSIST", unit) == 1 then
+				if frame.priority < Gladius.db.highlightTargetPriority then
 					frame.priority = Gladius.db.highlightTargetPriority
 					frame:SetBackdropBorderColor(Gladius.db.highlightTargetColor.r, Gladius.db.highlightTargetColor.g, Gladius.db.highlightTargetColor.b, Gladius.db.highlightTargetColor.a)
 				end
 			end
 			-- raid target icon
 			local icon = GetRaidTargetIndex(unit)
-			if (icon and Gladius.db["highlightRaidIcon"..icon]) then
-				if (frame.priority < Gladius.db["highlightRaidIcon"..icon.."Priority"]) then
+			if icon and Gladius.db["highlightRaidIcon"..icon] then
+				if frame.priority < Gladius.db["highlightRaidIcon"..icon.."Priority"] then
 					frame.priority = Gladius.db["highlightRaidIcon"..icon.."Priority"]
 					frame:SetBackdropBorderColor(Gladius.db["highlightRaidIcon"..icon.."Color"].r, Gladius.db["highlightRaidIcon"..icon.."Color"].g, Gladius.db["highlightRaidIcon"..icon.."Color"].b, Gladius.db["highlightRaidIcon"..icon.."Color"].a)
 				end
 			end
 		end
 		-- focus
-		if (focusGUID and UnitGUID(arenaUnit) == focusGUID) then
-			if (frame.priority < Gladius.db.highlightFocusPriority) then
+		if focusGUID and UnitGUID(arenaUnit) == focusGUID then
+			if frame.priority < Gladius.db.highlightFocusPriority then
 				frame.priority = Gladius.db.highlightFocusPriority
 				frame:SetBackdropBorderColor(Gladius.db.highlightFocusColor.r, Gladius.db.highlightFocusColor.g, Gladius.db.highlightFocusColor.b, Gladius.db.highlightFocusColor.a)
 			end
 		end
 		-- player target
-		if (playerTargetGUID and UnitGUID(arenaUnit) == playerTargetGUID) then
-			if (frame.priority < Gladius.db.highlightTargetPriority) then
+		if playerTargetGUID and UnitGUID(arenaUnit) == playerTargetGUID then
+			if frame.priority < Gladius.db.highlightTargetPriority then
 				frame.priority = Gladius.db.highlightTargetPriority
 				frame:SetBackdropBorderColor(Gladius.db.highlightTargetColor.r, Gladius.db.highlightTargetColor.g, Gladius.db.highlightTargetColor.b, Gladius.db.highlightTargetColor.a)
 			end
@@ -121,7 +127,7 @@ end
 
 function Highlight:CreateFrame(unit)
 	local button = Gladius.buttons[unit]
-	if (not button) then
+	if not button then
 		return
 	end
 	-- create frame
@@ -132,7 +138,7 @@ end
 
 function Highlight:Update(unit)
 	-- create frame
-	if (not self.frame[unit]) then
+	if not self.frame[unit] then
 		self:CreateFrame(unit)
 	end
 	-- update frame 
@@ -147,12 +153,12 @@ function Highlight:Update(unit)
 	-- update highlight
 	local button = Gladius.buttons[unit]
 	local secure = button.secure
-	if (Gladius.db.highlightHover) then
+	if Gladius.db.highlightHover then
 		-- set scripts
 		button:SetScript("OnEnter", function(f, motion)
-			if (motion and f:GetAlpha() > 0) then
+			if motion and f:GetAlpha() > 0 then
 				for _, m in pairs(Gladius.modules) do
-					if (m:IsEnabled() and m.frame and m.frame[unit].highlight) then
+					if m:IsEnabled() and m.frame and m.frame[unit].highlight then
 						-- set color
 						m.frame[unit].highlight:SetVertexColor(Gladius.db.highlightHoverColor.r, Gladius.db.highlightHoverColor.g, Gladius.db.highlightHoverColor.b, Gladius.db.highlightHoverColor.a)
 						-- set alpha
@@ -162,18 +168,18 @@ function Highlight:Update(unit)
 			end
 		end)
 		button:SetScript("OnLeave", function(f, motion)
-			if (motion) then
+			if motion then
 				for _, m in pairs(Gladius.modules) do
-					if (m:IsEnabled() and m.frame and m.frame[unit].highlight) then
+					if m:IsEnabled() and m.frame and m.frame[unit].highlight then
 						m.frame[unit].highlight:SetAlpha(0)
 					end
 				end
 			end
 		end)
 		secure:SetScript("OnEnter", function(f, motion)
-			if (motion and f:GetAlpha() > 0) then
+			if motion and f:GetAlpha() > 0 then
 				for _, m in pairs(Gladius.modules) do
-					if (m:IsEnabled() and m.frame and m.frame[unit].highlight) then
+					if m:IsEnabled() and m.frame and m.frame[unit].highlight then
 						-- set color
 						m.frame[unit].highlight:SetVertexColor(Gladius.db.highlightHoverColor.r, Gladius.db.highlightHoverColor.g, Gladius.db.highlightHoverColor.b, Gladius.db.highlightHoverColor.a)
 						-- set alpha
@@ -183,9 +189,9 @@ function Highlight:Update(unit)
 			end
 		end)
 		secure:SetScript("OnLeave", function(f, motion)
-			if (motion) then
+			if motion then
 				for _, m in pairs(Gladius.modules) do
-					if (m:IsEnabled() and m.frame and m.frame[unit].highlight) then
+					if m:IsEnabled() and m.frame and m.frame[unit].highlight then
 						m.frame[unit].highlight:SetAlpha(0)
 					end
 				end
@@ -212,11 +218,11 @@ function Highlight:Show(unit)
 end
 
 function Highlight:Reset(unit)
-	if (not self.frame[unit]) then
+	if not self.frame[unit] then
 		return
 	end
 	-- set priority
-	self.frame[unit].priority = - 1
+	self.frame[unit].priority = -1
 	-- hide border
 	self.frame[unit]:SetBackdropBorderColor(0, 0, 0, 0)
 end
@@ -462,7 +468,9 @@ function Highlight:GetOptions()
 				type = "range",
 				name = L["Highlight Raid Assist Priority"],
 				desc = L["Priority of the raid assist border"],
-				min = 0, max = 10, step = 1,
+				min = 0,
+				max = 10,
+				step = 1,
 				disabled = function()
 					return not Gladius.dbi.profile.modules[self.name]
 				end,
