@@ -77,7 +77,7 @@ function Dispel:GetFrame(unit)
 	return self.frame[unit]
 end
 
-function Dispel:SetTemplate(template)
+--[[function Dispel:SetTemplate(template)
 	if template == 1 then
 		-- reset width
 		if (Gladius.db.targetBarAttachTo == "HealthBar" and not Gladius.db.healthBarAdjustWidth) then
@@ -122,7 +122,7 @@ function Dispel:SetTemplate(template)
 			Gladius.db.dispellOffsetY = 0
 		end
 	end
-end
+end]]
 
 function Dispel:COMBAT_LOG_EVENT_UNFILTERED(event, ...)
 	local _, instanceType = IsInInstance()
