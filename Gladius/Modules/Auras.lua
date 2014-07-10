@@ -89,7 +89,7 @@ function Auras:OnDisable()
 	end
 end
 
-function Auras:SetTemplate(template)
+--[[function Auras:SetTemplate(template)
 	if template == 1 then
 		Gladius.db.aurasBuffsGrow = "DOWNRIGHT"
 		Gladius.db.aurasBuffsAttachTo = "CastBar"
@@ -108,7 +108,7 @@ function Auras:SetTemplate(template)
 		Gladius.db.aurasDebuffsMax = Gladius.db.modules.Trinket and 8 or 6
 		Gladius.db.aurasDebuffsOffsetY = - 1
 	end
-end
+end]]
 
 function Auras:GetAttachTo()
 	return Gladius.db.aurasAttachTo
