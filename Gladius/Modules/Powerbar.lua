@@ -19,7 +19,7 @@ local PowerBar = Gladius:NewModule("PowerBar", true, true, {
 	powerBarColor = {r = 1, g = 1, b = 1, a = 1},
 	powerBarDefaultColor = true,
 	powerBarBackgroundColor = {r = 1, g = 1, b = 1, a = 0.3},
-	powerBarTexture = "minimalist",
+	powerBarTexture = "Minimalist",
 	powerBarOffsetX = 0,
 	powerBarOffsetY = 0, 
 	powerBarAnchor = "TOPLEFT",
