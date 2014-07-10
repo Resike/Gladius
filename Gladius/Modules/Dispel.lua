@@ -77,7 +77,7 @@ function Dispel:GetFrame(unit)
 	return self.frame[unit]
 end
 
-function Dispel:SetTemplate(template)
+--[[function Dispel:SetTemplate(template)
 	if template == 1 then
 		-- reset width
 		if (Gladius.db.targetBarAttachTo == "HealthBar" and not Gladius.db.healthBarAdjustWidth) then
@@ -122,7 +122,7 @@ function Dispel:SetTemplate(template)
 			Gladius.db.dispellOffsetY = 0
 		end
 	end
-end
+end]]
 
 function Dispel:COMBAT_LOG_EVENT_UNFILTERED(event, ...)
 	local _, eventType, _, sourceGUID, _, _, _, _, _, _, _, spellId = ...
@@ -294,7 +294,7 @@ function Dispel:Show(unit)
 	-- show frame
 	self.frame[unit]:SetAlpha(1)
 	if Gladius.db.dispellGridStyleIcon then
-		self.frame[unit].texture:SetTexture(LSM:Fetch(LSM.MediaType.STATUSBAR, "minimalist"))
+		self.frame[unit].texture:SetTexture(LSM:Fetch(LSM.MediaType.STATUSBAR, "Minimalist"))
 		self.frame[unit].texture:SetVertexColor(Gladius.db.dispellGridStyleIconColor.r, Gladius.db.dispellGridStyleIconColor.g, Gladius.db.dispellGridStyleIconColor.b, Gladius.db.dispellGridStyleIconColor.a)
 	else
 		local dispellIcon
