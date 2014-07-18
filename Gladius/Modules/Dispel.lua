@@ -125,12 +125,26 @@ end
 end]]
 
 function Dispel:COMBAT_LOG_EVENT_UNFILTERED(event, ...)
+	local _, instanceType = IsInInstance()
+	if instanceType ~= "arena" then return end
+	
 	local _, eventType, _, sourceGUID, _, _, _, _, _, _, _, spellId = ...
 	if eventType == "SPELL_DISPEL" then
 		if not (UnitGUID("arena1") == sourceGUID or UnitGUID("arena2") == sourceGUID or UnitGUID("arena3") == sourceGUID or UnitGUID("arena4") == sourceGUID or UnitGUID("arena5") == sourceGUID) then
 			return
 		end
 		if spellId == 527 or spellId == 4987 or spellId == 77130 or spellId == 88423 or spellId == 115450 or spellId == 2782 or spellId == 51886 or spellId == 475 then
+<<<<<<< HEAD
+=======
+			--527:		priest 		purify
+			--4987:		paladin 	cleanse all spec
+			--77130:	rShaman 	purify spirit
+			--88423:	rdruid 		nature's cure
+			--115450:	monk		detox 	all spec
+			--2782:		feral/bala 	Remove Corruption  
+			--51886:	ena/elly	cleanse spirit  
+			--475:		mage		remove curse
+>>>>>>> origin/master
 			if UnitGUID("arena1") == sourceGUID then
 				self:UpdateDispel("arena1", 8)
 			elseif UnitGUID("arena2") == sourceGUID then
@@ -143,10 +157,6 @@ function Dispel:COMBAT_LOG_EVENT_UNFILTERED(event, ...)
 				self:UpdateDispel("arena5", 8)
 			end
 		end
-		--wotf
-		--[[if spellId == GetSpellInfo(7744) then
-			self:UpdateDispel(unit, 45)
-		end]]
 	end
 end
 
