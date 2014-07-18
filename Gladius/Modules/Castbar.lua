@@ -30,7 +30,7 @@ local CastBar = Gladius:NewModule("CastBar", true, true, {
 	castBarColor = {r = 1, g = 1, b = 0, a = 1},
 	castBarBackgroundColor = {r = 1, g = 1, b = 1, a = 0.3},
 	castBarTexture = "Minimalist",
-	castBarTextureUninterruptable = "CastBarLockFull",
+	castBarTextureUninterruptible = "CastBarLockFull",
 	castIcon = true,
 	castIconPosition = "LEFT",
 	castText = true,
@@ -111,7 +111,7 @@ function CastBar:UNIT_SPELLCAST_START(event, unit)
 		self.frame[unit].timeText:SetText(self.frame[unit].maxValue)
 		self.frame[unit].icon:SetTexture(icon)
 		if notInterruptible then
-			self.frame[unit]:SetStatusBarTexture(LSM:Fetch(LSM.MediaType.STATUSBAR, Gladius.db.castBarTextureUninterruptable))
+			self.frame[unit]:SetStatusBarTexture(LSM:Fetch(LSM.MediaType.STATUSBAR, Gladius.db.castBarTextureUninterruptible))
 		else
 			self.frame[unit]:SetStatusBarTexture(LSM:Fetch(LSM.MediaType.STATUSBAR, Gladius.db.castBarTexture))
 		end
@@ -143,7 +143,7 @@ function CastBar:UNIT_SPELLCAST_NOT_INTERRUPTIBLE(event, unit)
 		return
 	end
 	if self.frame[unit].isChanneling or self.frame[unit].isCasting then
-		self.frame[unit]:SetStatusBarTexture(LSM:Fetch(LSM.MediaType.STATUSBAR, Gladius.db.castBarTextureUninterruptable))
+		self.frame[unit]:SetStatusBarTexture(LSM:Fetch(LSM.MediaType.STATUSBAR, Gladius.db.castBarTextureUninterruptible))
 	end
 end
 
@@ -164,7 +164,7 @@ function CastBar:UNIT_SPELLCAST_CHANNEL_START(event, unit)
 		self.frame[unit].timeText:SetText(self.frame[unit].maxValue)
 		self.frame[unit].icon:SetTexture(icon)
 		if notInterruptible then
-			self.frame[unit]:SetStatusBarTexture(LSM:Fetch(LSM.MediaType.STATUSBAR, Gladius.db.castBarTextureUninterruptable))
+			self.frame[unit]:SetStatusBarTexture(LSM:Fetch(LSM.MediaType.STATUSBAR, Gladius.db.castBarTextureUninterruptible))
 		else
 			self.frame[unit]:SetStatusBarTexture(LSM:Fetch(LSM.MediaType.STATUSBAR, Gladius.db.castBarTexture))
 		end
@@ -423,7 +423,7 @@ function CastBar:Test(unit)
 		self.frame[unit].maxValue = 1
 		self.frame[unit]:SetMinMaxValues(0, self.frame[unit].maxValue)
 		self.frame[unit]:SetValue(self.frame[unit].value)
-		self.frame[unit]:SetStatusBarTexture(LSM:Fetch(LSM.MediaType.STATUSBAR, Gladius.db.castBarTextureUninterruptable))
+		self.frame[unit]:SetStatusBarTexture(LSM:Fetch(LSM.MediaType.STATUSBAR, Gladius.db.castBarTextureUninterruptible))
 		if Gladius.db.castTimeText then
 			self.frame[unit].timeText:SetFormattedText("%.1f", self.frame[unit].maxValue - self.frame[unit].value)
 		else
@@ -520,10 +520,10 @@ function CastBar:GetOptions()
 							end,
 							order = 20,
 						},
-						castBarTextureUninterruptable = {
+						castBarTextureUninterruptible = {
 							type = "select",
-							name = L["Uninterruptable Cast Bar Texture"],
-							desc = L["Texture of the uninterruptable cast bar"],
+							name = L["Uninterruptible Cast Bar Texture"],
+							desc = L["Texture of the uninterruptible cast bar"],
 							dialogControl = "LSM30_Statusbar",
 							values = AceGUIWidgetLSMlists.statusbar,
 							disabled = function()
