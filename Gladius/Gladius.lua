@@ -220,8 +220,6 @@ function Gladius:OnInitialize()
 			self.dbi["profiles"][k]["modules"]["Dispell"] = nil
 		end
 	end
-	--local SML = LibStub:GetLibrary("LibSharedMedia-3.0")
-	--SML:Register(SML.MediaType.STATUSBAR, "Smooth", "Interface\\Addons\\Gladius\\Images\\Smooth")
 	self.db = setmetatable(self.dbi.profile, {
 		__newindex = function(t, index, value)
 		if type(value) == "table" then

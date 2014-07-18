@@ -130,7 +130,7 @@ function Dispel:COMBAT_LOG_EVENT_UNFILTERED(event, ...)
 		if not (UnitGUID("arena1") == sourceGUID or UnitGUID("arena2") == sourceGUID or UnitGUID("arena3") == sourceGUID or UnitGUID("arena4") == sourceGUID or UnitGUID("arena5") == sourceGUID) then
 			return
 		end
-		if spellId == 527 or spellId == 4987 or spellId == 77130 or spellId == 88423 or spellId == 115450 then
+		if spellId == 527 or spellId == 4987 or spellId == 77130 or spellId == 88423 or spellId == 115450 or spellId == 2782 or spellId == 51886 or spellId == 475 then
 			if UnitGUID("arena1") == sourceGUID then
 				self:UpdateDispel("arena1", 8)
 			elseif UnitGUID("arena2") == sourceGUID then
