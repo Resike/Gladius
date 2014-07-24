@@ -1,3 +1,7 @@
+**3.3.1**
+* Fixed an issue with Grid style trinket icons color, when the unit is becomes unstealthed.
+* Toc version number fix.
+
 **3.3.0**
 * Added different cast bar texture for uninterruptable spells. (Thanks for balciseri.)
 * Added an option to change the bar texture for uninterruptable spells.
