@@ -350,7 +350,7 @@ function Gladius:JoinedArena()
 	self.test = false
 	self.testCount = 0
 	-- create and update buttons on first launch
-	local groupSize = max(GetNumGroupMembers())
+	local groupSize = GetNumGroupMembers()
 	for i = 1, groupSize do
 		self:UpdateUnit("arena"..i)
 		self.buttons["arena"..i]:RegisterForDrag("LeftButton")

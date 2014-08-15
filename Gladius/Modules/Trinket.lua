@@ -318,6 +318,9 @@ function Trinket:Reset(unit)
 		self.frame[unit].texture:SetTexCoord(0.07, 0.93, 0.07, 0.93)
 	end
 	self.frame[unit]:SetScript("OnUpdate", nil)
+	if Gladius.db.trinketGridStyleIcon then
+		self.frame[unit].texture:SetVertexColor(Gladius.db.trinketGridStyleIconColor.r, Gladius.db.trinketGridStyleIconColor.g, Gladius.db.trinketGridStyleIconColor.b, Gladius.db.trinketGridStyleIconColor.a)
+	end
 	-- reset cooldown
 	Gladius:Call(Gladius.modules.Timer, "HideTimer", self.frame[unit])
 	-- hide
