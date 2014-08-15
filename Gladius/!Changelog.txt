@@ -1,3 +1,7 @@
+**3.3.2**
+* Fixed an issue with Grid style trinket icon's color, when entering into a new arena.
+* Some other smaller fixes.
+
 **3.3.1**
 * Fixed an issue with Grid style trinket icon's color, when the unit is becomes unstealthed and it's trinket is on cooldown.
 * Toc version number fix.
