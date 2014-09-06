@@ -87,10 +87,11 @@ function ClassIcon:UpdateAura(unit)
 		self.frame[unit].priority = 0
 	end
 	local aura
-	local index = 1
+	--local index = 1
 	-- debuffs
-	while true do
-		local name, _, icon, _, _, duration, expires, _, _ = UnitAura(unit, index, "HARMFUL")
+	--while true do
+	for i = 1, 40 do
+		local name, _, icon, _, _, duration, expires, _, _ = UnitAura(unit, i, "HARMFUL")
 		if not name then
 			break
 		end
@@ -101,12 +102,13 @@ function ClassIcon:UpdateAura(unit)
 			self.frame[unit].expires = expires
 			self.frame[unit].priority = Gladius.db.aurasFrameAuras[name]
 		end
-		index = index + 1
+		--index = index + 1
 	end
 	-- buffs
-	index = 1
-	while true do
-		local name, _, icon, _, _, duration, expires, _, _ = UnitAura(unit, index, "HELPFUL")
+	--index = 1
+	--while true do
+	for i = 1, 40 do
+		local name, _, icon, _, _, duration, expires, _, _ = UnitAura(unit, i, "HELPFUL")
 		if not name then
 			break
 		end
@@ -117,7 +119,7 @@ function ClassIcon:UpdateAura(unit)
 			self.frame[unit].expires = expires
 			self.frame[unit].priority = Gladius.db.aurasFrameAuras[name]
 		end
-		index = index + 1
+		--index = index + 1
 	end
 	if aura then
 		-- display aura
