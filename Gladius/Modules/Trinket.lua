@@ -258,7 +258,7 @@ function Trinket:Show(unit)
 	self.frame[unit]:SetAlpha(1)
 	if Gladius.db.trinketGridStyleIcon then
 		self.frame[unit].texture:SetTexture(LSM:Fetch(LSM.MediaType.STATUSBAR, "Minimalist"))
-		if not self.frame[unit].timeleft or self.frame[unit].timeleft <= 0 then
+		if self.frame[unit].timeleft and self.frame[unit].timeleft <= 0 then
 			self.frame[unit].texture:SetVertexColor(Gladius.db.trinketGridStyleIconColor.r, Gladius.db.trinketGridStyleIconColor.g, Gladius.db.trinketGridStyleIconColor.b, Gladius.db.trinketGridStyleIconColor.a)
 		else
 			self.frame[unit].texture:SetVertexColor(Gladius.db.trinketGridStyleIconUsedColor.r, Gladius.db.trinketGridStyleIconUsedColor.g, Gladius.db.trinketGridStyleIconUsedColor.b, Gladius.db.trinketGridStyleIconUsedColor.a)
