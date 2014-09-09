@@ -133,6 +133,7 @@ function Trinket:UpdateTrinket(unit, duration)
 		self.frame[unit]:SetScript("OnUpdate", function(f, elapsed)
 			self.frame[unit].timeleft = self.frame[unit].timeleft - elapsed
 			if self.frame[unit].timeleft <= 0 then
+				self.frame[unit].timeleft = nil
 				-- trinket
 				if Gladius.db.trinketGridStyleIcon then
 					self.frame[unit].texture:SetVertexColor(Gladius.db.trinketGridStyleIconColor.r, Gladius.db.trinketGridStyleIconColor.g, Gladius.db.trinketGridStyleIconColor.b, Gladius.db.trinketGridStyleIconColor.a)
@@ -258,7 +259,7 @@ function Trinket:Show(unit)
 	self.frame[unit]:SetAlpha(1)
 	if Gladius.db.trinketGridStyleIcon then
 		self.frame[unit].texture:SetTexture(LSM:Fetch(LSM.MediaType.STATUSBAR, "Minimalist"))
-		if self.frame[unit].timeleft and self.frame[unit].timeleft <= 0 then
+		if not self.frame[unit].timeleft or (self.frame[unit].timeleft and self.frame[unit].timeleft <= 0) then
 			self.frame[unit].texture:SetVertexColor(Gladius.db.trinketGridStyleIconColor.r, Gladius.db.trinketGridStyleIconColor.g, Gladius.db.trinketGridStyleIconColor.b, Gladius.db.trinketGridStyleIconColor.a)
 		else
 			self.frame[unit].texture:SetVertexColor(Gladius.db.trinketGridStyleIconUsedColor.r, Gladius.db.trinketGridStyleIconUsedColor.g, Gladius.db.trinketGridStyleIconUsedColor.b, Gladius.db.trinketGridStyleIconUsedColor.a)
@@ -323,6 +324,7 @@ function Trinket:Reset(unit)
 	end
 	-- reset cooldown
 	Gladius:Call(Gladius.modules.Timer, "HideTimer", self.frame[unit])
+	self.frame[unit].timeleft = nil
 	-- hide
 	self.frame[unit]:SetAlpha(0)
 end
