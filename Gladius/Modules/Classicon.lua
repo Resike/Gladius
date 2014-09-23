@@ -91,7 +91,8 @@ function ClassIcon:UpdateAura(unit)
 	-- debuffs
 	--while true do
 	for i = 1, 40 do
-		local name, _, icon, _, _, duration, expires, _, _ = UnitAura(unit, i, "HARMFUL")
+		local name, _, icon, _, _, duration, expires, _, _, _, spellid = UnitAura(unit, i, "HARMFUL")
+		local id = tostring(spellid)
 		if not name then
 			break
 		end
@@ -101,6 +102,12 @@ function ClassIcon:UpdateAura(unit)
 			self.frame[unit].timeleft = duration
 			self.frame[unit].expires = expires
 			self.frame[unit].priority = Gladius.db.aurasFrameAuras[name]
+		elseif (Gladius.db.aurasFrameAuras[id] and Gladius.db.aurasFrameAuras[id] >= self.frame[unit].priority) then
+			aura = name
+			self.frame[unit].icon = icon
+			self.frame[unit].timeleft = duration
+			self.frame[unit].expires = expires
+			self.frame[unit].priority = Gladius.db.aurasFrameAuras[id]
 		end
 		--index = index + 1
 	end
@@ -108,7 +115,8 @@ function ClassIcon:UpdateAura(unit)
 	--index = 1
 	--while true do
 	for i = 1, 40 do
-		local name, _, icon, _, _, duration, expires, _, _ = UnitAura(unit, i, "HELPFUL")
+		local name, _, icon, _, _, duration, expires, _, _, _, spellid = UnitAura(unit, i, "HELPFUL")
+		local id = tostring(spellid)
 		if not name then
 			break
 		end
@@ -118,6 +126,12 @@ function ClassIcon:UpdateAura(unit)
 			self.frame[unit].timeleft = duration
 			self.frame[unit].expires = expires
 			self.frame[unit].priority = Gladius.db.aurasFrameAuras[name]
+		elseif (Gladius.db.aurasFrameAuras[id] and Gladius.db.aurasFrameAuras[id] >= self.frame[unit].priority) then
+			aura = name
+			self.frame[unit].icon = icon
+			self.frame[unit].timeleft = duration
+			self.frame[unit].expires = expires
+			self.frame[unit].priority = Gladius.db.aurasFrameAuras[id]
 		end
 		--index = index + 1
 	end

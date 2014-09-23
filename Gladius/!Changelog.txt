@@ -1,3 +1,6 @@
+**3.3.5**
+* Auras for Class Icons, now accept spells with spell ids too.
+
 **3.3.4**
 * Fixed an issue with Grid style trinket icon's color, when entering into a new arena.
 
