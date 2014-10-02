@@ -39,7 +39,7 @@ function Trinket:OnEnable()
 	LSM = Gladius.LSM
 	if not self.frame then
 		self.frame = { }
-	end 
+	end
 end
 
 function Trinket:OnDisable()

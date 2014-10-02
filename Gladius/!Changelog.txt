@@ -1,3 +1,9 @@
+**3.3.6**
+* Fixed an issue with the HealthBar module.
+* Fixed an issue with the Targetbar module.
+* TargetBar module updates.
+* Localization fixes/updates.
+
 **3.3.5**
 * Auras for Class Icons, now accept spells with spell ids too.
 

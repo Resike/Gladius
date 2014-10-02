@@ -137,7 +137,7 @@ function Timer:RegisterTimer(frame, showSpiral, hideTimer)
 	self.frames[frameName]:SetFrameLevel(100)
 	self.frames[frameName].text:ClearAllPoints()
 	self.frames[frameName].text:SetPoint("CENTER", self.frames[frameName])
-	self.frames[frameName].text:SetShadowOffset(1, - 1)
+	self.frames[frameName].text:SetShadowOffset(1, -1)
 	self.frames[frameName].text:SetShadowColor(0, 0, 0, 1)
 	-- hide
 	self.frames[frameName].text:SetAlpha(0)

@@ -49,7 +49,7 @@ function TargetBar:OnEnable()
 	else
 		self.isBar = false
 	end
-	if (not self.frame) then
+	if not self.frame then
 		self.frame = { }
 	end
 end
@@ -62,9 +62,9 @@ function TargetBar:OnDisable()
 end
 
 --[[function TargetBar:SetTemplate(template)
-	if (template == 1) then
+	if template == 1 then
 		-- reset width
-		if (Gladius.db.targetBarAttachTo == "HealthBar" and not Gladius.db.healthBarAdjustWidth) then
+		if Gladius.db.targetBarAttachTo == "HealthBar" and not Gladius.db.healthBarAdjustWidth then
 			Gladius.db.healthBarAdjustWidth = true
 		end
 		-- reset to default
@@ -72,12 +72,12 @@ end
 			Gladius.db[k] = v
 		end
 	else
-		if (Gladius.db.modules["HealthBar"]) then
-			if (Gladius.db.healthBarAdjustWidth) then
+		if Gladius.db.modules["HealthBar"] then
+			if Gladius.db.healthBarAdjustWidth then
 				Gladius.db.healthBarAdjustWidth = false
 				Gladius.db.healthBarWidth = Gladius.db.barWidth - Gladius.db.healthBarHeight
 			else
-			Gladius.db.healthBarWidth = Gladius.db.healthBarWidth - Gladius.db.healthBarHeight
+				Gladius.db.healthBarWidth = Gladius.db.healthBarWidth - Gladius.db.healthBarHeight
 			end
 			Gladius.db.targetBarEnableBar = false
 			Gladius.db.targetBarIcon = true
@@ -106,22 +106,22 @@ function TargetBar:GetFrame(unit)
 end
 
 function TargetBar:SetClassIcon(unit)
-	if (not self.frame[unit]) then
+	if not self.frame[unit] then
 		return
 	end
 	self.frame[unit]:Hide()
 	self.frame[unit].icon:Hide()
 	-- get unit class
 	local class
-	if (not Gladius.test) then
+	if not Gladius.test then
 		class = select(2, UnitClass(unit.."target"))
 	else
 		class = Gladius.testing[unit].unitClass
 	end
-	if (class) then
+	if class then
 		-- color
 		local colorx = self:GetBarColor(class)
-		if (colorx == nil) then
+		if colorx == nil then
 			--fallback, when targeting a pet or totem 
 			colorx = Gladius.db.targetBarColor
 		end
@@ -130,7 +130,7 @@ function TargetBar:SetClassIcon(unit)
 		self:UpdateHealth(unit, healthx, maxHealthx)
 		self.frame[unit].icon:SetTexture("Interface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes")
 		local left, right, top, bottom = unpack(CLASS_BUTTONS[class])
-		if (Gladius.db.targetBarIconCrop) then
+		if Gladius.db.targetBarIconCrop then
 			-- zoom class icon
 			left = left + (right - left) * 0.07
 			right = right - (right - left) * 0.07
@@ -150,11 +150,11 @@ end
 function TargetBar:UNIT_HEALTH(event, unit)
 	local foundUnit = nil
 	for u, _ in pairs(self.frame) do
-		if (UnitGUID(unit) == UnitGUID(u.."target")) then
+		if UnitGUID(unit) == UnitGUID(u.."target") then
 			foundUnit = u
 		end
 	end
-	if (not foundUnit) then
+	if not foundUnit then
 		return
 	end
 	local health, maxHealth = UnitHealth(foundUnit.."target"), UnitHealthMax(foundUnit.."target")
@@ -162,8 +162,8 @@ function TargetBar:UNIT_HEALTH(event, unit)
 end
 
 function TargetBar:UpdateHealth(unit, health, maxHealth)
-	if (not self.frame[unit]) then
-		if (not Gladius.buttons[unit]) then
+	if not self.frame[unit] then
+		if not Gladius.buttons[unit] then
 			Gladius:UpdateUnit(unit)
 		else
 			self:Update(unit)
@@ -172,7 +172,7 @@ function TargetBar:UpdateHealth(unit, health, maxHealth)
 	-- update min max values
 	self.frame[unit]:SetMinMaxValues(0, maxHealth)
 	-- inverse bar
-	if (Gladius.db.targetBarInverse) then
+	if Gladius.db.targetBarInverse then
 		self.frame[unit]:SetValue(maxHealth - health)
 	else
 		self.frame[unit]:SetValue(health)
@@ -181,7 +181,7 @@ end
 
 function TargetBar:CreateBar(unit)
 	local button = Gladius.buttons[unit]
-	if (not button) then
+	if not button then
 		return
 	end
 	-- create bar + text
@@ -197,20 +197,20 @@ end
 
 function TargetBar:Update(unit)
 	-- check parent module
-	if (not Gladius:GetModule(Gladius.db.castBarAttachTo)) then
-		if (self.frame[unit]) then
+	if not Gladius:GetModule(Gladius.db.castBarAttachTo) then
+		if self.frame[unit] then
 			self.frame[unit].frame:Hide()
 		end
 		return
 	end
 	-- create power bar
-	if (not self.frame[unit]) then
+	if not self.frame[unit] then
 		self:CreateBar(unit)
 	end
 	-- set bar type 
 	local parent = Gladius:GetParent(unit, Gladius.db.targetBarAttachTo)
 	-- set frame type
-	if (Gladius.db.targetBarAttachTo == "Frame" or strfind(Gladius.db.targetBarRelativePoint, "BOTTOM")) then
+	if Gladius.db.targetBarAttachTo == "Frame" or strfind(Gladius.db.targetBarRelativePoint, "BOTTOM") then
 		self.isBar = true
 	else
 		self.isBar = false
@@ -218,26 +218,26 @@ function TargetBar:Update(unit)
 	-- update health bar
 	self.frame[unit].frame:ClearAllPoints()
 	local width = 1
-		if (Gladius.db.targetBarEnableBar) then
+	if Gladius.db.targetBarEnableBar then
 		width = Gladius.db.targetBarAdjustWidth and Gladius.dbWidth or Gladius.db.targetBarWidth
 		-- add width of the widget if attached to an widget
-		if (Gladius.db.targetBarAttachTo ~= "Frame" and not strfind(Gladius.db.targetBarRelativePoint, "BOTTOM") and Gladius.db.targetBarAdjustWidth) then
-			if (not Gladius:GetModule(Gladius.db.targetBarAttachTo).frame[unit]) then
-			Gladius:GetModule(Gladius.db.targetBarAttachTo):Update(unit)
+		if Gladius.db.targetBarAttachTo ~= "Frame" and not strfind(Gladius.db.targetBarRelativePoint, "BOTTOM") and Gladius.db.targetBarAdjustWidth then
+			if not Gladius:GetModule(Gladius.db.targetBarAttachTo).frame[unit] then
+				Gladius:GetModule(Gladius.db.targetBarAttachTo):Update(unit)
 			end
 			width = width + Gladius:GetModule(Gladius.db.targetBarAttachTo).frame[unit]:GetWidth()
 		end
 	end
 	self.frame[unit].frame:SetHeight(Gladius.db.targetBarHeight)
 	self.frame[unit].frame:SetHeight(Gladius.db.targetBarHeight)
-	if (Gladius.db.targetBarIcon) then
+	if Gladius.db.targetBarIcon then
 		width = width + self.frame[unit].frame:GetHeight()
 	end
 	self.frame[unit].frame:SetWidth(width)
 	self.frame[unit].frame:SetPoint(Gladius.db.targetBarAnchor, parent, Gladius.db.targetBarRelativePoint, Gladius.db.targetBarOffsetX, Gladius.db.targetBarOffsetY)
 	-- update icon
 	self.frame[unit].icon:ClearAllPoints()
-	if (Gladius.db.targetBarIcon) then
+	if Gladius.db.targetBarIcon then
 		self.frame[unit].icon:SetPoint(Gladius.db.targetBarIconPosition, self.frame[unit].frame, Gladius.db.targetBarIconPosition)
 		self.frame[unit].icon:SetWidth(self.frame[unit].frame:GetHeight())
 		self.frame[unit].icon:SetHeight(self.frame[unit].frame:GetHeight())
@@ -246,9 +246,9 @@ function TargetBar:Update(unit)
 	else
 		self.frame[unit].icon:Hide()
 	end
-	if (Gladius.db.targetBarEnableBar) then
+	if Gladius.db.targetBarEnableBar then
 		self.frame[unit]:ClearAllPoints()
-		if (Gladius.db.targetBarIcon and Gladius.db.targetBarIconPosition == "LEFT") then
+		if Gladius.db.targetBarIcon and Gladius.db.targetBarIconPosition == "LEFT" then
 			self.frame[unit]:SetPoint("TOPLEFT", self.frame[unit].icon, "TOPRIGHT")
 		else
 			self.frame[unit]:SetPoint("TOPLEFT", self.frame[unit].frame, "TOPLEFT")
@@ -294,26 +294,28 @@ function TargetBar:Update(unit)
 end
 
 function TargetBar:GetBarColor(class)
-	if (class == "PRIEST" and not Gladius.db.healthBarUseDefaultColorPriest) then
+	if class == "PRIEST" and not Gladius.db.healthBarUseDefaultColorPriest then
 		return Gladius.db.healthBarColorPriest
-	elseif (class == "PALADIN" and not Gladius.db.healthBarUseDefaultColorPaladin) then
+	elseif class == "PALADIN" and not Gladius.db.healthBarUseDefaultColorPaladin then
 		return Gladius.db.healthBarUseDefaultColorPaladin
-	elseif (class == "SHAMAN" and not Gladius.db.healthBarUseDefaultColorShaman) then
+	elseif class == "SHAMAN" and not Gladius.db.healthBarUseDefaultColorShaman then
 		return Gladius.db.healthBarColorShaman
-	elseif (class == "DRUID" and not Gladius.db.healthBarUseDefaultColorDruid) then
+	elseif class == "DRUID" and not Gladius.db.healthBarUseDefaultColorDruid then
 		return Gladius.db.healthBarColorDruid
-	elseif (class == "MAGE" and not Gladius.db.healthBarUseDefaultColorMage) then
+	elseif class == "MAGE" and not Gladius.db.healthBarUseDefaultColorMage then
 		return Gladius.db.healthBarColorMage
-	elseif (class == "WARLOCK" and not Gladius.db.healthBarUseDefaultColorWarlock) then
+	elseif class == "WARLOCK" and not Gladius.db.healthBarUseDefaultColorWarlock then
 		return Gladius.db.healthBarColorWarlock
-	elseif (class == "HUNTER" and not Gladius.db.healthBarUseDefaultColorHunter) then
+	elseif class == "HUNTER" and not Gladius.db.healthBarUseDefaultColorHunter then
 		return Gladius.db.healthBarColorHunter
-	elseif (class == "WARRIOR" and not Gladius.db.healthBarUseDefaultColorWarrior) then
+	elseif class == "WARRIOR" and not Gladius.db.healthBarUseDefaultColorWarrior then
 		return Gladius.db.healthBarColorWarrior
-	elseif (class == "ROGUE" and not Gladius.db.healthBarUseDefaultColorRogue) then
+	elseif class == "ROGUE" and not Gladius.db.healthBarUseDefaultColorRogue then
 		return Gladius.db.healthBarColorRogue
-	elseif (class == "DEATHKNIGHT" and not Gladius.db.healthBarUseDefaultColorDeathknight) then
+	elseif class == "DEATHKNIGHT" and not Gladius.db.healthBarUseDefaultColorDeathknight then
 		return Gladius.db.healthBarColorDeathknight
+	elseif class == "MONK" and not Gladius.db.healthBarUseDefaultColorMonk then
+		return Gladius.db.healthBarColorMonk
 	end
 	return RAID_CLASS_COLORS[class]
 end
@@ -326,18 +328,18 @@ function TargetBar:Show(unit)
 	self.frame[unit].secure:SetFrameStrata("DIALOG")
 	-- get unit class
 	local class
-	if (not testing) then
+	if not testing then
 		class = select(2, UnitClass(unit.."target"))
 	else
 		class = Gladius.testing[unit].unitClass
 	end
 	-- set color
-	if (not Gladius.db.targetBarClassColor) then
+	if not Gladius.db.targetBarClassColor then
 		local color = Gladius.db.targetBarColor
 		self.frame[unit]:SetStatusBarColor(color.r, color.g, color.b, color.a)
 	else
 		local color = self:GetBarColor(class)
-		if (color == nil) then
+		if color == nil then
 			-- fallback, when targeting a pet or totem 
 			color = Gladius.db.targetBarColor
 		end
@@ -346,13 +348,13 @@ function TargetBar:Show(unit)
 	-- set class icon
 	TargetBar:SetClassIcon(unit)
 	-- call event
-	if (not Gladius.test) then
+	if not Gladius.test then
 		self:UNIT_HEALTH("UNIT_HEALTH", unit)
 	end
 end
 
 function TargetBar:Reset(unit)
-	if (not self.frame[unit]) then
+	if not self.frame[unit] then
 		return
 	end
 	-- reset bar
@@ -547,7 +549,9 @@ function TargetBar:GetOptions()
 							type = "range",
 							name = L["Target bar width"],
 							desc = L["Width of the health bar"],
-							min = 10, max = 500, step = 1,
+							min = 10,
+							max = 500,
+							step = 1,
 							disabled = function()
 								return Gladius.dbi.profile.targetBarAdjustWidth or not Gladius.dbi.profile.modules[self.name]
 							end,
@@ -557,7 +561,9 @@ function TargetBar:GetOptions()
 							type = "range",
 							name = L["Target bar height"],
 							desc = L["Height of the health bar"],
-							min = 10, max = 200, step = 1,
+							min = 10,
+							max = 200,
+							step = 1,
 							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
@@ -639,7 +645,9 @@ function TargetBar:GetOptions()
 							type = "range",
 							name = L["Target bar offset X"],
 							desc = L["X offset of the health bar"],
-							min = - 100, max = 100, step = 1,
+							min = -100,
+							max = 100,
+							step = 1,
 							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
@@ -652,7 +660,9 @@ function TargetBar:GetOptions()
 							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							min = - 100, max = 100, step = 1,
+							min = -100,
+							max = 100,
+							step = 1,
 							order = 25,
 						},
 					},
