@@ -225,7 +225,7 @@ function HealthBar:GetBarColor(class)
 	elseif class == "DEATHKNIGHT" and not Gladius.db.healthBarUseDefaultColorDeathknight then
 		return Gladius.db.healthBarColorDeathknight
 	elseif class == "MONK" and not Gladius.db.healthBarUseDefaultColorMonk then
-		return Gladius.db.healthBarColorDeathknight
+		return Gladius.db.healthBarColorMonk
 	end
 	return RAID_CLASS_COLORS[class]
 end
