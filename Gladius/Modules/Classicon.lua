@@ -337,7 +337,9 @@ function ClassIcon:Test(unit)
 		else
 			self.frame[unit].texture:SetTexCoord(0, 1, 0, 1)
 		end
-		Gladius:Call(Gladius.modules.Timer, "SetTimer", self.frame[unit], self.frame[unit].timeleft)
+		Gladius:Call(Gladius.modules.Timer, "SetTimer", self.frame[unit], self.frame[unit].timeleft, nil, function()
+			ClassIcon:SetClassIcon(unit)
+		end)
 	elseif unit == "arena2" then
 		aura = "Deterrence"
 		self.frame[unit].icon = select(3, GetSpellInfo(19263))
@@ -351,21 +353,9 @@ function ClassIcon:Test(unit)
 		else
 			self.frame[unit].texture:SetTexCoord(0, 1, 0, 1)
 		end
-		Gladius:Call(Gladius.modules.Timer, "SetTimer", self.frame[unit], self.frame[unit].timeleft)
-	elseif unit == "arena3" then
-		aura = "Smoke Bomb"
-		self.frame[unit].timeleft = 0
-		self.frame[unit].icon = select(3, GetSpellInfo(76577))
-		self.frame[unit].priority = Gladius.db.aurasFrameAuras[unit]
-		self.frame[unit].active = true
-		self.frame[unit].aura = aura
-		self.frame[unit].texture:SetTexture(self.frame[unit].icon)
-		if Gladius.db.classIconCrop then
-			self.frame[unit].texture:SetTexCoord(0.07, 0.93, 0.07, 0.93)
-		else
-			self.frame[unit].texture:SetTexCoord(0, 1, 0, 1)
-		end
-		Gladius:Call(Gladius.modules.Timer, "SetTimer", self.frame[unit], self.frame[unit].timeleft, GetTime())
+		Gladius:Call(Gladius.modules.Timer, "SetTimer", self.frame[unit], self.frame[unit].timeleft, nil, function()
+			ClassIcon:SetClassIcon(unit)
+		end)
 	end
 end
 
