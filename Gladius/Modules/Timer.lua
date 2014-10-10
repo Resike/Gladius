@@ -69,7 +69,7 @@ function Timer:SetFormattedNumber(frame, number)
 	end
 end
 
-function Timer:SetTimer(frame, duration, start)
+function Timer:SetTimer(frame, duration, start, callback)
 	if not self.frames or frame == nil then
 		return
 	end
@@ -102,6 +102,11 @@ function Timer:SetTimer(frame, duration, start)
 			if f.duration <= 0 then
 				f.text:SetAlpha(0)
 				f:SetScript("OnUpdate", nil)
+
+				-- Call the callback if one was supplied.
+				if type(callback) == 'function' then
+					callback()
+				end
 			else
 				self:SetFormattedNumber(f.text, f.duration)
 			end
