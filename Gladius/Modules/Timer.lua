@@ -88,6 +88,7 @@ function Timer:SetTimer(frame, duration, start, callback)
 	cooldown:SetEdgeTexture("Interface\\Cooldown\\edge")
 	cooldown:SetSwipeColor(0, 0, 0)
 	cooldown:SetDrawEdge(false)
+	cooldown:SetDrawBling(false)
 	cooldown.currentCooldownType = COOLDOWN_TYPE_NORMAL
 
 	if cooldown.isDisabled then
