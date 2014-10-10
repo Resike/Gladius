@@ -218,21 +218,30 @@ function ClassIcon:CreateFrame(unit)
 	self.frame[unit].texture = _G[self.frame[unit]:GetName().."Icon"]
 	self.frame[unit].normalTexture = _G[self.frame[unit]:GetName().."NormalTexture"]
 	self.frame[unit].cooldown = _G[self.frame[unit]:GetName().."Cooldown"]
+
+	-- secure
+	local secure = CreateFrame("Button", "Gladius"..self.name.."SecureButton"..unit, button, "SecureActionButtonTemplate")
+	secure:RegisterForClicks("AnyUp")
+	self.frame[unit].secure = secure
 end
 
 function ClassIcon:Update(unit)
 	-- TODO: check why we need this >_<
 	self.frame = self.frame or { }
+
 	-- create frame
 	if not self.frame[unit] then
 		self:CreateFrame(unit)
 	end
+
+	local unitFrame = self.frame[unit]
+
 	-- update frame
-	self.frame[unit]:ClearAllPoints()
+	unitFrame:ClearAllPoints()
 	local parent = Gladius:GetParent(unit, Gladius.db.classIconAttachTo)
-	self.frame[unit]:SetPoint(Gladius.db.classIconAnchor, parent, Gladius.db.classIconRelativePoint, Gladius.db.classIconOffsetX, Gladius.db.classIconOffsetY)
+	unitFrame:SetPoint(Gladius.db.classIconAnchor, parent, Gladius.db.classIconRelativePoint, Gladius.db.classIconOffsetX, Gladius.db.classIconOffsetY)
 	-- frame level
-	self.frame[unit]:SetFrameLevel(Gladius.db.classIconFrameLevel)
+	unitFrame:SetFrameLevel(Gladius.db.classIconFrameLevel)
 	if Gladius.db.classIconAdjustSize then
 		local height = false
 		-- need to rethink that
@@ -242,24 +251,35 @@ function ClassIcon:Update(unit)
 			end
 		end]]
 		if height then
-			self.frame[unit]:SetWidth(Gladius.buttons[unit].height)
-			self.frame[unit]:SetHeight(Gladius.buttons[unit].height)
+			unitFrame:SetWidth(Gladius.buttons[unit].height)
+			unitFrame:SetHeight(Gladius.buttons[unit].height)
 		else
-			self.frame[unit]:SetWidth(Gladius.buttons[unit].frameHeight)
-			self.frame[unit]:SetHeight(Gladius.buttons[unit].frameHeight)
+			unitFrame:SetWidth(Gladius.buttons[unit].frameHeight)
+			unitFrame:SetHeight(Gladius.buttons[unit].frameHeight)
 		end
 	else
-		self.frame[unit]:SetWidth(Gladius.db.classIconSize)
-		self.frame[unit]:SetHeight(Gladius.db.classIconSize)
+		unitFrame:SetWidth(Gladius.db.classIconSize)
+		unitFrame:SetHeight(Gladius.db.classIconSize)
 	end
-	self.frame[unit].texture:SetTexture("Interface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes")
+
+	-- Secure frame
+	if self.IsDetached() then
+		unitFrame.secure:SetAllPoints(unitFrame)
+		unitFrame.secure:SetHeight(unitFrame:GetHeight())
+		unitFrame.secure:SetWidth(unitFrame:GetWidth())
+		unitFrame.secure:Show()
+	else
+		unitFrame.secure:Hide()
+	end
+
+	unitFrame.texture:SetTexture("Interface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes")
 	-- set frame mouse-interactable area
 	local left, right, top, bottom = Gladius.buttons[unit]:GetHitRectInsets()
 	if self:GetAttachTo() == "Frame" and not self:IsDetached() then
 		if strfind(Gladius.db.classIconRelativePoint, "LEFT") then
-			left = - self.frame[unit]:GetWidth() + Gladius.db.classIconOffsetX
+			left = - unitFrame:GetWidth() + Gladius.db.classIconOffsetX
 		else
-			right = - self.frame[unit]:GetWidth() + - Gladius.db.classIconOffsetX
+			right = - unitFrame:GetWidth() + - Gladius.db.classIconOffsetX
 		end
 		-- search for an attached frame
 		--[[for _, module in pairs(Gladius.modules) do
@@ -273,31 +293,32 @@ function ClassIcon:Update(unit)
 			end
 		end]]
 		-- top / bottom
-		if self.frame[unit]:GetHeight() > Gladius.buttons[unit]:GetHeight() then
-			bottom = -(self.frame[unit]:GetHeight() - Gladius.buttons[unit]:GetHeight()) + Gladius.db.classIconOffsetY
+		if unitFrame:GetHeight() > Gladius.buttons[unit]:GetHeight() then
+			bottom = -(unitFrame:GetHeight() - Gladius.buttons[unit]:GetHeight()) + Gladius.db.classIconOffsetY
 		end
 		Gladius.buttons[unit]:SetHitRectInsets(left, right, 0, 0)
 		Gladius.buttons[unit].secure:SetHitRectInsets(left, right, 0, 0)
 	end
 	-- style action button
-	self.frame[unit].normalTexture:SetHeight(self.frame[unit]:GetHeight() + self.frame[unit]:GetHeight() * 0.4)
-	self.frame[unit].normalTexture:SetWidth(self.frame[unit]:GetWidth() + self.frame[unit]:GetWidth() * 0.4)
-	self.frame[unit].normalTexture:ClearAllPoints()
-	self.frame[unit].normalTexture:SetPoint("CENTER", 0, 0)
-	self.frame[unit]:SetNormalTexture("Interface\\AddOns\\Gladius\\Images\\Gloss")
-	self.frame[unit].texture:ClearAllPoints()
-	self.frame[unit].texture:SetPoint("TOPLEFT", self.frame[unit], "TOPLEFT")
-	self.frame[unit].texture:SetPoint("BOTTOMRIGHT", self.frame[unit], "BOTTOMRIGHT")
-	self.frame[unit].normalTexture:SetVertexColor(Gladius.db.classIconGlossColor.r, Gladius.db.classIconGlossColor.g, Gladius.db.classIconGlossColor.b, Gladius.db.classIconGloss and Gladius.db.classIconGlossColor.a or 0)
-	self.frame[unit].texture:SetTexCoord(left, right, top, bottom)
+	unitFrame.normalTexture:SetHeight(unitFrame:GetHeight() + unitFrame:GetHeight() * 0.4)
+	unitFrame.normalTexture:SetWidth(unitFrame:GetWidth() + unitFrame:GetWidth() * 0.4)
+	unitFrame.normalTexture:ClearAllPoints()
+	unitFrame.normalTexture:SetPoint("CENTER", 0, 0)
+	unitFrame:SetNormalTexture("Interface\\AddOns\\Gladius\\Images\\Gloss")
+	unitFrame.texture:ClearAllPoints()
+	unitFrame.texture:SetPoint("TOPLEFT", unitFrame, "TOPLEFT")
+	unitFrame.texture:SetPoint("BOTTOMRIGHT", unitFrame, "BOTTOMRIGHT")
+	unitFrame.normalTexture:SetVertexColor(Gladius.db.classIconGlossColor.r, Gladius.db.classIconGlossColor.g, Gladius.db.classIconGlossColor.b, Gladius.db.classIconGloss and Gladius.db.classIconGlossColor.a or 0)
+	unitFrame.texture:SetTexCoord(left, right, top, bottom)
 
 	-- cooldown
-	self.frame[unit].cooldown.isDisabled = not Gladius.db.classIconCooldown
-	self.frame[unit].cooldown:SetReverse(Gladius.db.classIconCooldownReverse)
-	Gladius:Call(Gladius.modules.Timer, "RegisterTimer", self.frame[unit], Gladius.db.classIconCooldown)
+	unitFrame.cooldown.isDisabled = not Gladius.db.classIconCooldown
+	unitFrame.cooldown:SetReverse(Gladius.db.classIconCooldownReverse)
+	Gladius:Call(Gladius.modules.Timer, "RegisterTimer", unitFrame, Gladius.db.classIconCooldown)
 	
 	-- hide
-	self.frame[unit]:SetAlpha(0)
+	unitFrame:SetAlpha(0)
+	self.frame[unit] = unitFrame
 end
 
 function ClassIcon:Show(unit)
