@@ -81,8 +81,15 @@ function Timer:SetTimer(frame, duration, start)
 	self:SetFormattedNumber(self.frames[frameName].text, duration)
 	self.frames[frameName].duration = duration - (GetTime() - start)
 	self.frames[frameName].text:SetAlpha(1)
-	_G[frameName.."Cooldown"]:SetCooldown(start, duration)
-	_G[frameName.."Cooldown"]:SetAlpha(self.frames[frameName].showSpiral and 1 or 0)
+
+	cooldown = _G[frameName.."Cooldown"]
+	cooldown:SetCooldown(start, duration)
+	cooldown:SetAlpha(self.frames[frameName].showSpiral and 1 or 0)
+	cooldown:SetEdgeTexture("Interface\\Cooldown\\edge")
+	cooldown:SetSwipeColor(0, 0, 0)
+	cooldown:SetDrawEdge(false)
+	cooldown.currentCooldownType = COOLDOWN_TYPE_NORMAL
+
 	if duration > 0 and not Gladius.db.timerOmniCC and not self.frames[frameName].hideTimer then
 		self.frames[frameName]:SetScript("OnUpdate", function(f, elapsed)
 			f.duration = f.duration - elapsed
@@ -131,6 +138,8 @@ function Timer:RegisterTimer(frame, showSpiral, hideTimer)
 		_G[frameName.."Cooldown"].noCooldownCount = false
 		self.frames[frameName].text:Hide()
 	end
+
+
 	-- update frame
 	self.frames[frameName]:SetAllPoints(frame)
 	self.frames[frameName]:SetFrameStrata("HIGH")
