@@ -95,18 +95,16 @@ function DRTracker:UpdateIcon(unit, drCat)
 	tracked:SetNormalTexture("Interface\\AddOns\\Gladius\\Images\\Gloss")
 	tracked.texture = _G[tracked:GetName().."Icon"]
 	tracked.normalTexture = _G[tracked:GetName().."NormalTexture"]
+
 	tracked.cooldown = _G[tracked:GetName().."Cooldown"]
-	-- cooldown
-	if Gladius.db.drTrackerCooldown then
-		tracked.cooldown:Show()
-	else
-		tracked.cooldown:Hide()
-	end
+	tracked.cooldown.isDisabled = not Gladius.db.drTrackerCooldown
 	tracked.cooldown:SetReverse(Gladius.db.drTrackerCooldownReverse)
 	Gladius:Call(Gladius.modules.Timer, "RegisterTimer", tracked, Gladius.db.drTrackerCooldown)
+
 	if not tracked.text then
 		tracked.text = tracked:CreateFontString(nil, "OVERLAY")
 	end
+
 	tracked.text:SetDrawLayer("OVERLAY")
 	tracked.text:SetJustifyH("RIGHT")
 	tracked.text:SetPoint("BOTTOMRIGHT", tracked, -2, 0)
@@ -125,9 +123,9 @@ function DRTracker:UpdateIcon(unit, drCat)
 	tracked.normalTexture:SetVertexColor(Gladius.db.drTrackerGlossColor.r, Gladius.db.drTrackerGlossColor.g, Gladius.db.drTrackerGlossColor.b, Gladius.db.drTrackerGloss and Gladius.db.drTrackerGlossColor.a or 0)
 end
 
-function DRTracker:DRFaded(unit, spellID)
+function DRTracker:DRFaded(unit, spellID, force)
 	local drCat = DRData:GetSpellCategory(spellID)
-	if Gladius.db.drCategories[drCat] == false then
+	if not force and Gladius.db.drCategories[drCat] == false then
 		return
 	end
 	local drTexts = {
@@ -292,9 +290,9 @@ function DRTracker:Reset(unit)
 end
 
 function DRTracker:Test(unit)
-	self:DRFaded(unit, 33786)
-	self:DRFaded(unit, 64058)
-	self:DRFaded(unit, 118)
+	self:DRFaded(unit, 33786, true)
+	self:DRFaded(unit, 8122, true)
+	self:DRFaded(unit, 118, true)
 end
 
 function DRTracker:GetOptions()

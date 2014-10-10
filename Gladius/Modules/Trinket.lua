@@ -241,14 +241,12 @@ function Trinket:Update(unit)
 		self.frame[unit].texture:SetTexCoord(0.07, 0.93, 0.07, 0.93)
 	end
 	self.frame[unit].normalTexture:SetVertexColor(Gladius.db.trinketGlossColor.r, Gladius.db.trinketGlossColor.g, Gladius.db.trinketGlossColor.b, Gladius.db.trinketGloss and Gladius.db.trinketGlossColor.a or 0)
+	
 	-- cooldown
-	if Gladius.db.trinketCooldown then
-		self.frame[unit].cooldown:Show()
-	else
-		self.frame[unit].cooldown:Hide()
-	end
+	self.frame[unit].cooldown.isDisabled = not Gladius.db.trinketCooldown
 	self.frame[unit].cooldown:SetReverse(Gladius.db.trinketCooldownReverse)
 	Gladius:Call(Gladius.modules.Timer, "RegisterTimer", self.frame[unit], Gladius.db.trinketCooldown)
+	
 	-- hide
 	self.frame[unit]:SetAlpha(0)
 end

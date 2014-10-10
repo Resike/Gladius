@@ -285,14 +285,12 @@ function ClassIcon:Update(unit)
 	self.frame[unit].texture:SetPoint("BOTTOMRIGHT", self.frame[unit], "BOTTOMRIGHT")
 	self.frame[unit].normalTexture:SetVertexColor(Gladius.db.classIconGlossColor.r, Gladius.db.classIconGlossColor.g, Gladius.db.classIconGlossColor.b, Gladius.db.classIconGloss and Gladius.db.classIconGlossColor.a or 0)
 	self.frame[unit].texture:SetTexCoord(left, right, top, bottom)
+
 	-- cooldown
-	if Gladius.db.classIconCooldown then
-		self.frame[unit].cooldown:Show()
-	else
-		self.frame[unit].cooldown:Hide()
-	end
+	self.frame[unit].cooldown.isDisabled = not Gladius.db.classIconCooldown
 	self.frame[unit].cooldown:SetReverse(Gladius.db.classIconCooldownReverse)
 	Gladius:Call(Gladius.modules.Timer, "RegisterTimer", self.frame[unit], Gladius.db.classIconCooldown)
+	
 	-- hide
 	self.frame[unit]:SetAlpha(0)
 end
