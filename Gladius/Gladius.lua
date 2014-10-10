@@ -494,8 +494,15 @@ function Gladius:UpdateUnit(unit, module)
 				if module == nil or (module and m.name == module) then
 					self:Call(m, "Update", unit)
 				end
+
 				local attachTo = m:GetAttachTo()
-				if attachTo == "Frame" or m.isBar then
+				local detached = false
+
+				if type(m.IsDetached) == "function" then
+					detached = m:IsDetached() 
+				end
+
+				if (not detached and (attachTo == "Frame" or m.isBar)) then
 					frameHeight = frameHeight + (m.frame[unit] and m.frame[unit]:GetHeight() or 0)
 				else
 					height = height + (m.frame[unit] and m.frame[unit]:GetHeight() or 0)
