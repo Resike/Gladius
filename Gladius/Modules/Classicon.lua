@@ -35,6 +35,7 @@ local ClassIcon = Gladius:NewModule("ClassIcon", false, true, {
 	classIconCooldown = false,
 	classIconCooldownReverse = false,
 	classIconShowSpec = false,
+	classIconDetached = false
 })
 
 function ClassIcon:OnEnable()
@@ -57,6 +58,10 @@ end
 
 function ClassIcon:GetAttachTo()
 	return Gladius.db.classIconAttachTo
+end
+
+function ClassIcon:IsDetached()
+	return Gladius.db.classIconDetached
 end
 
 function ClassIcon:GetFrame(unit)
@@ -250,7 +255,7 @@ function ClassIcon:Update(unit)
 	self.frame[unit].texture:SetTexture("Interface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes")
 	-- set frame mouse-interactable area
 	local left, right, top, bottom = Gladius.buttons[unit]:GetHitRectInsets()
-	if self:GetAttachTo() == "Frame" then
+	if self:GetAttachTo() == "Frame" and not self:IsDetached() then
 		if strfind(Gladius.db.classIconRelativePoint, "LEFT") then
 			left = - self.frame[unit]:GetWidth() + Gladius.db.classIconOffsetX
 		else
@@ -549,6 +554,15 @@ function ClassIcon:GetOptions()
 							end,
 							order = 5,
 						},
+						classIconDetached = {
+							type = "toggle",
+							name = L["Detached from frame"],
+							desc = L["Detach the cast bar from the frame itself"],
+							disabled = function()
+								return not Gladius.dbi.profile.modules[self.name]
+							end,
+							order = 6,
+						},
 						classIconPosition = {
 							type = "select",
 							name = L["Class Icon Position"],
@@ -573,13 +587,13 @@ function ClassIcon:GetOptions()
 							hidden = function()
 								return Gladius.db.advancedOptions
 							end,
-							order = 6,
+							order = 7,
 						},
 						sep = {
 							type = "description",
 							name = "",
 							width = "full",
-							order = 7,
+							order = 8,
 						},
 						classIconAnchor = {
 							type = "select",

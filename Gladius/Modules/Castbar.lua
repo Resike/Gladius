@@ -677,7 +677,7 @@ function CastBar:GetOptions()
 						castBarDetached = {
 							type = "toggle",
 							name = L["Detached from frame"],
-							desc = L["Detach the cast bar from the frame itself"],
+							desc = L["Detach the module from the frame itself"],
 							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
