@@ -19,6 +19,7 @@ local UnitChannelInfo = UnitChannelInfo
 
 local CastBar = Gladius:NewModule("CastBar", true, true, {
 	castBarAttachTo = "ClassIcon",
+	castBarDetached = false,
 	castBarHeight = 12,
 	castBarAdjustWidth = true,
 	castBarWidth = 150,
@@ -80,6 +81,10 @@ end
 
 function CastBar:GetAttachTo()
 	return Gladius.db.castBarAttachTo
+end
+
+function CastBar:IsDetached()
+	return Gladius.db.castBarDetached
 end
 
 function CastBar:GetFrame(unit)
@@ -642,11 +647,20 @@ function CastBar:GetOptions()
 							width = "double",
 							order = 5,
 						},
+						castBarDetached = {
+							type = "toggle",
+							name = L["Detached from frame"],
+							desc = L["Detach the cast bar from the frame itself"],
+							disabled = function()
+								return not Gladius.dbi.profile.modules[self.name]
+							end,
+							order = 6,
+						},
 						sep = {
 							type = "description",
 							name = "",
 							width = "full",
-							order = 7,
+							order = 8,
 						},
 						castBarAnchor = {
 							type = "select",
