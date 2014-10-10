@@ -29,6 +29,7 @@ local Trinket = Gladius:NewModule("Trinket", false, true, {
 	trinketCooldown = true,
 	trinketCooldownReverse = false,
 	trinketFaction = true,
+	trinketDetached = false
 },
 {
 	"Trinket icon", "Grid style health bar", "Grid style power bar"
@@ -51,6 +52,10 @@ end
 
 function Trinket:GetAttachTo()
 	return Gladius.db.trinketAttachTo
+end
+
+function Trinket:IsDetached()
+	return Gladius.db.trinketDetached
 end
 
 function Trinket:GetFrame(unit)
@@ -201,7 +206,7 @@ function Trinket:Update(unit)
 		self.frame[unit]:SetHeight(Gladius.db.trinketSize)
 	end
 	-- set frame mouse-interactable area
-	if self:GetAttachTo() == "Frame" then
+	if self:GetAttachTo() == "Frame" and not self.IsDetached() then
 		local left, right, top, bottom = Gladius.buttons[unit]:GetHitRectInsets()
 		if strfind(Gladius.db.trinketRelativePoint, "LEFT") then
 			left = - self.frame[unit]:GetWidth() + Gladius.db.trinketOffsetX
@@ -246,7 +251,7 @@ function Trinket:Update(unit)
 	self.frame[unit].cooldown.isDisabled = not Gladius.db.trinketCooldown
 	self.frame[unit].cooldown:SetReverse(Gladius.db.trinketCooldownReverse)
 	Gladius:Call(Gladius.modules.Timer, "RegisterTimer", self.frame[unit], Gladius.db.trinketCooldown)
-	
+
 	-- hide
 	self.frame[unit]:SetAlpha(0)
 end
@@ -575,6 +580,15 @@ function Trinket:GetOptions()
 							arg = "general",
 							order = 5,
 						},
+						trinketDetached = {
+							type = "toggle",
+							name = L["Detached from frame"],
+							desc = L["Detach the module from the frame itself"],
+							disabled = function()
+								return not Gladius.dbi.profile.modules[self.name]
+							end,
+							order = 6,
+						},
 						trinketPosition = {
 							type = "select",
 							name = L["Trinket Position"],
@@ -599,13 +613,13 @@ function Trinket:GetOptions()
 							hidden = function()
 								return Gladius.db.advancedOptions
 							end,
-							order = 6,
+							order = 7,
 						},
 						sep = {
 							type = "description",
 							name = "",
 							width = "full",
-							order = 7,
+							order = 8,
 						},
 						trinketAnchor = {
 							type = "select",
