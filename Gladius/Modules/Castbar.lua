@@ -29,6 +29,7 @@ local CastBar = Gladius:NewModule("CastBar", true, true, {
 	castBarRelativePoint = "BOTTOMLEFT",
 	castBarInverse = false,
 	castBarColor = {r = 1, g = 1, b = 0, a = 1},
+	castBarColorUninterruptible = {r = 1, g = 0, b = 0, a = 1},
 	castBarBackgroundColor = {r = 1, g = 1, b = 1, a = 0.3},
 	castBarTexture = "Minimalist",
 	castBarTextureUninterruptible = "CastBarLockFull",
@@ -116,8 +117,12 @@ function CastBar:UNIT_SPELLCAST_START(event, unit)
 		self.frame[unit].timeText:SetText(self.frame[unit].maxValue)
 		self.frame[unit].icon:SetTexture(icon)
 		if notInterruptible then
+			local color = Gladius.db.castBarColorUninterruptible
+			self.frame[unit]:SetStatusBarColor(color.r, color.g, color.b, color.a)
 			self.frame[unit]:SetStatusBarTexture(LSM:Fetch(LSM.MediaType.STATUSBAR, Gladius.db.castBarTextureUninterruptible))
 		else
+			local color = Gladius.db.castBarColorUninterruptible
+			self.frame[unit]:SetStatusBarColor(color.r, color.g, color.b, color.a)
 			self.frame[unit]:SetStatusBarTexture(LSM:Fetch(LSM.MediaType.STATUSBAR, Gladius.db.castBarTexture))
 		end
 		if rank ~= "" then
@@ -136,6 +141,8 @@ function CastBar:UNIT_SPELLCAST_INTERRUPTIBLE(event, unit)
 		return
 	end
 	if self.frame[unit].isChanneling or self.frame[unit].isCasting then
+		local color = Gladius.db.castBarColorUninterruptible
+		self.frame[unit]:SetStatusBarColor(color.r, color.g, color.b, color.a)
 		self.frame[unit]:SetStatusBarTexture(LSM:Fetch(LSM.MediaType.STATUSBAR, Gladius.db.castBarTexture))
 	end
 end
@@ -148,6 +155,8 @@ function CastBar:UNIT_SPELLCAST_NOT_INTERRUPTIBLE(event, unit)
 		return
 	end
 	if self.frame[unit].isChanneling or self.frame[unit].isCasting then
+		local color = Gladius.db.castBarColorUninterruptible
+		self.frame[unit]:SetStatusBarColor(color.r, color.g, color.b, color.a)
 		self.frame[unit]:SetStatusBarTexture(LSM:Fetch(LSM.MediaType.STATUSBAR, Gladius.db.castBarTextureUninterruptible))
 	end
 end
@@ -428,6 +437,8 @@ function CastBar:Test(unit)
 		self.frame[unit].maxValue = 1
 		self.frame[unit]:SetMinMaxValues(0, self.frame[unit].maxValue)
 		self.frame[unit]:SetValue(self.frame[unit].value)
+		local color = Gladius.db.castBarColorUninterruptible
+		self.frame[unit]:SetStatusBarColor(color.r, color.g, color.b, color.a)
 		self.frame[unit]:SetStatusBarTexture(LSM:Fetch(LSM.MediaType.STATUSBAR, Gladius.db.castBarTextureUninterruptible))
 		if Gladius.db.castTimeText then
 			self.frame[unit].timeText:SetFormattedText("%.1f", self.frame[unit].maxValue - self.frame[unit].value)
@@ -492,6 +503,22 @@ function CastBar:GetOptions()
 								return not Gladius.db.advancedOptions
 							end,
 							order = 10,
+						},
+						castBarColorUninterruptible = {
+							type = "color",
+							name = L["Uninterruptible Cast Bar Color"],
+							desc = L["Color of the cast bar"],
+							hasAlpha = true,
+							get = function(info)
+								return Gladius:GetColorOption(info)
+							end,
+							set = function(info, r, g, b, a)
+								return Gladius:SetColorOption(info, r, g, b, a)
+							end,
+							disabled = function()
+								return not Gladius.dbi.profile.modules[self.name]
+							end,
+							order = 11,
 						},
 						sep = {
 							type = "description",
