@@ -27,13 +27,21 @@ local Timer = Gladius:NewModule("Timer", false, false, {
 function Timer:OnEnable()
 	LSM = Gladius.LSM
 	-- cooldown frames
-	self.frames = { }
+	self.frames = self.frames or {}
 end
 
 function Timer:OnDisable()
 	self:UnregisterAllEvents()
-	for frame in pairs(self.frames) do
-		self.frames[frame]:SetAlpha(0)
+	self:Reset()
+	print('enabled ' .. tostring(self.enabled))
+end
+
+function Timer:Reset()
+	-- It used to be left to each individual module to call
+	-- HideTimer, however I feel that makes little sense and
+	-- is very error prone.
+	for frameName in pairs(self.frames) do
+		self:HideTimer(_G[frameName])
 	end
 end
 
@@ -70,6 +78,7 @@ function Timer:SetFormattedNumber(frame, number)
 end
 
 function Timer:SetTimer(frame, duration, start, callback)
+	print("SetTimer enabled "..tostring(self.enabled))
 	if not self.frames or frame == nil then
 		return
 	end
@@ -83,7 +92,6 @@ function Timer:SetTimer(frame, duration, start, callback)
 	self.frames[frameName].text:SetAlpha(1)
 
 	cooldown = _G[frameName.."Cooldown"]
-	cooldown:SetCooldown(start, duration)
 	cooldown:SetAlpha(self.frames[frameName].showSpiral and 1 or 0)
 	cooldown:SetEdgeTexture("Interface\\Cooldown\\edge")
 	cooldown:SetSwipeColor(0, 0, 0)
@@ -91,10 +99,8 @@ function Timer:SetTimer(frame, duration, start, callback)
 	cooldown:SetDrawBling(false)
 	cooldown.currentCooldownType = COOLDOWN_TYPE_NORMAL
 
-	if cooldown.isDisabled then
-		cooldown:Hide()
-	else
-		cooldown:Show()
+	if not cooldown.isDisabled then
+		cooldown:SetCooldown(start, duration)
 	end
 
 	if duration > 0 and not Gladius.db.timerOmniCC and not self.frames[frameName].hideTimer then
