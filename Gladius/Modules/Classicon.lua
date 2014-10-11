@@ -337,7 +337,7 @@ function ClassIcon:Reset(unit)
 	self.frame[unit].priority = 0
 	self.frame[unit]:SetScript("OnUpdate", nil)
 	-- reset cooldown
-	self.frame[unit].cooldown:SetCooldown(GetTime(), 0)
+	self.frame[unit].cooldown:SetCooldown(0, 0)
 	-- reset texture
 	self.frame[unit].texture:SetTexture("")
 	-- hide
