@@ -141,7 +141,7 @@ function CastBar:UNIT_SPELLCAST_INTERRUPTIBLE(event, unit)
 		return
 	end
 	if self.frame[unit].isChanneling or self.frame[unit].isCasting then
-		local color = Gladius.db.castBarColorUninterruptible
+		local color = Gladius.db.castBarColor
 		self.frame[unit]:SetStatusBarColor(color.r, color.g, color.b, color.a)
 		self.frame[unit]:SetStatusBarTexture(LSM:Fetch(LSM.MediaType.STATUSBAR, Gladius.db.castBarTexture))
 	end
