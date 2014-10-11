@@ -1399,6 +1399,7 @@ function Auras:GetAuraList()
 		[GetSpellInfo(131558)]	= 7,	-- Spiritwalker's Aegis
 		[GetSpellInfo(104773)]	= 7,	-- Unending Resolve
 		[GetSpellInfo(124488)]	= 7,	-- Zen Focus
+		[GetSpellInfo(159630)]  = 7,    -- Shadow Magic
 		-- Silence Auras (8)
 		[GetSpellInfo(1330)]	= 8,	-- Garrote (Silence)
 		[GetSpellInfo(15487)]	= 8,	-- Silence
