@@ -121,7 +121,7 @@ function CastBar:UNIT_SPELLCAST_START(event, unit)
 			self.frame[unit]:SetStatusBarColor(color.r, color.g, color.b, color.a)
 			self.frame[unit]:SetStatusBarTexture(LSM:Fetch(LSM.MediaType.STATUSBAR, Gladius.db.castBarTextureUninterruptible))
 		else
-			local color = Gladius.db.castBarColorUninterruptible
+			local color = Gladius.db.castBarColor
 			self.frame[unit]:SetStatusBarColor(color.r, color.g, color.b, color.a)
 			self.frame[unit]:SetStatusBarTexture(LSM:Fetch(LSM.MediaType.STATUSBAR, Gladius.db.castBarTexture))
 		end
