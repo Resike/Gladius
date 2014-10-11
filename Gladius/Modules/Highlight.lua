@@ -147,7 +147,7 @@ function Highlight:Update(unit)
 	local left, right, top, bottom = Gladius.buttons[unit]:GetHitRectInsets()
 	self.frame[unit]:ClearAllPoints()
 	self.frame[unit]:SetPoint("TOPLEFT", Gladius.buttons[unit], "TOPLEFT", left - 3, top + 3)
-	self.frame[unit]:SetBackdrop({edgeFile = "Interface\\ChatFrame\\ChatFrameBackground", edgeSize = 2,})
+	self.frame[unit]:SetBackdrop({edgeFile = "Interface\\ChatFrame\\ChatFrameBackground", edgeSize = Gladius.db.highlightWidth,})
 	self.frame[unit]:SetBackdropBorderColor(0, 0, 0, 0)
 	self.frame[unit]:SetFrameStrata("HIGH")
 	-- update highlight
