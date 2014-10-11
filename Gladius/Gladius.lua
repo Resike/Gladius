@@ -52,7 +52,7 @@ local L
 
 function Gladius:Call(handler, func, ...)
 	-- module disabled, return
-	if not handler.IsEnabled then
+	if not handler:IsEnabled() then
 		return
 	end
 	-- save module function call
@@ -183,11 +183,17 @@ function Gladius:GetParent(unit, module)
 end
 
 function Gladius:EnableModule(name)
-	self:Call(self.modules[name], "Enable")
+	m = self:GetModule(name)
+	if m ~= nil then
+		m:Enable()
+	end
 end
 
 function Gladius:DisableModule(name)
-	self:Call(self.modules[name], "Disable")
+	m = self:GetModule(name)
+	if m ~= nil then
+		m:Disable()
+	end
 end
 
 function Gladius:GetModule(name)
