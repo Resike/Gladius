@@ -33,7 +33,6 @@ end
 function Timer:OnDisable()
 	self:UnregisterAllEvents()
 	self:Reset()
-	print('enabled ' .. tostring(self.enabled))
 end
 
 function Timer:Reset()
@@ -78,7 +77,6 @@ function Timer:SetFormattedNumber(frame, number)
 end
 
 function Timer:SetTimer(frame, duration, start, callback)
-	print("SetTimer enabled "..tostring(self.enabled))
 	if not self.frames or frame == nil then
 		return
 	end
