@@ -81,84 +81,69 @@ function ClassIcon:UpdateColors(unit)
 end
 
 function ClassIcon:UpdateAura(unit)
-	if not self.frame[unit] then
+	local unitFrame = self.frame[unit]
+
+	if not unitFrame then
 		return
 	end
+
 	if not Gladius.db.aurasFrameAuras then
 		return
 	end
-	-- default priority
-	if not self.frame[unit].priority then
-		self.frame[unit].priority = 0
-	end
+
 	local aura
-	--local index = 1
-	-- debuffs
-	--while true do
-	for i = 1, 40 do
-		local name, _, icon, _, _, duration, expires, _, _, _, spellid = UnitAura(unit, i, "HARMFUL")
-		local id = tostring(spellid)
-		if not name then
-			break
+
+	for _, type in pairs({'HELPFUL', 'HARMFUL'}) do
+		for i = 1, 40 do
+			local name, _, icon, _, _, duration, expires, _, _, _, spellid = UnitAura(unit, i, "HARMFUL")
+
+			if not name then
+				break
+			end
+			local auraList = Gladius.db.aurasFrameAuras
+			local priority = auraList[name] or auraList[tostring(spellid)]
+
+			if priority ~= nil and (not aura or aura.priority < priority)  then
+				aura = {
+					name = name,
+					icon = icon,
+					duration = duration,
+					expires = expires,
+					spellid = spellid,
+					priority = priority
+				}
+			end
 		end
-		if Gladius.db.aurasFrameAuras[name] and Gladius.db.aurasFrameAuras[name] >= self.frame[unit].priority then
-			aura = name
-			self.frame[unit].icon = icon
-			self.frame[unit].timeleft = duration
-			self.frame[unit].expires = expires
-			self.frame[unit].priority = Gladius.db.aurasFrameAuras[name]
-		elseif (Gladius.db.aurasFrameAuras[id] and Gladius.db.aurasFrameAuras[id] >= self.frame[unit].priority) then
-			aura = name
-			self.frame[unit].icon = icon
-			self.frame[unit].timeleft = duration
-			self.frame[unit].expires = expires
-			self.frame[unit].priority = Gladius.db.aurasFrameAuras[id]
-		end
-		--index = index + 1
 	end
-	-- buffs
-	--index = 1
-	--while true do
-	for i = 1, 40 do
-		local name, _, icon, _, _, duration, expires, _, _, _, spellid = UnitAura(unit, i, "HELPFUL")
-		local id = tostring(spellid)
-		if not name then
-			break
-		end
-		if Gladius.db.aurasFrameAuras[name] and Gladius.db.aurasFrameAuras[name] >= self.frame[unit].priority then
-			aura = name
-			self.frame[unit].icon = icon
-			self.frame[unit].timeleft = duration
-			self.frame[unit].expires = expires
-			self.frame[unit].priority = Gladius.db.aurasFrameAuras[name]
-		elseif (Gladius.db.aurasFrameAuras[id] and Gladius.db.aurasFrameAuras[id] >= self.frame[unit].priority) then
-			aura = name
-			self.frame[unit].icon = icon
-			self.frame[unit].timeleft = duration
-			self.frame[unit].expires = expires
-			self.frame[unit].priority = Gladius.db.aurasFrameAuras[id]
-		end
-		--index = index + 1
-	end
-	if aura then
-		-- display aura
-		self.frame[unit].texture:SetTexture(self.frame[unit].icon)
-		if Gladius.db.classIconCrop then
-			self.frame[unit].texture:SetTexCoord(0.07, 0.93, 0.07, 0.93)
-		else
-			self.frame[unit].texture:SetTexCoord(0, 1, 0, 1)
-		end
-		local timeLeft = self.frame[unit].expires > 0 and self.frame[unit].expires - GetTime() or 0
-		local start = GetTime() - (self.frame[unit].timeleft - timeLeft)
-		--self.frame[unit].timeleft = timeLeft
-		Gladius:Call(Gladius.modules.Timer, "SetTimer", self.frame[unit], self.frame[unit].timeleft, start)
-	elseif not aura and self.frame[unit].priority > 0 then
-		-- reset
-		self.frame[unit].priority = 0
-		self:SetClassIcon(unit)
+
+	if aura and (not unitFrame.aura or (unitFrame.aura.id ~= aura or unitFrame.aura.expires ~= aura.expires)) then
+		self:ShowAura(unit, aura)
 	elseif not aura then
+		self.frame[unit].aura = nil
 		self:SetClassIcon(unit)
 	end
+end
+
+function ClassIcon:ShowAura(unit, aura)
+	unitFrame = self.frame[unit]
+	unitFrame.aura = aura
+
+	-- display aura
+	unitFrame.texture:SetTexture(aura.icon)
+	if Gladius.db.classIconCrop then
+		unitFrame.texture:SetTexCoord(0.07, 0.93, 0.07, 0.93)
+	else
+		unitFrame.texture:SetTexCoord(0, 1, 0, 1)
+	end
+
+	local start
+
+	if aura.expires then
+		local timeLeft = aura.expires > 0 and aura.expires - GetTime() or 0
+		start = GetTime() - (aura.duration - timeLeft)
+	end
+
+	Gladius:Call(Gladius.modules.Timer, "SetTimer", unitFrame, aura.duration, start)
 end
 
 function ClassIcon:SetClassIcon(unit)
@@ -331,10 +316,7 @@ end
 
 function ClassIcon:Reset(unit)
 	-- reset frame
-	self.frame[unit].active = false
 	self.frame[unit].aura = nil
-	self.frame[unit].expires = 0
-	self.frame[unit].priority = 0
 	self.frame[unit]:SetScript("OnUpdate", nil)
 	-- reset cooldown
 	self.frame[unit].cooldown:SetCooldown(0, 0)
@@ -348,40 +330,16 @@ function ClassIcon:Test(unit)
 	if not Gladius.db.classIconImportantAuras then
 		return
 	end
-	Gladius.db.aurasFrameAuras = Gladius.db.aurasFrameAuras or Gladius.modules["Auras"]:GetAuraList()
-	local aura
 	if unit == "arena1" then
-		aura = "Ice Block"
-		self.frame[unit].icon = select(3, GetSpellInfo(45438))
-		self.frame[unit].timeleft = 10
-		self.frame[unit].priority = Gladius.db.aurasFrameAuras[unit]
-		self.frame[unit].active = true
-		self.frame[unit].aura = aura
-		self.frame[unit].texture:SetTexture(self.frame[unit].icon)
-		if Gladius.db.classIconCrop then
-			self.frame[unit].texture:SetTexCoord(0.07, 0.93, 0.07, 0.93)
-		else
-			self.frame[unit].texture:SetTexCoord(0, 1, 0, 1)
-		end
-		Gladius:Call(Gladius.modules.Timer, "SetTimer", self.frame[unit], self.frame[unit].timeleft, nil, function()
-			ClassIcon:SetClassIcon(unit)
-		end)
+		self:ShowAura(unit, {
+			icon = select(3, GetSpellInfo(45438)),
+			duration = 10
+		})
 	elseif unit == "arena2" then
-		aura = "Deterrence"
-		self.frame[unit].icon = select(3, GetSpellInfo(19263))
-		self.frame[unit].timeleft = 5
-		self.frame[unit].priority = Gladius.db.aurasFrameAuras[unit]
-		self.frame[unit].active = true
-		self.frame[unit].aura = aura
-		self.frame[unit].texture:SetTexture(self.frame[unit].icon)
-		if Gladius.db.classIconCrop then
-			self.frame[unit].texture:SetTexCoord(0.07, 0.93, 0.07, 0.93)
-		else
-			self.frame[unit].texture:SetTexCoord(0, 1, 0, 1)
-		end
-		Gladius:Call(Gladius.modules.Timer, "SetTimer", self.frame[unit], self.frame[unit].timeleft, nil, function()
-			ClassIcon:SetClassIcon(unit)
-		end)
+		self:ShowAura(unit, {
+			icon = select(3, GetSpellInfo(19263)),
+			duration = 5
+		})
 	end
 end
 
