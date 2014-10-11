@@ -1,0 +1,48 @@
+Adirelle:
+	- Minor 6.0 fixes.
+	- Fills category names and pve info from actual categories.
+	Ensure 5.4/6.0 compatibility.
+	- Handle taunt DR.
+	Fixes #5.
+	- Handles knockback reset time.
+	Fixes #4.
+Cybeloras:
+	- I'm 99% sure that the short stun category is gone now. Charge is a root now, and earthquake and dragon roar say "knock down"
+	- I'm 99% sure that the short stun category is gone now. Charge is a root now, and earthquake and dragon roar say "knock down"
+	- Updates for WoD (still compatible with live)
+Adirelle:
+	- Fixed warlock providers.
+	- Minor version bump.
+Rainrider:
+	- Monk: Added providers and confirmed ids
+	- Hunter: fixed Charge provider, Narrow Escape, Entrapment
+	Confirmed all hunter pet spells in-game
+Adirelle:
+	- Updated the providers of hunter spells.
+	- Added an API to get the spell ("provider") that applies the CC debuff.
+	Initial work: for now the debuff id is returned as the provider id. The data needs to be updated.
+Cybeloras:
+	- Fix spellID for Storm Bolt
+	- Added the Incarnation version of Pounce
+Shadowed:
+	- * Almost forgot pkgmeta and toc updates
+	- * Initial Import
+	- * Added 500 more polymorph versions
+	- * Updated the Dr database should be the most accurate there is at this point
+	- * Blind is now in the fear category
+	- * Added new DR category: taunts * Added Banish to the sleep DR category
+	- * Nether Shock -> silence * Snatch -> disarm * Gnaw, Intercept (Felguard), Ravage, Sonic Blast -> control stun
+	- * Dragon's Breath, Hungering Cold -> disorient * Maim, Holy Wrath, Inferno Effect, Demon Charge -> control stun * Improved Fire Nova -> random stun * Mace Stun, Blackout, Divine Hymn -> removed * Psychic Horror -> disarm * Pounce -> cheap shot * Psychic Horror -> horror
+	- * Wyvern Sting moved to the Freezing Trap category * Freezing Arrow added under the Freezing Trap category
+	- * Kidney Shot is now listed as a controlled stun, Cheap Shot as it's own category
+	- * Added Silences (3.0.8, remove this if they revert) * Added Divine Hymn (Disorient) * Added Glyph of Death Grip (Control Stun) * Removed Chatise
+	- * Added Shackle to the disorient DR
+	- * Added Disarm, Dismantle, Chimera Shot - Scorpid to the Disarm DR category
+	- * Added Concussion Blow and Shockwave to the controlled stun category.
+	- * Added Gnaw as a control stun for now
+	- * This is now a WoTLK only version, added the new spellIDs for 3.0 and removed the old Gouge/Intercept ranks * Added Repentance (Disorient)
+	- * Added Death Coil, Wyvern Sting, Entangling Roots, Frost Nova, Intercept, Pounce, Polymorph, Sap, Maim, Hex spellID's for WoTLK
+	- * Impact changed from a random stun to a controlled stun... apparently something that has a chance of proccing is controlled? * Added Mind Control as a charm category
+	- * Added Turn Evil (Fear) * Added Stoneclaw Stun (Random Stun) * Added Revenge Stun (Random Stun) * Added Frostbite (Random Root) * Moved Improved Hamstring to Random Roots * Renamed Control Stuns -> Controlled Stuns * Renamed Roots -> Controlled Roots
+	- * Changed Hibernate to a sleep, added Wyvern Sting under the sleep category * Added a bunch of APIs to access the data, I'll toss a wiki up for them later
+	- * Initial Import: DRData-1.0/ * After playing with it more, DiminishingReturns-1.0 doesn't work very well because we need to rely on order of events registered, since all thats required is maybe 20 lines to do the actual DR tracking I'll make the data into a small library to share it.
