@@ -94,9 +94,9 @@ function ClassIcon:UpdateAura(unit)
 
 	local aura
 
-	for _, type in pairs({'HELPFUL', 'HARMFUL'}) do
+	for _, auraType in pairs({'HELPFUL', 'HARMFUL'}) do
 		for i = 1, 40 do
-			local name, _, icon, _, _, duration, expires, _, _, _, spellid = UnitAura(unit, i, "HARMFUL")
+			local name, _, icon, _, _, duration, expires, _, _, _, spellid = UnitAura(unit, i, auraType)
 
 			if not name then
 				break
