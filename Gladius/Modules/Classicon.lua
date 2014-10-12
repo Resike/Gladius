@@ -69,9 +69,10 @@ function ClassIcon:GetFrame(unit)
 end
 
 function ClassIcon:UNIT_AURA(event, unit)
-	if not strfind(unit, "arena") or strfind(unit, "pet") then
+	if not Gladius:IsValidUnit(unit) then
 		return
 	end
+
 	-- important auras
 	self:UpdateAura(unit)
 end
@@ -155,8 +156,9 @@ function ClassIcon:SetClassIcon(unit)
 	local class
 	local specIcon
 	if not Gladius.test then
-		class = select(2, UnitClass(unit))
-		specIcon = Gladius.buttons[unit].specIcon
+		frame = Gladius:GetUnitFrame(unit)
+		class = frame.class
+		specIcon = frame.specIcon
 	else
 		class = Gladius.testing[unit].unitClass
 		local _, _, _, icon = GetSpecializationInfoByID(Gladius.testing[unit].unitSpecId)

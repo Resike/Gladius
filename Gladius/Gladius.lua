@@ -217,6 +217,7 @@ function Gladius:OnInitialize()
 	self.dbi.RegisterCallback(self, "OnProfileChanged", "OnProfileChanged")
 	self.dbi.RegisterCallback(self, "OnProfileCopied", "OnProfileChanged")
 	self.dbi.RegisterCallback(self, "OnProfileReset", "OnProfileChanged")
+
 	-- dispel module updates (3.2.6)
 	for k, v in pairs(self.dbi["profiles"]) do
 		if self.dbi["profiles"][k]["modules"] then
@@ -226,6 +227,7 @@ function Gladius:OnInitialize()
 			self.dbi["profiles"][k]["modules"]["Dispell"] = nil
 		end
 	end
+
 	self.db = setmetatable(self.dbi.profile, {
 		__newindex = function(t, index, value)
 		if type(value) == "table" then
@@ -233,20 +235,16 @@ function Gladius:OnInitialize()
 		end
 		rawset(t, index, value)
 	end})
-	-- option reset (increase number)
-	--[[self.version = 2
-	if self.db.version == nil or self.db.version < self.version then
-		print("Gladius:", "Resetting options...") 
-		self.dbi:ResetProfile()
-	end
-	self.db.version = self.version]]
+
 	-- localization
 	L = self.L
+
 	-- libsharedmedia
 	self.LSM = LibStub("LibSharedMedia-3.0")
 	self.LSM:Register(self.LSM.MediaType.STATUSBAR, "Bars", "Interface\\AddOns\\Gladius\\Images\\Bars")
 	self.LSM:Register(self.LSM.MediaType.STATUSBAR, "Minimalist", "Interface\\AddOns\\Gladius\\Images\\Minimalist")
 	self.LSM:Register(self.LSM.MediaType.STATUSBAR, "Smooth", "Interface\\AddOns\\Gladius\\Images\\Smooth")
+
 	-- test environment
 	self.test = false
 	self.testCount = 0
@@ -262,8 +260,7 @@ function Gladius:OnInitialize()
 			return t["arena1"]
 		end
 	})
-	-- spec detection (old)
-	--self.specSpells = self:GetSpecList()
+
 	-- buttons
 	self.buttons = { }
 end
@@ -333,7 +330,6 @@ function Gladius:ZONE_CHANGED_NEW_AREA()
 	-- check if we are entering or leaving an arena 
 	if type == "arena" then
 		self:JoinedArena()
-		--self:SendMessage("GLADIUS_SPEC_UPDATE", nil, unit)
 	elseif type ~= "arena" and self.instanceType == "arena" then
 		self:LeftArena()
 	end
@@ -341,15 +337,12 @@ function Gladius:ZONE_CHANGED_NEW_AREA()
 end
 
 function Gladius:JoinedArena()
-	-- enemy events
-	--self:RegisterEvent("UNIT_PET")
 	-- special arena event
 	self:RegisterEvent("UNIT_NAME_UPDATE")
 	self:RegisterEvent("ARENA_OPPONENT_UPDATE") 
 	self:RegisterEvent("ARENA_PREP_OPPONENT_SPECIALIZATIONS")
 	self:RegisterEvent("UNIT_HEALTH") 
 	self:RegisterEvent("UNIT_MAXHEALTH", "UNIT_HEALTH")
-	-- spec detection
 	self:RegisterEvent("UNIT_AURA")
 	self:RegisterEvent("UNIT_SPELLCAST_START")
 	-- reset test
@@ -371,6 +364,11 @@ function Gladius:JoinedArena()
 			self.anchor:SetFrameStrata("LOW")
 		end
 	end
+
+	local numOpps = GetNumArenaOpponentSpecs()
+	if (numOpps and numOpps > 0) then
+		self:ARENA_PREP_OPPONENT_SPECIALIZATIONS()
+	end
 end
 
 function Gladius:LeftArena()
@@ -391,26 +389,43 @@ function Gladius:UNIT_NAME_UPDATE(event, unit)
 	if not IsActiveBattlefieldArena() then
 		return
 	end
-	if not strfind(unit, "arena") or strfind(unit, "pet") then
+
+	if not self:IsValidUnit(unit) then
 		return
 	end
-	if not self.buttons[unit] or self.buttons[unit]:GetAlpha() < 1 then
-		self:ShowUnit(unit)
-	end
+
+	self:ShowUnit(unit)
 end
 
 function Gladius:ARENA_OPPONENT_UPDATE(event, unit, type)
 	-- enemy seen
 	if type == "seen" or type == "destroyed" then
-		if not self.buttons[unit] or self.buttons[unit]:GetAlpha() < 1 then
-			self:ShowUnit(unit)
-		end
+		self:ShowUnit(unit, false, nil, true)
 	-- enemy stealth
 	elseif type == "unseen" then
 		self:UpdateAlpha(unit, self.db.stealthAlpha)
 	-- enemy left arena
 	elseif type == "cleared" then
 		--self:ResetUnit(unit)
+	end
+end
+
+function Gladius:ARENA_PREP_OPPONENT_SPECIALIZATIONS(event)
+	-- Update spec from API
+	local numOpps = GetNumArenaOpponentSpecs()
+	for i = 1, numOpps do
+		local unit = "arena"..i
+		local specID = GetArenaOpponentSpec(i)
+		if specID > 0 then
+			local _, spec, _, specIcon, _, _, class = GetSpecializationInfoByID(specID);
+			if self.buttons[unit] then
+				self.buttons[unit].spec = spec
+				self.buttons[unit].specIcon = specIcon
+				self.buttons[unit].class = class
+				self:ShowUnit(unit)
+				self:UpdateAlpha(unit, 0.5)
+			end
+		end
 	end
 end
 
@@ -423,9 +438,8 @@ function Gladius:UpdateFrame()
 		if self.testCount >= unitId then
 			-- update frame will only be called in the test environment
 			self:UpdateUnit(unit)
-			if not self.buttons[unit] or self.buttons[unit]:GetAlpha() < 1 then
-				self:ShowUnit(unit, true)
-			end
+			self:ShowUnit(unit, true)
+
 			-- test environment
 			if self.test then
 				self:TestUnit(unit)
@@ -443,11 +457,13 @@ function Gladius:HideFrame()
 	for unit, _ in pairs(self.buttons) do
 		self:ResetUnit(unit)
 	end
+
 	-- hide background
 	if self.background then
 		self.background:SetAlpha(0)
 		--self.background:Hide()
 	end
+
 	-- hide anchor
 	if self.anchor then
 		--self.anchor:SetAlpha(0)
@@ -456,42 +472,30 @@ function Gladius:HideFrame()
 end
 
 function Gladius:UpdateUnit(unit, module)
-	--[[local instanceType = select(2, IsInInstance())
-	if instanceType ~= "arena" then
-		return
-	end]]
-	if not strfind(unit, "arena") or strfind(unit, "pet") then
+	if not self:IsValidUnit(unit) then
 		return
 	end
+
 	if InCombatLockdown() then
 		return
 	end
+
 	-- create button 
 	if not self.buttons[unit] then
 		self:CreateButton(unit)
 	end
+
 	local height = 0
 	local frameHeight = 0
-	-- spec
-	self.buttons[unit].spec = ""
-	-- Update spec from API
-	local numOpps = GetNumArenaOpponentSpecs()
-	for i = 1, numOpps do
-		local specID = GetArenaOpponentSpec(i)
-		if specID > 0 then
-			local _, spec, _, specIcon, _, _, class = GetSpecializationInfoByID(specID)
-			if Gladius.buttons["arena"..i] then
-				Gladius.buttons["arena"..i].spec = spec
-				Gladius.buttons["arena"..i].specIcon = specIcon
-			end
-		end
-	end
+
 	-- default height values
 	self.buttons[unit].frameHeight = 1
 	self.buttons[unit].height = 1
+
 	-- reset hit rect
 	self.buttons[unit]:SetHitRectInsets(0, 0, 0, 0) 
 	self.buttons[unit].secure:SetHitRectInsets(0, 0, 0, 0)
+
 	-- update modules (bars first, because we need the height)
 	for _, m in pairs(self.modules) do
 		if m:IsEnabled() then
@@ -624,12 +628,18 @@ function Gladius:UpdateUnit(unit, module)
 end
 
 function Gladius:ShowUnit(unit, testing, module)
-	if not strfind(unit, "arena") or strfind(unit, "pet") then
+	if not self:IsValidUnit(unit) then
 		return
 	end
+
 	if not self.buttons[unit] then
 		return
 	end
+
+	if self:IsUnitShown(unit) then
+		return
+	end
+
 	-- disable test mode, when there are real arena opponents (happens when entering arena and using /gladius test)
 	local testing = testing or false
 	if not testing and self.test then 
@@ -638,6 +648,7 @@ function Gladius:ShowUnit(unit, testing, module)
 		-- disable test mode
 		self.test = false
 	end
+
 	self.buttons[unit]:SetAlpha(1)
 	for _, m in pairs(self.modules) do
 		if m:IsEnabled() then
@@ -646,6 +657,7 @@ function Gladius:ShowUnit(unit, testing, module)
 			end
 		end
 	end
+
 	-- background
 	if self.db.groupButtons then
 		self.background:SetAlpha(1)
@@ -654,6 +666,7 @@ function Gladius:ShowUnit(unit, testing, module)
 			self.anchor:SetFrameStrata("LOW")
 		end
 	end
+
 	local maxHeight = 0
 	for u, button in pairs(self.buttons) do
 		local unitId = tonumber(string.match(u, "^arena(.+)"))
@@ -661,23 +674,15 @@ function Gladius:ShowUnit(unit, testing, module)
 			maxHeight = math.max(maxHeight, unitId)
 		end
 	end
-	-- Update spec from API
-	local numOpps = GetNumArenaOpponentSpecs()
-	for i = 1, numOpps do
-		local specID = GetArenaOpponentSpec(i)
-		if specID > 0 then
-			local _, spec, _, specIcon, _, _, class = GetSpecializationInfoByID(specID)
-			Gladius.buttons["arena"..i].spec = spec
-			Gladius.buttons["arena"..i].specIcon = specIcon
-		end
-	end
+
 	self.background:SetHeight(self.buttons[unit]:GetHeight() * maxHeight + self.db.bottomMargin * (maxHeight - 1) + self.db.backgroundPadding * 2)
 end
 
 function Gladius:TestUnit(unit, module)
-	if not strfind(unit, "arena") or strfind(unit, "pet") then
+	if not self:IsValidUnit(unit) then
 		return
 	end
+
 	-- test modules
 	for _, m in pairs(self.modules) do
 		if m:IsEnabled() then
@@ -692,12 +697,14 @@ function Gladius:TestUnit(unit, module)
 end
 
 function Gladius:ResetUnit(unit, module)
-	if not strfind(unit, "arena") or strfind(unit, "pet") then
+	if not self:IsValidUnit(unit) then
 		return
 	end
+
 	if not self.buttons[unit] then
 		return
 	end
+
 	-- reset modules
 	for _, m in pairs(self.modules) do
 		if m:IsEnabled() then
@@ -785,76 +792,42 @@ function Gladius:CreateButton(unit)
 end
 
 function Gladius:UNIT_AURA(event, unit)
-	if not strfind(unit, "arena") or strfind(unit, "pet") then
+	if not self:IsValidUnit(unit) then
 		return
 	end
-	if not self.buttons[unit] or self.buttons[unit]:GetAlpha() < 1 then
-		self:ShowUnit(unit)
-	end
-	--[[local index = 1
-	while true do
-		local name, rank, icon, count, debuffType, duration, expirationTime, unitCaster, isStealable = UnitAura(unit, index, "HELPFUL")
-		if not name then
-			break
-		end
-		if self.buttons[unitCaster] and self.buttons[unitCaster].spec == "" then
-			--self.buttons[unitCaster].spec = self.specSpells[name]
-			--self:SendMessage("GLADIUS_SPEC_UPDATE", nil, unitCaster)
-		end
-		index = index + 1
-		-- Update spec from API
-		local numOpps = GetNumArenaOpponentSpecs()
-		for i = 1, numOpps do
-			local specID = GetArenaOpponentSpec(i)
-			if specID > 0 then
-				local _, spec, _, specIcon, _, _, class = GetSpecializationInfoByID(specID)
-				Gladius.buttons["arena"..i].spec = spec
-			end
-		end
-	end]]
+
+	self:ShowUnit(unit)
 end
 
 function Gladius:UNIT_SPELLCAST_START(event, unit)
-	if not strfind(unit, "arena") or strfind(unit, "pet") then
+	if not self:IsValidUnit(unit) then
 		return
 	end
-	if not self.buttons[unit] or self.buttons[unit]:GetAlpha() < 1 then
-		self:ShowUnit(unit)
-	end
-	--[[local spell = UnitCastingInfo(unit)
-	if self.buttons[unit].spec == "" then
-		--self.buttons[unit].spec = self.specSpells[spell]
-		--self:SendMessage("GLADIUS_SPEC_UPDATE", nil, unit)
-	end
-	-- Update spec from API
-	local numOpps = GetNumArenaOpponentSpecs()
-	for i = 1, numOpps do
-		local specID = GetArenaOpponentSpec(i)
-		if specID > 0 then
-			local _, spec, _, specIcon, _, _, class = GetSpecializationInfoByID(specID)
-			Gladius.buttons["arena"..i].spec = spec
-		end
-	end]]
+
+	self:ShowUnit(unit)
 end
 
 function Gladius:UNIT_HEALTH(event, unit)
-	if not strfind(unit, "arena") or strfind(unit, "pet") then
+	if not self:IsValidUnit(unit) then
 		return
 	end
+	
 	-- update unit
-	if not self.buttons[unit] or self.buttons[unit]:GetAlpha() < 1 then
-		self:ShowUnit(unit)
-	end
+	self:ShowUnit(unit)
+
 	if UnitIsDeadOrGhost(unit) then
 		self:UpdateAlpha(unit, 0.5)
 	end
-	-- Update spec from API
-	--[[local numOpps = GetNumArenaOpponentSpecs()
-	for i = 1, numOpps do
-		local specID = GetArenaOpponentSpec(i)
-		if specID > 0 then
-			local _, spec, _, specIcon, _, _, class = GetSpecializationInfoByID(specID)
-			Gladius.buttons["arena"..i].spec = spec
-		end
-	end]]
+end
+
+function Gladius:IsUnitShown(unit)
+	return self.buttons[unit] and self.buttons[unit]:GetAlpha() == 1
+end
+
+function Gladius:GetUnitFrame(unit)
+	return self.buttons[unit]
+end
+
+function Gladius:IsValidUnit(unit)
+	return strfind(unit, "arena") and not strfind(unit, "pet")
 end
