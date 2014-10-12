@@ -345,17 +345,14 @@ function Gladius:JoinedArena()
 	self:RegisterEvent("UNIT_MAXHEALTH", "UNIT_HEALTH")
 	self:RegisterEvent("UNIT_AURA")
 	self:RegisterEvent("UNIT_SPELLCAST_START")
+
 	-- reset test
 	self.test = false
 	self.testCount = 0
-	-- create and update buttons on first launch
-	local groupSize = GetNumGroupMembers()
-	for i = 1, groupSize do
-		self:UpdateUnit("arena"..i)
-		self.buttons["arena"..i]:RegisterForDrag("LeftButton")
-	end
+
 	-- hide buttons
 	self:HideFrame()
+
 	-- background
 	if self.db.groupButtons then
 		self.background:SetAlpha(1)
@@ -373,12 +370,14 @@ end
 
 function Gladius:LeftArena()
 	self:HideFrame()
+	
 	-- reset units
 	for unit, _ in pairs(self.buttons) do
 		Gladius.buttons[unit]:RegisterForDrag()
 		Gladius.buttons[unit]:Hide()
 		self:ResetUnit(unit)
 	end
+
 	-- unregister combat events
 	self:UnregisterAllEvents()
 	self:RegisterEvent("ZONE_CHANGED_NEW_AREA")
@@ -406,7 +405,7 @@ function Gladius:ARENA_OPPONENT_UPDATE(event, unit, type)
 		self:UpdateAlpha(unit, self.db.stealthAlpha)
 	-- enemy left arena
 	elseif type == "cleared" then
-		--self:ResetUnit(unit)
+		self:UpdateAlpha(unit, 0)
 	end
 end
 
@@ -422,6 +421,7 @@ function Gladius:ARENA_PREP_OPPONENT_SPECIALIZATIONS(event)
 				self.buttons[unit].spec = spec
 				self.buttons[unit].specIcon = specIcon
 				self.buttons[unit].class = class
+				self:UpdateUnit(unit)
 				self:ShowUnit(unit)
 				self:UpdateAlpha(unit, 0.5)
 			end
