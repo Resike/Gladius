@@ -231,6 +231,7 @@ function PowerBar:Show(unit)
 	-- show frame
 	self.frame[unit]:SetAlpha(1)
 	self.frame[unit]:SetValue(1)
+	self.frame[unit]:SetStatusBarColor(0, 0, 1)
 	if (not Gladius.test) then
 		self:UNIT_POWER("UNIT_POWER", unit)
 	end
