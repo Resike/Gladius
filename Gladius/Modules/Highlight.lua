@@ -47,6 +47,8 @@ local Highlight = Gladius:NewModule("Highlight", false, false, {
 	highlightRaidIcon8 = false,
 	highlightRaidIcon8Color = {r = 1, g = 1, b = 1, a = 1},
 	highlightRaidIcon8Priority = 1,
+	highlightWidth = 1,
+	highlightInset = false
 })
 
 function Highlight:OnEnable()
@@ -145,11 +147,9 @@ function Highlight:Update(unit)
 	local left, right, top, bottom = Gladius.buttons[unit]:GetHitRectInsets()
 	self.frame[unit]:ClearAllPoints()
 	self.frame[unit]:SetPoint("TOPLEFT", Gladius.buttons[unit], "TOPLEFT", left - 3, top + 3)
-	self.frame[unit]:SetWidth(Gladius.buttons[unit]:GetWidth() + abs(left) + abs(right) + 3)
-	self.frame[unit]:SetHeight(Gladius.buttons[unit]:GetHeight() + abs(bottom) + abs(top) + 3)
-	self.frame[unit]:SetBackdrop({edgeFile = "Interface\\ChatFrame\\ChatFrameBackground", edgeSize = 1,})
+	self.frame[unit]:SetBackdrop({edgeFile = "Interface\\ChatFrame\\ChatFrameBackground", edgeSize = Gladius.db.highlightWidth,})
 	self.frame[unit]:SetBackdropBorderColor(0, 0, 0, 0)
-	self.frame[unit]:SetFrameStrata("LOW")
+	self.frame[unit]:SetFrameStrata("MEDIUM")
 	-- update highlight
 	local button = Gladius.buttons[unit]
 	local secure = button.secure
@@ -211,10 +211,12 @@ function Highlight:Show(unit)
 	-- show
 	self.frame[unit]:SetAlpha(1)
 	local left, right, top, bottom = Gladius.buttons[unit]:GetHitRectInsets()
+	local offs = Gladius.db.highlightInset and 0 or 2
+
 	self.frame[unit]:ClearAllPoints()
-	self.frame[unit]:SetPoint("TOPLEFT", Gladius.buttons[unit], "TOPLEFT", left - 3, top + 3)
-	self.frame[unit]:SetWidth(Gladius.buttons[unit]:GetWidth() + abs(left) + abs(right) + 3)
-	self.frame[unit]:SetHeight(Gladius.buttons[unit]:GetHeight() + abs(bottom) + abs(top) + 3)
+	self.frame[unit]:SetPoint("TOPLEFT", Gladius.buttons[unit], "TOPLEFT", left - offs, top + offs)
+	self.frame[unit]:SetWidth(Gladius.buttons[unit]:GetWidth() + abs(left) + abs(right) + offs*2)
+	self.frame[unit]:SetHeight(Gladius.buttons[unit]:GetHeight() + abs(bottom) + abs(top) + offs*2)
 end
 
 function Highlight:Reset(unit)
@@ -228,7 +230,10 @@ function Highlight:Reset(unit)
 end
 
 function Highlight:Test(unit)
-	-- test
+	if unit == "arena1" then
+ 		Highlight:Show(unit)
+		self.frame[unit]:SetBackdropBorderColor(Gladius.db.highlightTargetColor.r, Gladius.db.highlightTargetColor.g, Gladius.db.highlightTargetColor.b, Gladius.db.highlightTargetColor.a)
+	end
 end
 
 function Highlight:GetOptions()
@@ -238,12 +243,43 @@ function Highlight:GetOptions()
 			name = L["General"],
 			order = 1,
 			args = {
+				position = {
+					type = "group",
+					name = L["Position"],
+					desc = L["Position settings"],
+					inline = true,
+					order = 1,
+					hidden = function()
+						return not Gladius.db.advancedOptions
+					end,
+					args = {
+						highlightWidth = {
+							type = "range",
+							name = L["Highlight Border Width"],
+							desc = L["Highlight Border Width"],
+							min = 0, max = 10, step = 1,
+							disabled = function()
+								return not Gladius.dbi.profile.modules[self.name]
+							end,
+							order = 5,
+						},
+						highlightInset = {
+							type = "toggle",
+							name = L["Highlight Border Inset"],
+							desc = L["Inset the highlight border"],
+							disabled = function()
+								return not Gladius.dbi.profile.modules[self.name]
+							end,
+							order = 10,
+						},
+					},
+				},
 				hover = {
 					type = "group",
 					name = L["Hover"],
 					desc = L["Hover settings"],
 					inline = true,
-					order = 1,
+					order = 10,
 					args = {
 						highlightHover = {
 							type = "toggle",
@@ -325,7 +361,7 @@ function Highlight:GetOptions()
 					name = L["Player Focus Target"],
 					desc = L["Player focus target settings"],
 					inline = true,
-					order = 2,
+					order = 20,
 					args = {
 						highlightFocus = {
 							type = "toggle",
@@ -373,7 +409,7 @@ function Highlight:GetOptions()
 					name = L["Raid Assist Target"],
 					desc = L["Raid assist settings"],
 					inline = true,
-					order = 2,
+					order = 30,
 					args = {
 						highlightAssist = {
 							type = "toggle",

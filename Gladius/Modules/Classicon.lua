@@ -35,6 +35,7 @@ local ClassIcon = Gladius:NewModule("ClassIcon", false, true, {
 	classIconCooldown = false,
 	classIconCooldownReverse = false,
 	classIconShowSpec = false,
+	classIconDetached = false
 })
 
 function ClassIcon:OnEnable()
@@ -59,14 +60,19 @@ function ClassIcon:GetAttachTo()
 	return Gladius.db.classIconAttachTo
 end
 
+function ClassIcon:IsDetached()
+	return Gladius.db.classIconDetached
+end
+
 function ClassIcon:GetFrame(unit)
 	return self.frame[unit]
 end
 
 function ClassIcon:UNIT_AURA(event, unit)
-	if not strfind(unit, "arena") or strfind(unit, "pet") then
+	if not Gladius:IsValidUnit(unit) then
 		return
 	end
+
 	-- important auras
 	self:UpdateAura(unit)
 end
@@ -76,84 +82,69 @@ function ClassIcon:UpdateColors(unit)
 end
 
 function ClassIcon:UpdateAura(unit)
-	if not self.frame[unit] then
+	local unitFrame = self.frame[unit]
+
+	if not unitFrame then
 		return
 	end
+
 	if not Gladius.db.aurasFrameAuras then
 		return
 	end
-	-- default priority
-	if not self.frame[unit].priority then
-		self.frame[unit].priority = 0
-	end
+
 	local aura
-	--local index = 1
-	-- debuffs
-	--while true do
-	for i = 1, 40 do
-		local name, _, icon, _, _, duration, expires, _, _, _, spellid = UnitAura(unit, i, "HARMFUL")
-		local id = tostring(spellid)
-		if not name then
-			break
+
+	for _, auraType in pairs({'HELPFUL', 'HARMFUL'}) do
+		for i = 1, 40 do
+			local name, _, icon, _, _, duration, expires, _, _, _, spellid = UnitAura(unit, i, auraType)
+
+			if not name then
+				break
+			end
+			local auraList = Gladius.db.aurasFrameAuras
+			local priority = auraList[name] or auraList[tostring(spellid)]
+
+			if priority ~= nil and (not aura or aura.priority < priority)  then
+				aura = {
+					name = name,
+					icon = icon,
+					duration = duration,
+					expires = expires,
+					spellid = spellid,
+					priority = priority
+				}
+			end
 		end
-		if Gladius.db.aurasFrameAuras[name] and Gladius.db.aurasFrameAuras[name] >= self.frame[unit].priority then
-			aura = name
-			self.frame[unit].icon = icon
-			self.frame[unit].timeleft = duration
-			self.frame[unit].expires = expires
-			self.frame[unit].priority = Gladius.db.aurasFrameAuras[name]
-		elseif (Gladius.db.aurasFrameAuras[id] and Gladius.db.aurasFrameAuras[id] >= self.frame[unit].priority) then
-			aura = name
-			self.frame[unit].icon = icon
-			self.frame[unit].timeleft = duration
-			self.frame[unit].expires = expires
-			self.frame[unit].priority = Gladius.db.aurasFrameAuras[id]
-		end
-		--index = index + 1
 	end
-	-- buffs
-	--index = 1
-	--while true do
-	for i = 1, 40 do
-		local name, _, icon, _, _, duration, expires, _, _, _, spellid = UnitAura(unit, i, "HELPFUL")
-		local id = tostring(spellid)
-		if not name then
-			break
-		end
-		if Gladius.db.aurasFrameAuras[name] and Gladius.db.aurasFrameAuras[name] >= self.frame[unit].priority then
-			aura = name
-			self.frame[unit].icon = icon
-			self.frame[unit].timeleft = duration
-			self.frame[unit].expires = expires
-			self.frame[unit].priority = Gladius.db.aurasFrameAuras[name]
-		elseif (Gladius.db.aurasFrameAuras[id] and Gladius.db.aurasFrameAuras[id] >= self.frame[unit].priority) then
-			aura = name
-			self.frame[unit].icon = icon
-			self.frame[unit].timeleft = duration
-			self.frame[unit].expires = expires
-			self.frame[unit].priority = Gladius.db.aurasFrameAuras[id]
-		end
-		--index = index + 1
-	end
-	if aura then
-		-- display aura
-		self.frame[unit].texture:SetTexture(self.frame[unit].icon)
-		if Gladius.db.classIconCrop then
-			self.frame[unit].texture:SetTexCoord(0.07, 0.93, 0.07, 0.93)
-		else
-			self.frame[unit].texture:SetTexCoord(0, 1, 0, 1)
-		end
-		local timeLeft = self.frame[unit].expires > 0 and self.frame[unit].expires - GetTime() or 0
-		local start = GetTime() - (self.frame[unit].timeleft - timeLeft)
-		--self.frame[unit].timeleft = timeLeft
-		Gladius:Call(Gladius.modules.Timer, "SetTimer", self.frame[unit], self.frame[unit].timeleft, start)
-	elseif not aura and self.frame[unit].priority > 0 then
-		-- reset
-		self.frame[unit].priority = 0
-		self:SetClassIcon(unit)
+
+	if aura and (not unitFrame.aura or (unitFrame.aura.id ~= aura or unitFrame.aura.expires ~= aura.expires)) then
+		self:ShowAura(unit, aura)
 	elseif not aura then
+		self.frame[unit].aura = nil
 		self:SetClassIcon(unit)
 	end
+end
+
+function ClassIcon:ShowAura(unit, aura)
+	unitFrame = self.frame[unit]
+	unitFrame.aura = aura
+
+	-- display aura
+	unitFrame.texture:SetTexture(aura.icon)
+	if Gladius.db.classIconCrop then
+		unitFrame.texture:SetTexCoord(0.07, 0.93, 0.07, 0.93)
+	else
+		unitFrame.texture:SetTexCoord(0, 1, 0, 1)
+	end
+
+	local start
+
+	if aura.expires then
+		local timeLeft = aura.expires > 0 and aura.expires - GetTime() or 0
+		start = GetTime() - (aura.duration - timeLeft)
+	end
+
+	Gladius:Call(Gladius.modules.Timer, "SetTimer", unitFrame, aura.duration, start)
 end
 
 function ClassIcon:SetClassIcon(unit)
@@ -165,8 +156,9 @@ function ClassIcon:SetClassIcon(unit)
 	local class
 	local specIcon
 	if not Gladius.test then
-		class = select(2, UnitClass(unit))
-		specIcon = Gladius.buttons[unit].specIcon
+		frame = Gladius:GetUnitFrame(unit)
+		class = frame.class
+		specIcon = frame.specIcon
 	else
 		class = Gladius.testing[unit].unitClass
 		local _, _, _, icon = GetSpecializationInfoByID(Gladius.testing[unit].unitSpecId)
@@ -213,21 +205,30 @@ function ClassIcon:CreateFrame(unit)
 	self.frame[unit].texture = _G[self.frame[unit]:GetName().."Icon"]
 	self.frame[unit].normalTexture = _G[self.frame[unit]:GetName().."NormalTexture"]
 	self.frame[unit].cooldown = _G[self.frame[unit]:GetName().."Cooldown"]
+
+	-- secure
+	local secure = CreateFrame("Button", "Gladius"..self.name.."SecureButton"..unit, button, "SecureActionButtonTemplate")
+	secure:RegisterForClicks("AnyUp")
+	self.frame[unit].secure = secure
 end
 
 function ClassIcon:Update(unit)
 	-- TODO: check why we need this >_<
 	self.frame = self.frame or { }
+
 	-- create frame
 	if not self.frame[unit] then
 		self:CreateFrame(unit)
 	end
+
+	local unitFrame = self.frame[unit]
+
 	-- update frame
-	self.frame[unit]:ClearAllPoints()
+	unitFrame:ClearAllPoints()
 	local parent = Gladius:GetParent(unit, Gladius.db.classIconAttachTo)
-	self.frame[unit]:SetPoint(Gladius.db.classIconAnchor, parent, Gladius.db.classIconRelativePoint, Gladius.db.classIconOffsetX, Gladius.db.classIconOffsetY)
+	unitFrame:SetPoint(Gladius.db.classIconAnchor, parent, Gladius.db.classIconRelativePoint, Gladius.db.classIconOffsetX, Gladius.db.classIconOffsetY)
 	-- frame level
-	self.frame[unit]:SetFrameLevel(Gladius.db.classIconFrameLevel)
+	unitFrame:SetFrameLevel(Gladius.db.classIconFrameLevel)
 	if Gladius.db.classIconAdjustSize then
 		local height = false
 		-- need to rethink that
@@ -237,24 +238,35 @@ function ClassIcon:Update(unit)
 			end
 		end]]
 		if height then
-			self.frame[unit]:SetWidth(Gladius.buttons[unit].height)
-			self.frame[unit]:SetHeight(Gladius.buttons[unit].height)
+			unitFrame:SetWidth(Gladius.buttons[unit].height)
+			unitFrame:SetHeight(Gladius.buttons[unit].height)
 		else
-			self.frame[unit]:SetWidth(Gladius.buttons[unit].frameHeight)
-			self.frame[unit]:SetHeight(Gladius.buttons[unit].frameHeight)
+			unitFrame:SetWidth(Gladius.buttons[unit].frameHeight)
+			unitFrame:SetHeight(Gladius.buttons[unit].frameHeight)
 		end
 	else
-		self.frame[unit]:SetWidth(Gladius.db.classIconSize)
-		self.frame[unit]:SetHeight(Gladius.db.classIconSize)
+		unitFrame:SetWidth(Gladius.db.classIconSize)
+		unitFrame:SetHeight(Gladius.db.classIconSize)
 	end
-	self.frame[unit].texture:SetTexture("Interface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes")
+
+	-- Secure frame
+	if self.IsDetached() then
+		unitFrame.secure:SetAllPoints(unitFrame)
+		unitFrame.secure:SetHeight(unitFrame:GetHeight())
+		unitFrame.secure:SetWidth(unitFrame:GetWidth())
+		unitFrame.secure:Show()
+	else
+		unitFrame.secure:Hide()
+	end
+
+	unitFrame.texture:SetTexture("Interface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes")
 	-- set frame mouse-interactable area
 	local left, right, top, bottom = Gladius.buttons[unit]:GetHitRectInsets()
-	if self:GetAttachTo() == "Frame" then
+	if self:GetAttachTo() == "Frame" and not self:IsDetached() then
 		if strfind(Gladius.db.classIconRelativePoint, "LEFT") then
-			left = - self.frame[unit]:GetWidth() + Gladius.db.classIconOffsetX
+			left = - unitFrame:GetWidth() + Gladius.db.classIconOffsetX
 		else
-			right = - self.frame[unit]:GetWidth() + - Gladius.db.classIconOffsetX
+			right = - unitFrame:GetWidth() + - Gladius.db.classIconOffsetX
 		end
 		-- search for an attached frame
 		--[[for _, module in pairs(Gladius.modules) do
@@ -268,33 +280,32 @@ function ClassIcon:Update(unit)
 			end
 		end]]
 		-- top / bottom
-		if self.frame[unit]:GetHeight() > Gladius.buttons[unit]:GetHeight() then
-			bottom = -(self.frame[unit]:GetHeight() - Gladius.buttons[unit]:GetHeight()) + Gladius.db.classIconOffsetY
+		if unitFrame:GetHeight() > Gladius.buttons[unit]:GetHeight() then
+			bottom = -(unitFrame:GetHeight() - Gladius.buttons[unit]:GetHeight()) + Gladius.db.classIconOffsetY
 		end
 		Gladius.buttons[unit]:SetHitRectInsets(left, right, 0, 0)
 		Gladius.buttons[unit].secure:SetHitRectInsets(left, right, 0, 0)
 	end
 	-- style action button
-	self.frame[unit].normalTexture:SetHeight(self.frame[unit]:GetHeight() + self.frame[unit]:GetHeight() * 0.4)
-	self.frame[unit].normalTexture:SetWidth(self.frame[unit]:GetWidth() + self.frame[unit]:GetWidth() * 0.4)
-	self.frame[unit].normalTexture:ClearAllPoints()
-	self.frame[unit].normalTexture:SetPoint("CENTER", 0, 0)
-	self.frame[unit]:SetNormalTexture("Interface\\AddOns\\Gladius\\Images\\Gloss")
-	self.frame[unit].texture:ClearAllPoints()
-	self.frame[unit].texture:SetPoint("TOPLEFT", self.frame[unit], "TOPLEFT")
-	self.frame[unit].texture:SetPoint("BOTTOMRIGHT", self.frame[unit], "BOTTOMRIGHT")
-	self.frame[unit].normalTexture:SetVertexColor(Gladius.db.classIconGlossColor.r, Gladius.db.classIconGlossColor.g, Gladius.db.classIconGlossColor.b, Gladius.db.classIconGloss and Gladius.db.classIconGlossColor.a or 0)
-	self.frame[unit].texture:SetTexCoord(left, right, top, bottom)
+	unitFrame.normalTexture:SetHeight(unitFrame:GetHeight() + unitFrame:GetHeight() * 0.4)
+	unitFrame.normalTexture:SetWidth(unitFrame:GetWidth() + unitFrame:GetWidth() * 0.4)
+	unitFrame.normalTexture:ClearAllPoints()
+	unitFrame.normalTexture:SetPoint("CENTER", 0, 0)
+	unitFrame:SetNormalTexture("Interface\\AddOns\\Gladius\\Images\\Gloss")
+	unitFrame.texture:ClearAllPoints()
+	unitFrame.texture:SetPoint("TOPLEFT", unitFrame, "TOPLEFT")
+	unitFrame.texture:SetPoint("BOTTOMRIGHT", unitFrame, "BOTTOMRIGHT")
+	unitFrame.normalTexture:SetVertexColor(Gladius.db.classIconGlossColor.r, Gladius.db.classIconGlossColor.g, Gladius.db.classIconGlossColor.b, Gladius.db.classIconGloss and Gladius.db.classIconGlossColor.a or 0)
+	unitFrame.texture:SetTexCoord(left, right, top, bottom)
+
 	-- cooldown
-	if Gladius.db.classIconCooldown then
-		self.frame[unit].cooldown:Show()
-	else
-		self.frame[unit].cooldown:Hide()
-	end
-	self.frame[unit].cooldown:SetReverse(Gladius.db.classIconCooldownReverse)
-	Gladius:Call(Gladius.modules.Timer, "RegisterTimer", self.frame[unit], Gladius.db.classIconCooldown)
+	unitFrame.cooldown.isDisabled = not Gladius.db.classIconCooldown
+	unitFrame.cooldown:SetReverse(Gladius.db.classIconCooldownReverse)
+	Gladius:Call(Gladius.modules.Timer, "RegisterTimer", unitFrame, Gladius.db.classIconCooldown)
+	
 	-- hide
-	self.frame[unit]:SetAlpha(0)
+	unitFrame:SetAlpha(0)
+	self.frame[unit] = unitFrame
 end
 
 function ClassIcon:Show(unit)
@@ -307,13 +318,10 @@ end
 
 function ClassIcon:Reset(unit)
 	-- reset frame
-	self.frame[unit].active = false
 	self.frame[unit].aura = nil
-	self.frame[unit].expires = 0
-	self.frame[unit].priority = 0
 	self.frame[unit]:SetScript("OnUpdate", nil)
 	-- reset cooldown
-	self.frame[unit].cooldown:SetCooldown(GetTime(), 0)
+	self.frame[unit].cooldown:SetCooldown(0, 0)
 	-- reset texture
 	self.frame[unit].texture:SetTexture("")
 	-- hide
@@ -324,50 +332,16 @@ function ClassIcon:Test(unit)
 	if not Gladius.db.classIconImportantAuras then
 		return
 	end
-	Gladius.db.aurasFrameAuras = Gladius.db.aurasFrameAuras or Gladius.modules["Auras"]:GetAuraList()
-	local aura
 	if unit == "arena1" then
-		aura = "Ice Block"
-		self.frame[unit].icon = select(3, GetSpellInfo(45438))
-		self.frame[unit].timeleft = 10
-		self.frame[unit].priority = Gladius.db.aurasFrameAuras[unit]
-		self.frame[unit].active = true
-		self.frame[unit].aura = aura
-		self.frame[unit].texture:SetTexture(self.frame[unit].icon)
-		if Gladius.db.classIconCrop then
-			self.frame[unit].texture:SetTexCoord(0.07, 0.93, 0.07, 0.93)
-		else
-			self.frame[unit].texture:SetTexCoord(0, 1, 0, 1)
-		end
-		Gladius:Call(Gladius.modules.Timer, "SetTimer", self.frame[unit], self.frame[unit].timeleft)
+		self:ShowAura(unit, {
+			icon = select(3, GetSpellInfo(45438)),
+			duration = 10
+		})
 	elseif unit == "arena2" then
-		aura = "Deterrence"
-		self.frame[unit].icon = select(3, GetSpellInfo(19263))
-		self.frame[unit].timeleft = 5
-		self.frame[unit].priority = Gladius.db.aurasFrameAuras[unit]
-		self.frame[unit].active = true
-		self.frame[unit].aura = aura
-		self.frame[unit].texture:SetTexture(self.frame[unit].icon)
-		if Gladius.db.classIconCrop then
-			self.frame[unit].texture:SetTexCoord(0.07, 0.93, 0.07, 0.93)
-		else
-			self.frame[unit].texture:SetTexCoord(0, 1, 0, 1)
-		end
-		Gladius:Call(Gladius.modules.Timer, "SetTimer", self.frame[unit], self.frame[unit].timeleft)
-	elseif unit == "arena3" then
-		aura = "Smoke Bomb"
-		self.frame[unit].timeleft = 0
-		self.frame[unit].icon = select(3, GetSpellInfo(76577))
-		self.frame[unit].priority = Gladius.db.aurasFrameAuras[unit]
-		self.frame[unit].active = true
-		self.frame[unit].aura = aura
-		self.frame[unit].texture:SetTexture(self.frame[unit].icon)
-		if Gladius.db.classIconCrop then
-			self.frame[unit].texture:SetTexCoord(0.07, 0.93, 0.07, 0.93)
-		else
-			self.frame[unit].texture:SetTexCoord(0, 1, 0, 1)
-		end
-		Gladius:Call(Gladius.modules.Timer, "SetTimer", self.frame[unit], self.frame[unit].timeleft, GetTime())
+		self:ShowAura(unit, {
+			icon = select(3, GetSpellInfo(19263)),
+			duration = 5
+		})
 	end
 end
 
@@ -561,6 +535,15 @@ function ClassIcon:GetOptions()
 							end,
 							order = 5,
 						},
+						classIconDetached = {
+							type = "toggle",
+							name = L["Detached from frame"],
+							desc = L["Detach the cast bar from the frame itself"],
+							disabled = function()
+								return not Gladius.dbi.profile.modules[self.name]
+							end,
+							order = 6,
+						},
 						classIconPosition = {
 							type = "select",
 							name = L["Class Icon Position"],
@@ -585,13 +568,13 @@ function ClassIcon:GetOptions()
 							hidden = function()
 								return Gladius.db.advancedOptions
 							end,
-							order = 6,
+							order = 7,
 						},
 						sep = {
 							type = "description",
 							name = "",
 							width = "full",
-							order = 7,
+							order = 8,
 						},
 						classIconAnchor = {
 							type = "select",

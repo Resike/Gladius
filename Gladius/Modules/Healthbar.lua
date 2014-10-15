@@ -86,9 +86,10 @@ function HealthBar:GetFrame(unit)
 end
 
 function HealthBar:UNIT_HEALTH(event, unit)
-	if not strfind(unit, "arena") or strfind(unit, "pet") then
+	if not Gladius:IsValidUnit(unit) or not UnitExists(unit) then
 		return
 	end
+
 	local health, maxHealth = UnitHealth(unit), UnitHealthMax(unit)
 	self:UpdateHealth(unit, health, maxHealth)
 end
@@ -177,8 +178,8 @@ function HealthBar:Update(unit)
 	self.frame[unit]:SetHeight(Gladius.db.healthBarHeight)
 	self.frame[unit]:SetWidth(width) 
 	self.frame[unit]:SetPoint(Gladius.db.healthBarAnchor, parent, Gladius.db.healthBarRelativePoint, Gladius.db.healthBarOffsetX, Gladius.db.healthBarOffsetY)
-	self.frame[unit]:SetMinMaxValues(0, 100)
-	self.frame[unit]:SetValue(100)
+	self.frame[unit]:SetMinMaxValues(0,1)
+	self.frame[unit]:SetValue(1)
 	self.frame[unit]:SetStatusBarTexture(LSM:Fetch(LSM.MediaType.STATUSBAR, Gladius.db.healthBarTexture))
 	-- disable tileing
 	self.frame[unit]:GetStatusBarTexture():SetHorizTile(false)
@@ -233,14 +234,18 @@ end
 function HealthBar:Show(unit)
 	local testing = Gladius.test
 	-- show frame
+
 	self.frame[unit]:SetAlpha(1)
+
 	-- get unit class
 	local class
 	if not testing then
-		class = select(2, UnitClass(unit))
+		frame = Gladius:GetUnitFrame(unit)
+		class = frame.class
 	else
 		class = Gladius.testing[unit].unitClass
 	end
+
 	-- set color
 	if not Gladius.db.healthBarClassColor then
 		local color = Gladius.db.healthBarColor
@@ -249,6 +254,9 @@ function HealthBar:Show(unit)
 		local color = self:GetBarColor(class)
 		self.frame[unit]:SetStatusBarColor(color.r, color.g, color.b, color.a or 1)
 	end
+
+	self.frame[unit]:SetValue(1)
+
 	-- call event
 	if not Gladius.test then
 		self:UNIT_HEALTH("UNIT_HEALTH", unit)

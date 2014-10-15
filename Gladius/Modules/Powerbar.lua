@@ -78,7 +78,7 @@ function PowerBar:GetFrame(unit)
 end
 
 function PowerBar:UNIT_POWER(event, unit)
-	if (not strfind(unit, "arena") or strfind(unit, "pet")) then
+	if not Gladius:IsValidUnit(unit) or not UnitExists(unit) then
 		return
 	end
 	local power, maxPower, powerType = UnitPower(unit), UnitPowerMax(unit), UnitPowerType(unit)
@@ -178,8 +178,8 @@ function PowerBar:Update(unit)
 	self.frame[unit]:SetHeight(Gladius.db.powerBarHeight)
 	self.frame[unit]:SetWidth(width)
 	self.frame[unit]:SetPoint(Gladius.db.powerBarAnchor, parent, Gladius.db.powerBarRelativePoint, Gladius.db.powerBarOffsetX, Gladius.db.powerBarOffsetY)
-	self.frame[unit]:SetMinMaxValues(0, 100)
-	self.frame[unit]:SetValue(100)
+	self.frame[unit]:SetMinMaxValues(0,1)
+	self.frame[unit]:SetValue(1)
 	self.frame[unit]:SetStatusBarTexture(LSM:Fetch(LSM.MediaType.STATUSBAR, Gladius.db.powerBarTexture))
 	-- disable tileing
 	self.frame[unit]:GetStatusBarTexture():SetHorizTile(false)
@@ -230,6 +230,8 @@ end
 function PowerBar:Show(unit)
 	-- show frame
 	self.frame[unit]:SetAlpha(1)
+	self.frame[unit]:SetValue(1)
+	self.frame[unit]:SetStatusBarColor(0, 0, 1)
 	if (not Gladius.test) then
 		self:UNIT_POWER("UNIT_POWER", unit)
 	end
@@ -238,6 +240,7 @@ end
 function PowerBar:Reset(unit)
 	-- reset bar
 	self.frame[unit]:SetMinMaxValues(0, 1)
+	self.frame[unit]:SetStatusBarColor(0, 0, 1)
 	self.frame[unit]:SetValue(1)
 	-- hide
 	self.frame[unit]:SetAlpha(0)
