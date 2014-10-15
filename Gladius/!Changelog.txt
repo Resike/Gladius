@@ -1,5 +1,14 @@
 **4.0.0**
 * Updated for 6.0.2.
+* Support to show preparation frames, when you enter the arena.
+* Auras updates.
+* The castbar is now detachable.
+* Add support to change the uninterruptible castbar color.
+* Allow clicks on detached class and trinket icons.
+* Fixed module enabling and disabling.
+* Fixed cooldown/timer resetting.
+* Library updates.
+* A lot of other smaller fixes.
 
 **3.3.6**
 * Fixed an issue with the HealthBar module.
