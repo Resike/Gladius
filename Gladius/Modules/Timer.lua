@@ -27,13 +27,20 @@ local Timer = Gladius:NewModule("Timer", false, false, {
 function Timer:OnEnable()
 	LSM = Gladius.LSM
 	-- cooldown frames
-	self.frames = { }
+	self.frames = self.frames or {}
 end
 
 function Timer:OnDisable()
 	self:UnregisterAllEvents()
-	for frame in pairs(self.frames) do
-		self.frames[frame]:SetAlpha(0)
+	self:Reset()
+end
+
+function Timer:Reset()
+	-- It used to be left to each individual module to call
+	-- HideTimer, however I feel that makes little sense and
+	-- is very error prone.
+	for frameName in pairs(self.frames) do
+		self:HideTimer(_G[frameName])
 	end
 end
 
@@ -69,7 +76,7 @@ function Timer:SetFormattedNumber(frame, number)
 	end
 end
 
-function Timer:SetTimer(frame, duration, start)
+function Timer:SetTimer(frame, duration, start, callback)
 	if not self.frames or frame == nil then
 		return
 	end
@@ -81,14 +88,30 @@ function Timer:SetTimer(frame, duration, start)
 	self:SetFormattedNumber(self.frames[frameName].text, duration)
 	self.frames[frameName].duration = duration - (GetTime() - start)
 	self.frames[frameName].text:SetAlpha(1)
-	_G[frameName.."Cooldown"]:SetCooldown(start, duration)
-	_G[frameName.."Cooldown"]:SetAlpha(self.frames[frameName].showSpiral and 1 or 0)
+
+	cooldown = _G[frameName.."Cooldown"]
+	cooldown:SetAlpha(self.frames[frameName].showSpiral and 1 or 0)
+	cooldown:SetEdgeTexture("Interface\\Cooldown\\edge")
+	cooldown:SetSwipeColor(0, 0, 0)
+	cooldown:SetDrawEdge(false)
+	cooldown:SetDrawBling(false)
+	cooldown.currentCooldownType = COOLDOWN_TYPE_NORMAL
+
+	if not cooldown.isDisabled then
+		cooldown:SetCooldown(start, duration)
+	end
+
 	if duration > 0 and not Gladius.db.timerOmniCC and not self.frames[frameName].hideTimer then
 		self.frames[frameName]:SetScript("OnUpdate", function(f, elapsed)
 			f.duration = f.duration - elapsed
 			if f.duration <= 0 then
 				f.text:SetAlpha(0)
 				f:SetScript("OnUpdate", nil)
+
+				-- Call the callback if one was supplied.
+				if type(callback) == 'function' then
+					callback()
+				end
 			else
 				self:SetFormattedNumber(f.text, f.duration)
 			end
@@ -131,6 +154,8 @@ function Timer:RegisterTimer(frame, showSpiral, hideTimer)
 		_G[frameName.."Cooldown"].noCooldownCount = false
 		self.frames[frameName].text:Hide()
 	end
+
+
 	-- update frame
 	self.frames[frameName]:SetAllPoints(frame)
 	self.frames[frameName]:SetFrameStrata("HIGH")

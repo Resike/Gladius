@@ -29,6 +29,7 @@ local Trinket = Gladius:NewModule("Trinket", false, true, {
 	trinketCooldown = true,
 	trinketCooldownReverse = false,
 	trinketFaction = true,
+	trinketDetached = false
 },
 {
 	"Trinket icon", "Grid style health bar", "Grid style power bar"
@@ -51,6 +52,10 @@ end
 
 function Trinket:GetAttachTo()
 	return Gladius.db.trinketAttachTo
+end
+
+function Trinket:IsDetached()
+	return Gladius.db.trinketDetached
 end
 
 function Trinket:GetFrame(unit)
@@ -162,6 +167,11 @@ function Trinket:CreateFrame(unit)
 	self.frame[unit].texture = _G[self.frame[unit]:GetName().."Icon"]
 	self.frame[unit].normalTexture = _G[self.frame[unit]:GetName().."NormalTexture"]
 	self.frame[unit].cooldown = _G[self.frame[unit]:GetName().."Cooldown"]
+
+	-- secure
+	local secure = CreateFrame("Button", "Gladius"..self.name.."SecureButton"..unit, button, "SecureActionButtonTemplate")
+	secure:RegisterForClicks("AnyUp")
+	self.frame[unit].secure = secure
 end
 
 function Trinket:Update(unit)
@@ -169,13 +179,16 @@ function Trinket:Update(unit)
 	if not self.frame[unit] then
 		self:CreateFrame(unit)
 	end
+
+	local unitFrame = self.frame[unit]
+
 	-- update frame
-	self.frame[unit]:ClearAllPoints()
+	unitFrame:ClearAllPoints()
 	-- anchor point 
 	local parent = Gladius:GetParent(unit, Gladius.db.trinketAttachTo)
-	self.frame[unit]:SetPoint(Gladius.db.trinketAnchor, parent, Gladius.db.trinketRelativePoint, Gladius.db.trinketOffsetX, Gladius.db.trinketOffsetY)
+	unitFrame:SetPoint(Gladius.db.trinketAnchor, parent, Gladius.db.trinketRelativePoint, Gladius.db.trinketOffsetX, Gladius.db.trinketOffsetY)
 	-- frame level
-	self.frame[unit]:SetFrameLevel(Gladius.db.trinketFrameLevel)
+	unitFrame:SetFrameLevel(Gladius.db.trinketFrameLevel)
 	if Gladius.db.trinketAdjustSize then
 		if self:GetAttachTo() == "Frame" then
 			local height = false
@@ -186,27 +199,27 @@ function Trinket:Update(unit)
 				end
 			end]]
 			if height then
-				self.frame[unit]:SetWidth(Gladius.buttons[unit].height)
-				self.frame[unit]:SetHeight(Gladius.buttons[unit].height)
+				unitFrame:SetWidth(Gladius.buttons[unit].height)
+				unitFrame:SetHeight(Gladius.buttons[unit].height)
 			else
-				self.frame[unit]:SetWidth(Gladius.buttons[unit].frameHeight)
-				self.frame[unit]:SetHeight(Gladius.buttons[unit].frameHeight)
+				unitFrame:SetWidth(Gladius.buttons[unit].frameHeight)
+				unitFrame:SetHeight(Gladius.buttons[unit].frameHeight)
 			end
 		else
-			self.frame[unit]:SetWidth(Gladius:GetModule(self:GetAttachTo()).frame[unit]:GetHeight() or 1)
-			self.frame[unit]:SetHeight(Gladius:GetModule(self:GetAttachTo()).frame[unit]:GetHeight() or 1)
+			unitFrame:SetWidth(Gladius:GetModule(self:GetAttachTo()).frame[unit]:GetHeight() or 1)
+			unitFrame:SetHeight(Gladius:GetModule(self:GetAttachTo()).frame[unit]:GetHeight() or 1)
 		end
 	else
-		self.frame[unit]:SetWidth(Gladius.db.trinketSize)
-		self.frame[unit]:SetHeight(Gladius.db.trinketSize)
+		unitFrame:SetWidth(Gladius.db.trinketSize)
+		unitFrame:SetHeight(Gladius.db.trinketSize)
 	end
 	-- set frame mouse-interactable area
-	if self:GetAttachTo() == "Frame" then
+	if self:GetAttachTo() == "Frame" and not self.IsDetached() then
 		local left, right, top, bottom = Gladius.buttons[unit]:GetHitRectInsets()
 		if strfind(Gladius.db.trinketRelativePoint, "LEFT") then
-			left = - self.frame[unit]:GetWidth() + Gladius.db.trinketOffsetX
+			left = - unitFrame:GetWidth() + Gladius.db.trinketOffsetX
 		else
-			right = - self.frame[unit]:GetWidth() + - Gladius.db.trinketOffsetX
+			right = - unitFrame:GetWidth() + - Gladius.db.trinketOffsetX
 		end
 		-- search for an attached frame
 		--[[for _, module in pairs(Gladius.modules) do
@@ -220,37 +233,45 @@ function Trinket:Update(unit)
 			end
 		end]]
 		-- top / bottom
-		if (self.frame[unit]:GetHeight() > Gladius.buttons[unit]:GetHeight()) then
-			bottom = -(self.frame[unit]:GetHeight() - Gladius.buttons[unit]:GetHeight()) + Gladius.db.trinketOffsetY
+		if (unitFrame:GetHeight() > Gladius.buttons[unit]:GetHeight()) then
+			bottom = -(unitFrame:GetHeight() - Gladius.buttons[unit]:GetHeight()) + Gladius.db.trinketOffsetY
 		end
 		Gladius.buttons[unit]:SetHitRectInsets(left, right, 0, 0)
 		Gladius.buttons[unit].secure:SetHitRectInsets(left, right, 0, 0)
 	end
 	-- style action button
-	self.frame[unit].normalTexture:SetHeight(self.frame[unit]:GetHeight() + self.frame[unit]:GetHeight() * 0.4)
-	self.frame[unit].normalTexture:SetWidth(self.frame[unit]:GetWidth() + self.frame[unit]:GetWidth() * 0.4)
-	self.frame[unit].normalTexture:ClearAllPoints()
-	self.frame[unit].normalTexture:SetPoint("CENTER", 0, 0)
-	self.frame[unit]:SetNormalTexture("Interface\\AddOns\\Gladius\\Images\\Gloss")
-	self.frame[unit].texture:ClearAllPoints()
-	self.frame[unit].texture:SetPoint("TOPLEFT", self.frame[unit], "TOPLEFT")
-	self.frame[unit].texture:SetPoint("BOTTOMRIGHT", self.frame[unit], "BOTTOMRIGHT")
+	unitFrame.normalTexture:SetHeight(unitFrame:GetHeight() + unitFrame:GetHeight() * 0.4)
+	unitFrame.normalTexture:SetWidth(unitFrame:GetWidth() + unitFrame:GetWidth() * 0.4)
+	unitFrame.normalTexture:ClearAllPoints()
+	unitFrame.normalTexture:SetPoint("CENTER", 0, 0)
+	unitFrame:SetNormalTexture("Interface\\AddOns\\Gladius\\Images\\Gloss")
+	unitFrame.texture:ClearAllPoints()
+	unitFrame.texture:SetPoint("TOPLEFT", unitFrame, "TOPLEFT")
+	unitFrame.texture:SetPoint("BOTTOMRIGHT", unitFrame, "BOTTOMRIGHT")
 	if not Gladius.db.trinketIconCrop and not Gladius.db.trinketGridStyleIcon then
-		self.frame[unit].texture:SetTexCoord(0, 1, 0, 1)
+		unitFrame.texture:SetTexCoord(0, 1, 0, 1)
 	else
-		self.frame[unit].texture:SetTexCoord(0.07, 0.93, 0.07, 0.93)
+		unitFrame.texture:SetTexCoord(0.07, 0.93, 0.07, 0.93)
 	end
-	self.frame[unit].normalTexture:SetVertexColor(Gladius.db.trinketGlossColor.r, Gladius.db.trinketGlossColor.g, Gladius.db.trinketGlossColor.b, Gladius.db.trinketGloss and Gladius.db.trinketGlossColor.a or 0)
+	unitFrame.normalTexture:SetVertexColor(Gladius.db.trinketGlossColor.r, Gladius.db.trinketGlossColor.g, Gladius.db.trinketGlossColor.b, Gladius.db.trinketGloss and Gladius.db.trinketGlossColor.a or 0)
+	
 	-- cooldown
-	if Gladius.db.trinketCooldown then
-		self.frame[unit].cooldown:Show()
+	unitFrame.cooldown.isDisabled = not Gladius.db.trinketCooldown
+	unitFrame.cooldown:SetReverse(Gladius.db.trinketCooldownReverse)
+	Gladius:Call(Gladius.modules.Timer, "RegisterTimer", unitFrame, Gladius.db.trinketCooldown)
+
+	-- Secure frame
+	if self.IsDetached() then
+		unitFrame.secure:SetAllPoints(unitFrame)
+		unitFrame.secure:SetHeight(unitFrame:GetHeight())
+		unitFrame.secure:SetWidth(unitFrame:GetWidth())
+		unitFrame.secure:Show()
 	else
-		self.frame[unit].cooldown:Hide()
+		unitFrame.secure:Hide()
 	end
-	self.frame[unit].cooldown:SetReverse(Gladius.db.trinketCooldownReverse)
-	Gladius:Call(Gladius.modules.Timer, "RegisterTimer", self.frame[unit], Gladius.db.trinketCooldown)
+
 	-- hide
-	self.frame[unit]:SetAlpha(0)
+	unitFrame:SetAlpha(0)
 end
 
 function Trinket:Show(unit)
@@ -323,8 +344,8 @@ function Trinket:Reset(unit)
 		self.frame[unit].texture:SetVertexColor(Gladius.db.trinketGridStyleIconColor.r, Gladius.db.trinketGridStyleIconColor.g, Gladius.db.trinketGridStyleIconColor.b, Gladius.db.trinketGridStyleIconColor.a)
 	end
 	-- reset cooldown
-	Gladius:Call(Gladius.modules.Timer, "HideTimer", self.frame[unit])
 	self.frame[unit].timeleft = nil
+	self.frame[unit].cooldown:SetCooldown(0, 0)
 	-- hide
 	self.frame[unit]:SetAlpha(0)
 end
@@ -577,6 +598,15 @@ function Trinket:GetOptions()
 							arg = "general",
 							order = 5,
 						},
+						trinketDetached = {
+							type = "toggle",
+							name = L["Detached from frame"],
+							desc = L["Detach the module from the frame itself"],
+							disabled = function()
+								return not Gladius.dbi.profile.modules[self.name]
+							end,
+							order = 6,
+						},
 						trinketPosition = {
 							type = "select",
 							name = L["Trinket Position"],
@@ -601,13 +631,13 @@ function Trinket:GetOptions()
 							hidden = function()
 								return Gladius.db.advancedOptions
 							end,
-							order = 6,
+							order = 7,
 						},
 						sep = {
 							type = "description",
 							name = "",
 							width = "full",
-							order = 7,
+							order = 8,
 						},
 						trinketAnchor = {
 							type = "select",

@@ -84,7 +84,7 @@ local Tags = Gladius:NewModule("Tags", false, false, {
 
 function Tags:OnEnable()
 	LSM = Gladius.LSM
-	self.version = 2
+	self.version = 4
 	-- frame
 	if not self.frame then
 		self.frame = { }
@@ -92,7 +92,6 @@ function Tags:OnEnable()
 	-- tags
 	if not Gladius.db.tags or Gladius.db.tagsVersion == nil or self.version > Gladius.db.tagsVersion then
 		Gladius.db.tags = self:GetTags()
-		Gladius.db.tagEvents = self:GetTagsEvents()
 	end
 	-- cached functions
 	self.func = { }
@@ -100,10 +99,11 @@ function Tags:OnEnable()
 	self.events = { }
 	for k,v in pairs(Gladius.db.tagsTexts) do
 		-- get tags
-		for tag in v.text:gmatch("%[(.-)%]") do
+		for tagName in v.text:gmatch("%[(.-)%]") do
 			-- get events
-			if Gladius.db.tagEvents[tag] then
-				for event in Gladius.db.tagEvents[tag]:gmatch("%S+") do
+			tag = Gladius.db.tags[tagName]
+			if tag then
+				for event in tag.events:gmatch("%S+") do
 					if not self.events[event] then
 						self.events[event] = { }
 					end
@@ -134,7 +134,6 @@ end
 
 function Tags:OnProfileChanged()
 	Gladius.dbi.profile.tags = self:GetTags()
-	Gladius.dbi.profile.tagEvents = self:GetTagsEvents()
 end
 
 function Tags:GetAttachTo()
@@ -188,7 +187,6 @@ function Tags:UpdateText(unit, text)
 	-- tags
 	if not Gladius.dbi.profile.tags then
 		Gladius.dbi.profile.tags = self:GetTags()
-		Gladius.dbi.profile.tagEvents = self:GetTagsEvents()
 	end
 	-- set unit
 	local unitParameter = unit
@@ -198,22 +196,22 @@ function Tags:UpdateText(unit, text)
 	end
 	-- update tag
 	local tagText = Gladius.db.tagsTexts[text].text
-	for tag in strgmatch(Gladius.db.tagsTexts[text].text, "%[(.-)%]") do
-		if Gladius.db.tags[tag] then
+	for tagName in strgmatch(Gladius.db.tagsTexts[text].text, "%[(.-)%]") do
+		local tag = Gladius.db.tags[tagName]
+		if tag then
 			local escapedText
 			-- clear the tag, if unit does not exist
-			if not Gladius.test and not UnitName(unitParameter) then
+			if not Gladius.test and not UnitName(unitParameter) and not tag.preparation then
 				escapedText = ""
 			else
-			-- create function
-			if not self.func[tag] then
-				if tag then
-					local func, error = loadstring("local strformat = string.format return "..Gladius.db.tags[tag])
-					self.func[tag] = func
+				-- create function
+				local func = self.func[tagName]
+				if not func then
+					func, error = loadstring("local strformat = string.format return "..tag.func)
+					self.func[tagName] = func
 				end
-			end
-			-- escape return string
-			local funcText = self.func[tag]()
+				-- escape return string
+				local funcText = func()
 				if funcText and unitParameter then
 					escapedText = strgsub(funcText(unitParameter) or "", "%%", "%%%%")
 				else
@@ -221,7 +219,7 @@ function Tags:UpdateText(unit, text)
 				end
 			end
 			-- replace tag
-			tagText = strgsub(tagText, "%["..tag.."%]", escapedText)
+			tagText = strgsub(tagText, "%["..tagName.."%]", escapedText)
 		end
 	end
 	self.frame[unit][text]:SetText(tagText or "")
@@ -286,7 +284,6 @@ function Tags:GetOptions()
 	-- tags
 	if not Gladius.dbi.profile.tags then
 		Gladius.dbi.profile.tags = self:GetTags()
-		Gladius.dbi.profile.tagEvents = self:GetTagsEvents()
 	end
 	-- add text values
 	self.addTextAttachTo = "HealthBar"
@@ -410,9 +407,11 @@ function Tags:GetOptions()
 						func = function()
 							if self.addTagName ~= "" and not Gladius.db.tags[self.addTagName] then
 								-- add to db
-								Gladius.db.tags[self.addTagName] = [[function(unit)
-								end]]
-								Gladius.db.tagEvents[self.addTagName] = ""
+								Gladius.db.tags[self.addTagName] = {
+									func = [[function(unit) 
+									end]],
+									events = ""
+								}
 								-- add to options
 								Gladius.options.args[self.name].args.tagList.args[self.addTagName] = self:GetTagOptionTable(self.addTagName, self.order)
 								-- add to text option tags
@@ -666,7 +665,6 @@ function Tags:GetTagOptionTable(tag, order)
 				func = function()
 					-- remove from db
 					Gladius.db.tags[tag] = nil
-					Gladius.db.tagEvents[tag] = nil
 					-- remove from options
 					Gladius.options.args[self.name].args.tagList.args[tag] = nil
 					-- remove from text option tags
@@ -700,9 +698,7 @@ function Tags:GetTagOptionTable(tag, order)
 							local key = info[#info - 2]
 							-- db
 							Gladius.db.tags[value] = Gladius.db.tags[key]
-							Gladius.db.tagEvents[value] = Gladius.db.tagEvents[key]
 							Gladius.db.tags[key] = nil
-							Gladius.db.tagEvents[key] = nil
 							-- options
 							Gladius.options.args[self.name].args.tagList.args[key] = nil
 							Gladius.options.args[self.name].args.tagList.args[value] = self:GetTagOptionTable(value, order)
@@ -721,11 +717,11 @@ function Tags:GetTagOptionTable(tag, order)
 						order = 10,
 						get = function(info)
 							local key = info[#info - 2]
-							return Gladius.db.tagEvents[key]
+							return Gladius.db.tags[key].events
 						end,
 						set = function(info, value)
 							local key = info[#info - 2]
-							Gladius.db.tagEvents[key] = value
+							Gladius.db.tags[key].events = value
 							-- update
 							Gladius:UpdateFrame()
 						end,
@@ -741,14 +737,33 @@ function Tags:GetTagOptionTable(tag, order)
 						order = 15,
 						get = function(info)
 							local key = info[#info - 2]
-							return Gladius.db.tags[key]
+							return Gladius.db.tags[key].func
 						end,
 						set = function(info, value)
 							local key = info[#info - 2]
-							Gladius.db.tags[key] = value
+							Gladius.db.tags[key].func = value
 							-- delete cached function
 							self.func[key] = nil
 							-- update
+							Gladius:UpdateFrame()
+						end,
+						disabled = function()
+							return not Gladius.dbi.profile.modules[self.name]
+						end,
+					},
+					name = {
+						type = "toggle",
+						name = L["Enable in preparation area"],
+						desc = L["Whether or not to enable the tag in the arena preparation area."],
+						width = "full",
+						order = 20,
+						get = function(info)
+							local key = info[#info - 2]
+							return Gladius.db.tags[key].preparation
+						end,
+						set = function(info, value)
+							local key = info[#info - 2]
+							Gladius.db.tags[key].preparation = value
 							Gladius:UpdateFrame()
 						end,
 						disabled = function()
@@ -763,44 +778,77 @@ end
 
 function Tags:GetTags()
 	return {
-		["name"] = "function(unit)\nreturn UnitName(unit) or unit\nend",
-		["name:status"] = "function(unit)\nreturn UnitIsDeadOrGhost(unit) and Gladius.L[\"DEAD\"] or (UnitName(unit) or unit)\nend",
-		["class"] = "function(unit)\nreturn not Gladius.test and UnitClass(unit) or LOCALIZED_CLASS_NAMES_MALE[Gladius.testing[unit].unitClass]\nend",
-		["class:short"] = "function(unit)\nreturn not Gladius.test and Gladius.L[UnitClass(unit)..\":short\"] or Gladius.L[LOCALIZED_CLASS_NAMES_MALE[Gladius.testing[unit].unitClass]..\":short\"]\nend",
-		["race"] = "function(unit)\nreturn not Gladius.test and UnitRace(unit) or Gladius.testing[unit].unitRace\nend",
-		["spec"] = "function(unit)\nreturn Gladius.test and Gladius.testing[unit].unitSpec or Gladius.buttons[unit].spec\nend",
-		["spec:short"] = "function(unit)\nlocal spec = Gladius.test and Gladius.testing[unit].unitSpec or Gladius.buttons[unit].spec\nif (spec == nil or spec == \"\") then\nreturn \"\"\nend\nreturn Gladius.L[spec..\":short\"]\nend",
-		["health"] = "function(unit)\nreturn not Gladius.test and UnitHealth(unit) or Gladius.testing[unit].health\nend",
-		["maxhealth"] = "function(unit)\nreturn not Gladius.test and UnitHealthMax(unit) or Gladius.testing[unit].maxHealth\nend",
-		["health:short"] = "function(unit)\nlocal health = not Gladius.test and UnitHealth(unit) or Gladius.testing[unit].health\nif (health > 999) then\nreturn strformat(\"%.1fk\", (health / 1000))\nelse\nreturn health\nend\nend",
-		["maxhealth:short"] = "function(unit)\nlocal health = not Gladius.test and UnitHealthMax(unit) or Gladius.testing[unit].maxHealth\nif (health > 999) then\nreturn strformat(\"%.1fk\", (health / 1000))\nelse\nreturn health\nend\nend",
-		["health:percentage"] = "function(unit)\nlocal health = not Gladius.test and UnitHealth(unit) or Gladius.testing[unit].health\nlocal maxHealth = not Gladius.test and UnitHealthMax(unit) or Gladius.testing[unit].maxHealth\nreturn strformat(\"%.1f%%\", (health / maxHealth * 100))\nend",
-		["power"] = "function(unit)\nreturn not Gladius.test and UnitPower(unit) or Gladius.testing[unit].power\nend",
-		["maxpower"] = "function(unit)\nreturn not Gladius.test and UnitPowerMax(unit) or Gladius.testing[unit].maxPower\nend",
-		["power:short"] = "function(unit)\nlocal power = not Gladius.test and UnitPower(unit) or Gladius.testing[unit].power\nif (power > 999) then\nreturn strformat(\"%.1fk\", (power / 1000))\nelse\nreturn power\nend\nend",
-		["maxpower:short"] = "function(unit)\nlocal power = not Gladius.test and UnitPowerMax(unit) or Gladius.testing[unit].maxPower\nif (power > 999) then\nreturn strformat(\"%.1fk\", (power / 1000))\nelse\nreturn power\nend\nend",
-		["power:percentage"] = "function(unit)\nlocal power = not Gladius.test and UnitPower(unit) or Gladius.testing[unit].power\nlocal maxPower = not Gladius.test and UnitPowerMax(unit) or Gladius.testing[unit].maxPower\nreturn strformat(\"%.1f%%\", (power / maxPower * 100))\nend",
-	}
-end
-
-function Tags:GetTagsEvents()
-	return {
-		["name"] = "UNIT_NAME_UPDATE",
-		["name:status"] = "UNIT_NAME_UPDATE UNIT_HEALTH",
-		["class"] = "UNIT_NAME_UPDATE",
-		["class:short"] = "UNIT_NAME_UPDATE",
-		["race"] = "UNIT_NAME_UPDATE",
-		["spec"] = "UNIT_NAME_UPDATE GLADIUS_SPEC_UPDATE",
-		["spec:short"] = "UNIT_NAME_UPDATE GLADIUS_SPEC_UPDATE",
-		["health"] = "UNIT_HEALTH UNIT_MAXHEALTH UNIT_NAME_UPDATE",
-		["maxhealth"] = "UNIT_HEALTH UNIT_MAXHEALTH UNIT_NAME_UPDATE",
-		["health:short"] = "UNIT_HEALTH UNIT_MAXHEALTH UNIT_NAME_UPDATE",
-		["maxhealth:short"] = "UNIT_HEALTH UNIT_MAXHEALTH UNIT_NAME_UPDATE",
-		["health:percentage"] = "UNIT_HEALTH UNIT_MAXHEALTH UNIT_NAME_UPDATE",
-		["power"] = "UNIT_POWER UNIT_DISPLAYPOWER UNIT_NAME_UPDATE",
-		["maxpower"] = "UNIT_MAXPOWER UNIT_DISPLAYPOWER UNIT_NAME_UPDATE",
-		["power:short"] = "UNIT_POWER UNIT_DISPLAYPOWER UNIT_NAME_UPDATE",
-		["maxpower:short"] = "UNIT_MAXPOWER UNIT_DISPLAYPOWER UNIT_NAME_UPDATE",
-		["power:percentage"] = "UNIT_POWER UNIT_MAXPOWER UNIT_DISPLAYPOWER UNIT_NAME_UPDATE",
+		["name"] = {
+			func = "function(unit)\nreturn UnitName(unit) or unit\nend",
+			events = "UNIT_NAME_UPDATE",
+		},
+		["name:status"] = {
+			func = "function(unit)\nreturn UnitIsDeadOrGhost(unit) and Gladius.L[\"DEAD\"] or (UnitName(unit) or unit)\nend",
+			events = "UNIT_NAME_UPDATE UNIT_HEALTH",
+		},
+		["class"] = {
+			func = "function(unit)\nreturn not Gladius.test and LOCALIZED_CLASS_NAMES_MALE[Gladius.buttons[unit].class] or LOCALIZED_CLASS_NAMES_MALE[Gladius.testing[unit].unitClass]\nend",
+			events = "UNIT_NAME_UPDATE",
+			preparation = true
+		},
+		["class:short"] = {
+			func = "function(unit)\nreturn not Gladius.test and Gladius.L[LOCALIZED_CLASS_NAMES_MALE[Gladius.buttons[unit].class]..\":short\"] or Gladius.L[LOCALIZED_CLASS_NAMES_MALE[Gladius.testing[unit].unitClass]..\":short\"]\nend",
+			events = "UNIT_NAME_UPDATE",
+			preparation = true
+		},
+		["race"] = {
+			func = "function(unit)\nreturn not Gladius.test and UnitRace(unit) or Gladius.testing[unit].unitRace\nend",
+			events = "UNIT_NAME_UPDATE"
+		},
+		["spec"] = {
+			func = "function(unit)\nreturn Gladius.test and Gladius.testing[unit].unitSpec or Gladius.buttons[unit].spec\nend",
+			events = "UNIT_NAME_UPDATE GLADIUS_SPEC_UPDATE",
+			preparation = true
+		},
+		["spec:short"] = {
+			func = "function(unit)\nlocal spec = Gladius.test and Gladius.testing[unit].unitSpec or Gladius.buttons[unit].spec\nif (spec == nil or spec == \"\") then\nreturn \"\"\nend\nreturn Gladius.L[spec..\":short\"]\nend",
+			events = "UNIT_NAME_UPDATE GLADIUS_SPEC_UPDATE",
+			preparation = true
+		},
+		["health"] = {
+			func = "function(unit)\nreturn not Gladius.test and UnitHealth(unit) or Gladius.testing[unit].health\nend",
+			events = "UNIT_HEALTH UNIT_MAXHEALTH UNIT_NAME_UPDATE"
+		},
+		["maxhealth"] = {
+			func = "function(unit)\nreturn not Gladius.test and UnitHealthMax(unit) or Gladius.testing[unit].maxHealth\nend",
+			events = "UNIT_HEALTH UNIT_MAXHEALTH UNIT_NAME_UPDATE"
+		},
+		["health:short"] = {
+			func = "function(unit)\nlocal health = not Gladius.test and UnitHealth(unit) or Gladius.testing[unit].health\nif (health > 999) then\nreturn strformat(\"%.1fk\", (health / 1000))\nelse\nreturn health\nend\nend",
+			events = "UNIT_HEALTH UNIT_MAXHEALTH UNIT_NAME_UPDATE"
+		},
+		["maxhealth:short"] = {
+			func = "function(unit)\nlocal health = not Gladius.test and UnitHealthMax(unit) or Gladius.testing[unit].maxHealth\nif (health > 999) then\nreturn strformat(\"%.1fk\", (health / 1000))\nelse\nreturn health\nend\nend",
+			events = "UNIT_HEALTH UNIT_MAXHEALTH UNIT_NAME_UPDATE"
+		},
+		["health:percentage"] = {
+			func = "function(unit)\nlocal health = not Gladius.test and UnitHealth(unit) or Gladius.testing[unit].health\nlocal maxHealth = not Gladius.test and UnitHealthMax(unit) or Gladius.testing[unit].maxHealth\nreturn strformat(\"%.1f%%\", (health / maxHealth * 100))\nend",
+			events = "UNIT_HEALTH UNIT_MAXHEALTH UNIT_NAME_UPDATE"
+		},
+		["power"] = {
+			func = "function(unit)\nreturn not Gladius.test and UnitPower(unit) or Gladius.testing[unit].power\nend",
+			events = "UNIT_POWER UNIT_DISPLAYPOWER UNIT_NAME_UPDATE"
+		},
+		["maxpower"] = {
+			func = "function(unit)\nreturn not Gladius.test and UnitPowerMax(unit) or Gladius.testing[unit].maxPower\nend",
+			events = "UNIT_MAXPOWER UNIT_DISPLAYPOWER UNIT_NAME_UPDATE"
+		},
+		["power:short"] = {
+			func = "function(unit)\nlocal power = not Gladius.test and UnitPower(unit) or Gladius.testing[unit].power\nif (power > 999) then\nreturn strformat(\"%.1fk\", (power / 1000))\nelse\nreturn power\nend\nend",
+			events = "UNIT_POWER UNIT_DISPLAYPOWER UNIT_NAME_UPDATE"
+		},
+		["maxpower:short"] = {
+			func = "function(unit)\nlocal power = not Gladius.test and UnitPowerMax(unit) or Gladius.testing[unit].maxPower\nif (power > 999) then\nreturn strformat(\"%.1fk\", (power / 1000))\nelse\nreturn power\nend\nend",
+			events = "UNIT_MAXPOWER UNIT_DISPLAYPOWER UNIT_NAME_UPDATE"
+		},
+		["power:percentage"] = {
+			func = "function(unit)\nlocal power = not Gladius.test and UnitPower(unit) or Gladius.testing[unit].power\nlocal maxPower = not Gladius.test and UnitPowerMax(unit) or Gladius.testing[unit].maxPower\nreturn strformat(\"%.1f%%\", (power / maxPower * 100))\nend",
+			events = "UNIT_POWER UNIT_MAXPOWER UNIT_DISPLAYPOWER UNIT_NAME_UPDATE"
+		},
 	}
 end
