@@ -17,12 +17,15 @@ local GetNumArenaOpponentSpecs = GetNumArenaOpponentSpecs
 local GetNumGroupMembers = GetNumGroupMembers
 local GetSpecializationInfoByID = GetSpecializationInfoByID
 local InCombatLockdown = InCombatLockdown
+local IsActiveBattlefieldArena = IsActiveBattlefieldArena 
 local IsAddOnLoaded = IsAddOnLoaded
 local IsInInstance = IsInInstance
 local IsLoggedIn = IsLoggedIn
 local UnitAura = UnitAura
 local UnitCastingInfo = UnitCastingInfo
 local UnitIsDeadOrGhost = UnitIsDeadOrGhost
+
+local UIParent = UIParent
 
 Gladius = { }
 Gladius.eventHandler = CreateFrame("Frame")
@@ -183,14 +186,14 @@ function Gladius:GetParent(unit, module)
 end
 
 function Gladius:EnableModule(name)
-	m = self:GetModule(name)
+	local m = self:GetModule(name)
 	if m ~= nil then
 		m:Enable()
 	end
 end
 
 function Gladius:DisableModule(name)
-	m = self:GetModule(name)
+	local m = self:GetModule(name)
 	if m ~= nil then
 		m:Disable()
 	end
@@ -326,14 +329,14 @@ function Gladius:OnProfileChanged(event, database, newProfileKey)
 end
 
 function Gladius:ZONE_CHANGED_NEW_AREA()
-	local type = select(2, IsInInstance())
+	local _, instanceType = IsInInstance()
 	-- check if we are entering or leaving an arena 
-	if type == "arena" then
+	if instanceType == "arena" then
 		self:JoinedArena()
-	elseif type ~= "arena" and self.instanceType == "arena" then
+	elseif instanceType ~= "arena" and self.instanceType == "arena" then
 		self:LeftArena()
 	end
-	self.instanceType = type
+	self.instanceType = instanceType
 end
 
 function Gladius:JoinedArena()
@@ -355,10 +358,19 @@ function Gladius:JoinedArena()
 
 	-- background
 	if self.db.groupButtons then
+		if not self.background then
+			local background = CreateFrame("Frame", "GladiusButtonBackground", UIParent)
+			background:SetBackdrop({bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", tile = true, tileSize = 16})
+			background:SetBackdropColor(self.db.backgroundColor.r, self.db.backgroundColor.g, self.db.backgroundColor.b, self.db.backgroundColor.a)
+			background:SetFrameStrata("BACKGROUND")
+			self.background = background
+		end
 		self.background:SetAlpha(1)
 		if not self.db.locked then
-			self.anchor:SetAlpha(1)
-			self.anchor:SetFrameStrata("LOW")
+			if self.anchor then
+				self.anchor:SetAlpha(1)
+				self.anchor:SetFrameStrata("LOW")
+			end
 		end
 	end
 
@@ -417,14 +429,15 @@ function Gladius:ARENA_PREP_OPPONENT_SPECIALIZATIONS(event)
 		local specID = GetArenaOpponentSpec(i)
 		if specID > 0 then
 			local _, spec, _, specIcon, _, _, class = GetSpecializationInfoByID(specID);
-			if self.buttons[unit] then
-				self.buttons[unit].spec = spec
-				self.buttons[unit].specIcon = specIcon
-				self.buttons[unit].class = class
-				self:UpdateUnit(unit)
-				self:ShowUnit(unit)
-				self:UpdateAlpha(unit, 0.5)
+			if not self.buttons[unit] then
+				self:CreateButton(unit)
 			end
+			self.buttons[unit].spec = spec
+			self.buttons[unit].specIcon = specIcon
+			self.buttons[unit].class = class
+			self:UpdateUnit(unit)
+			self:ShowUnit(unit)
+			self:UpdateAlpha(unit, 0.5)
 		end
 	end
 end
