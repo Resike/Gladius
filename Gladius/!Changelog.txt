@@ -1,3 +1,11 @@
+**4.0.1**
+* Fixed an issue which caused frames to appear in some battlegroudns.
+* Auto selecting "INSTANCE_CHAT" announcement channel for arena skimrishes.
+* Added "INSTANCE_CHAT" channel for announcements.
+* Added "RAID" channel for announcements.
+* Some other smaller fixes.
+* Toc update.
+
 **4.0.0**
 * Updated for 6.0.2.
 * Support to show preparation frames, when you enter the arena.

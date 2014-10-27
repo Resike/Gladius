@@ -7,12 +7,16 @@ local LSM
 
 -- global functions
 local _G = _G
-local strformat = string.format
-local pairs = pairs
 local floor = math.floor
+local pairs = pairs
+local strformat = string.format
+local type = type
 
-local GetTime = GetTime
 local CreateFrame = CreateFrame
+local GetTime = GetTime
+local IsInInstance = IsInInstance
+
+local COOLDOWN_TYPE_NORMAL = COOLDOWN_TYPE_NORMAL
 
 local Timer = Gladius:NewModule("Timer", false, false, {
 	timerSoonFontSize = 18,
@@ -89,7 +93,7 @@ function Timer:SetTimer(frame, duration, start, callback)
 	self.frames[frameName].duration = duration - (GetTime() - start)
 	self.frames[frameName].text:SetAlpha(1)
 
-	cooldown = _G[frameName.."Cooldown"]
+	local cooldown = _G[frameName.."Cooldown"]
 	cooldown:SetAlpha(self.frames[frameName].showSpiral and 1 or 0)
 	cooldown:SetEdgeTexture("Interface\\Cooldown\\edge")
 	cooldown:SetSwipeColor(0, 0, 0)
