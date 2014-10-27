@@ -485,6 +485,10 @@ function Gladius:HideFrame()
 end
 
 function Gladius:UpdateUnit(unit, module)
+	local _, instanceType = IsInInstance()
+	if instanceType ~= "arena" and not Gladius.test then
+		return
+	end
 	if not self:IsValidUnit(unit) then
 		return
 	end
@@ -742,6 +746,10 @@ function Gladius:UpdateAlpha(unit, alpha)
 end
 
 function Gladius:CreateButton(unit)
+	local _, instanceType = IsInInstance()
+	if instanceType ~= "arena" and not Gladius.test then
+		return
+	end
 	local button = CreateFrame("Frame", "GladiusButtonFrame"..unit, UIParent)
 	--[[button:SetBackdrop({bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", tile = true, tileSize = 16,})
 	button:SetBackdropColor(0, 0, 0, 0.4)]]

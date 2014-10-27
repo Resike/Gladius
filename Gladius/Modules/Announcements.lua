@@ -10,6 +10,7 @@ local strfind = string.find
 local string = string
 
 local GetArenaOpponentSpec = GetArenaOpponentSpec
+local GetCurrentArenaSeason = GetCurrentArenaSeason
 local GetNumArenaOpponentSpecs = GetNumArenaOpponentSpecs
 local GetNumGroupMembers = GetNumGroupMembers
 local GetRealNumPartyMembers = GetRealNumPartyMembers
@@ -17,6 +18,7 @@ local GetRealNumRaidMembers = GetRealNumRaidMembers
 local GetSpecializationInfoByID = GetSpecializationInfoByID
 local GetSpellInfo = GetSpellInfo
 local GetTime = GetTime
+local IsActiveBattlefieldArena = IsActiveBattlefieldArena
 local IsAddOnLoaded = IsAddOnLoaded
 local IsInInstance = IsInInstance
 local IsRaidLeader = IsRaidLeader
@@ -30,6 +32,7 @@ local UnitHealthMax = UnitHealthMax
 local UnitIsGroupAssistant = UnitIsGroupAssistant
 local UnitIsGroupLeader = UnitIsGroupLeader
 local UnitName = UnitName
+
 local UNKNOWN = UNKNOWN
 
 local Announcements = Gladius:NewModule("Announcements", false, false, {
@@ -173,6 +176,11 @@ end
 function Announcements:Send(msg, throttle, unit)
 	local color = unit and RAID_CLASS_COLORS[UnitClass(unit)] or {r = 0, g = 1, b = 0}
 	local dest = Gladius.db.announcements.dest
+	local season = GetCurrentArenaSeason()
+	local isArena, isRegistered = IsActiveBattlefieldArena()
+	if not isRegistered or season == 0 then
+		dest = "instance"
+	end
 	if not self.throttled then
 		self.throttled = { }
 	end
@@ -196,6 +204,12 @@ function Announcements:Send(msg, throttle, unit)
 	-- party chat
 	if dest == "party" and (GetNumGroupMembers() > 0) then
 		SendChatMessage(msg, "PARTY")
+	-- instance chat
+	elseif dest == "instance" and (GetNumGroupMembers() > 0) then
+		SendChatMessage(msg, "INSTANCE_CHAT")
+	-- raid chat
+	elseif dest == "raid" and (GetNumGroupMembers() > 0) then
+		SendChatMessage(msg, "RAID")
 	-- say
 	elseif dest == "say" then
 		SendChatMessage(msg, "SAY")
@@ -235,6 +249,8 @@ function Announcements:GetOptions()
 	local destValues = {
 		["self"] = L["Self"],
 		["party"] = L["Party"],
+		["instance"] = L["Instance Chat"],
+		["raid"] = L["Raid"],
 		["say"] = L["Say"],
 		["rw"] = L["Raid Warning"],
 		["sct"] = L["Scrolling Combat Text"],
