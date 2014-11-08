@@ -10,14 +10,16 @@ local _G = _G
 local pairs = pairs
 local select = select
 local strfind = string.find
+local tostring = tostring
 local unpack = unpack
 
+local CLASS_BUTTONS = CLASS_BUTTONS
 local CreateFrame = CreateFrame
-local GetTime = GetTime
+local GetSpecializationInfoByID = GetSpecializationInfoByID
 local GetSpellInfo = GetSpellInfo
+local GetTime = GetTime
 local UnitAura = UnitAura
 local UnitClass = UnitClass
-local CLASS_BUTTONS = CLASS_BUTTONS
 
 local ClassIcon = Gladius:NewModule("ClassIcon", false, true, {
 	classIconAttachTo = "Frame",
@@ -126,7 +128,7 @@ function ClassIcon:UpdateAura(unit)
 end
 
 function ClassIcon:ShowAura(unit, aura)
-	unitFrame = self.frame[unit]
+	local unitFrame = self.frame[unit]
 	unitFrame.aura = aura
 
 	-- display aura
@@ -156,7 +158,7 @@ function ClassIcon:SetClassIcon(unit)
 	local class
 	local specIcon
 	if not Gladius.test then
-		frame = Gladius:GetUnitFrame(unit)
+		local frame = Gladius:GetUnitFrame(unit)
 		class = frame.class
 		specIcon = frame.specIcon
 	else
