@@ -294,7 +294,7 @@ function Gladius:OnEnable()
 		self:Print(L["If this is not your first run please lock or move the frame to prevent this from happening."])
 	end
 	-- clique
-	if IsAddOnLoaded("Clique") then
+	--[[if IsAddOnLoaded("Clique") then
 		SlashCmdList["GLADIUS"]("test 5")
 		SlashCmdList["GLADIUS"]("hide")	
 		ClickCastFrames = ClickCastFrames or { }
@@ -303,7 +303,7 @@ function Gladius:OnEnable()
 		ClickCastFrames[self.buttons.arena3.secure] = true
 		ClickCastFrames[self.buttons.arena4.secure] = true
 		ClickCastFrames[self.buttons.arena5.secure] = true
-	end
+	end]]
 	-- see if we are already in arena
 	if IsLoggedIn() then
 		Gladius:ZONE_CHANGED_NEW_AREA()
@@ -777,6 +777,9 @@ function Gladius:CreateButton(unit)
 	local secure = CreateFrame("Button", "GladiusButton"..unit, button, "SecureActionButtonTemplate")
 	secure:RegisterForClicks("AnyUp")
 	button.secure = secure
+	-- clique
+	ClickCastFrames = ClickCastFrames or {}
+	ClickCastFrames[secure] = true
 	self.buttons[unit] = button
 	-- group background
 	if unit == "arena1" then
