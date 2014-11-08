@@ -1,4 +1,7 @@
-**4.0.0**
+**4.0.2**
+* Clique changes.
+* PowerBar module updates.
+* Fixed some leaks.
 
 **4.0.1**
 * Fixed an issue which caused frames to appear in some battlegroudns.
