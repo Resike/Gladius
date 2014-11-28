@@ -1210,7 +1210,9 @@ function Auras:GetOptions()
 		Gladius.db.aurasFrameAuras = self:GetAuraList()
 	end
 	for aura, priority in pairs(Gladius.db.aurasFrameAuras) do
-		options.auraList.args[aura] = self:SetupAura(aura, priority)
+		local isNum = tonumber(aura) ~= nil
+		local name = isNum and GetSpellInfo(aura) or aura
+		options.auraList.args[aura] = self:SetupAura(aura, priority, name)
 	end
 	return options
 end
@@ -1239,18 +1241,20 @@ local function getAura(info)
 	end
 end
 
-function Auras:SetupAura(aura, priority)
+function Auras:SetupAura(aura, priority, name)
+	local name = name or aura
+
 	return {
 		type = "group",
-		name = aura,
-		desc = aura,
+		name = name,
+		desc = name,
 		get = getAura,
 		set = setAura,
 		args = {
 			name = {
 				type = "input",
-				name = L["Name"],
-				desc = L["Name of the aura"],
+				name = L["Name or ID"],
+				desc = L["Name or ID of the aura"],
 				order = 1,
 			},
 			priority = {
@@ -1358,7 +1362,7 @@ function Auras:GetAuraList()
 		[GetSpellInfo(51713)]	= 4,	-- Shadow Dance
 		-- Roots (5)
 		[GetSpellInfo(91807)]	= 5,	-- Shambling Rush (Ghoul)
-		[GetSpellInfo(96294)]	= 5,	-- Chains of Ice (Chilblains)
+		["96294"]				= 5,	-- Chains of Ice (Chilblains)
 		[GetSpellInfo(61685)]	= 5,	-- Charge (Various)
 		[GetSpellInfo(116706)]	= 5,	-- Disable
 		[GetSpellInfo(87194)]	= 5,	-- Mind Blast (Glyphed)
@@ -1422,6 +1426,7 @@ function Auras:GetAuraList()
 		[GetSpellInfo(7922)]	= 9,	-- Charge Stun
 		[GetSpellInfo(119392)]	= 9,	-- Charging Ox Wave
 		[GetSpellInfo(1833)]	= 9,	-- Cheap Shot
+		--[GetSpellInfo(1822)]	= 9,	-- Rake
 		[GetSpellInfo(118895)]	= 9,	-- Dragon Roar
 		[GetSpellInfo(77505)]	= 9,	-- Earthquake
 		[GetSpellInfo(120086)]	= 9,	-- Fist of Fury
@@ -1450,6 +1455,8 @@ function Auras:GetAuraList()
 		[GetSpellInfo(132169)]	= 9,	-- Storm Bolt
 		[GetSpellInfo(20549)]	= 9,	-- War Stomp
 		[GetSpellInfo(16979)]	= 9,	-- Wild Charge
+		[GetSpellInfo(117526)]  = 9,    -- Binding Shot
+		["163505"]              = 9,    -- Rake
 		-- Crowd Controls Auras (10)
 		[GetSpellInfo(710)]		= 10,	-- Banish
 		[GetSpellInfo(2094)]	= 10,	-- Blind
