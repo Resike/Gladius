@@ -269,7 +269,7 @@ local spellsAndProvidersByCategory = {
 		[ 22570] = true, -- Maim
 		[  5211] = true, -- Mighty Bash
 		-- FIXME: Pounce
-		--[163505] = true, -- Rake (Stun from Prowl)
+		[163505] = true, -- Rake (Stun from Prowl)
 		-- Hunter
 		[117526] = 109248, -- Binding Shot
 		[ 24394] = 19577, -- Intimidation
