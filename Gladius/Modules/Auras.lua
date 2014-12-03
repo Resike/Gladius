@@ -1289,6 +1289,8 @@ function Auras:GetAuraList()
 	local auraTable = setmetatable({
 		-- Higher Number is More Priority
 		-- Priority List by P0rkz
+		-- Unpurgable long lasting buffs
+		[GetSpellInfo(108292)]	= 0,	-- Heart of the Wild
 		-- Mobility Auras (0)
 		[GetSpellInfo(108843)]	= 0,	-- Blazing Speed
 		[GetSpellInfo(65081)]	= 0,	-- Body and Soul
@@ -1335,8 +1337,6 @@ function Auras:GetAuraList()
 		[GetSpellInfo(5277)]	= 3,	-- Evasion
 		[GetSpellInfo(47788)]	= 3,	-- Guardian Spirit
 		[GetSpellInfo(48792)]	= 3,	-- Icebound Fortitude
-		[GetSpellInfo(1463)]	= 3,	-- Incanter's Ward
-		[GetSpellInfo(116267)]	= 3,	-- Incanter's Absorption
 		[GetSpellInfo(66)]		= 3,	-- Invisibility
 		[GetSpellInfo(102342)]	= 3,	-- Ironbark
 		[GetSpellInfo(12975)]	= 3,	-- Last Stand
@@ -1352,6 +1352,7 @@ function Auras:GetAuraList()
 		[GetSpellInfo(871)]		= 3,	-- Shield Wall
 		[GetSpellInfo(112833)]	= 3,	-- Spectral Guise
 		[GetSpellInfo(23920)]	= 3,	-- Spell Reflection
+		[GetSpellInfo(122470)]	= 3,	-- Touch of Karma
 		-- Offensive - Melee Auras (4)
 		[GetSpellInfo(13750)]	= 4,	-- Adrenaline Rush
 		[GetSpellInfo(107574)]	= 4,	-- Avatar
