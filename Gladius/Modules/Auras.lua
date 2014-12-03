@@ -1285,6 +1285,8 @@ function Auras:GetAuraList()
 	local auraTable = setmetatable({
 		-- Higher Number is More Priority
 		-- Priority List by P0rkz
+        -- Unpurgable long lasting buffs
+		[GetSpellInfo(108292)]	= 0,	-- Heart of the Wild
 		-- Mobility Auras (0)
 		[GetSpellInfo(108843)]	= 0,	-- Blazing Speed
 		[GetSpellInfo(65081)]	= 0,	-- Body and Soul
