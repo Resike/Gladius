@@ -1426,7 +1426,6 @@ function Auras:GetAuraList()
 		[GetSpellInfo(7922)]	= 9,	-- Charge Stun
 		[GetSpellInfo(119392)]	= 9,	-- Charging Ox Wave
 		[GetSpellInfo(1833)]	= 9,	-- Cheap Shot
-		--[GetSpellInfo(1822)]	= 9,	-- Rake
 		[GetSpellInfo(118895)]	= 9,	-- Dragon Roar
 		[GetSpellInfo(77505)]	= 9,	-- Earthquake
 		[GetSpellInfo(120086)]	= 9,	-- Fist of Fury
