@@ -1333,8 +1333,6 @@ function Auras:GetAuraList()
 		[GetSpellInfo(5277)]	= 3,	-- Evasion
 		[GetSpellInfo(47788)]	= 3,	-- Guardian Spirit
 		[GetSpellInfo(48792)]	= 3,	-- Icebound Fortitude
-		[GetSpellInfo(1463)]	= 3,	-- Incanter's Ward
-		[GetSpellInfo(116267)]	= 3,	-- Incanter's Absorption
 		[GetSpellInfo(66)]		= 3,	-- Invisibility
 		[GetSpellInfo(102342)]	= 3,	-- Ironbark
 		[GetSpellInfo(12975)]	= 3,	-- Last Stand
