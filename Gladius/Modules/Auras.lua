@@ -1285,7 +1285,7 @@ function Auras:GetAuraList()
 	local auraTable = setmetatable({
 		-- Higher Number is More Priority
 		-- Priority List by P0rkz
-        -- Unpurgable long lasting buffs
+		-- Unpurgable long lasting buffs
 		[GetSpellInfo(108292)]	= 0,	-- Heart of the Wild
 		-- Mobility Auras (0)
 		[GetSpellInfo(108843)]	= 0,	-- Blazing Speed
@@ -1348,6 +1348,7 @@ function Auras:GetAuraList()
 		[GetSpellInfo(871)]		= 3,	-- Shield Wall
 		[GetSpellInfo(112833)]	= 3,	-- Spectral Guise
 		[GetSpellInfo(23920)]	= 3,	-- Spell Reflection
+		[GetSpellInfo(122470)]	= 3,	-- Touch of Karma
 		-- Offensive - Melee Auras (4)
 		[GetSpellInfo(13750)]	= 4,	-- Adrenaline Rush
 		[GetSpellInfo(107574)]	= 4,	-- Avatar
