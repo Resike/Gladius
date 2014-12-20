@@ -1320,7 +1320,6 @@ function Auras:GetAuraList()
 		[GetSpellInfo(11426)]	= 2,	-- Ice Barrier
 		[GetSpellInfo(53271)]	= 2,	-- Master's Call
 		[GetSpellInfo(132158)]	= 2,	-- Nature's Swiftness
-		[GetSpellInfo(69369)]	= 2,	-- Predatory Swiftness
 		[GetSpellInfo(12043)]	= 2,	-- Presence of Mind
 		[GetSpellInfo(48108)]	= 2,	-- Pyroblast!
 		-- Defensive - Damage Redution Auras (3)
@@ -1353,8 +1352,10 @@ function Auras:GetAuraList()
 		[GetSpellInfo(112833)]	= 3,	-- Spectral Guise
 		[GetSpellInfo(23920)]	= 3,	-- Spell Reflection
 		[GetSpellInfo(122470)]	= 3,	-- Touch of Karma
+		[GetSpellInfo(61336)]	= 3,	-- Survival Instincts
 		-- Offensive - Melee Auras (4)
 		[GetSpellInfo(13750)]	= 4,	-- Adrenaline Rush
+		[GetSpellInfo(152151)]	= 4,	-- Shadow Reflection
 		[GetSpellInfo(107574)]	= 4,	-- Avatar
 		[GetSpellInfo(106952)]	= 4,	-- Berserk
 		[GetSpellInfo(12292)]	= 4,	-- Bloodbath
