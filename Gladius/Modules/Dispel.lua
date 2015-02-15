@@ -151,6 +151,9 @@ function Dispel:COMBAT_LOG_EVENT_UNFILTERED(event, ...)
 end
 
 function Dispel:UpdateDispel(unit, duration)
+	if not unit or not duration then
+		return
+	end
 	-- grid style icon
 	if Gladius.db.dispellGridStyleIcon then
 		self.frame[unit].texture:SetVertexColor(Gladius.db.dispellGridStyleIconUsedColor.r, Gladius.db.dispellGridStyleIconUsedColor.g, Gladius.db.dispellGridStyleIconUsedColor.b, Gladius.db.dispellGridStyleIconUsedColor.a)

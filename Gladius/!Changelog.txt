@@ -1,3 +1,7 @@
+**4.0.5**
+* Reduced unit frame strata to not to override bags and bag items.
+* Some other fixes.
+
 **4.0.4**
 * Diminishing returns updates.
 
