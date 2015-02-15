@@ -590,7 +590,7 @@ function Gladius:UpdateUnit(unit, module)
 	self.buttons[unit].secure:Show()
 	self.buttons[unit].secure:SetAlpha(1)
 	self.buttons[unit]:SetFrameStrata("LOW")
-	self.buttons[unit].secure:SetFrameStrata("HIGH")
+	self.buttons[unit].secure:SetFrameStrata("MEDIUM")
 	-- update background
 	if unit == "arena1" then
 		local left, right = self.buttons[unit]:GetHitRectInsets()

@@ -334,7 +334,7 @@ local spellsAndProvidersByCategory = {
 		[102793] = true, -- Ursol's Vortex
 		[132469] = true, -- Typhoon
 		-- Hunter
-		[119403] = true, -- Glyph of Explosive Trap
+		[13812] = true, -- Glyph of Explosive Trap [Missing CLEU event]
 		-- Shaman
 		[ 51490] = true, -- Thunderstorm
 		-- Warlock
