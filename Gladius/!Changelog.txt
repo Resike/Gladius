@@ -1,3 +1,6 @@
+**4.0.4**
+* Diminishing returns updates.
+
 **4.0.3**
 * Aura updates.
 * Library updates.
