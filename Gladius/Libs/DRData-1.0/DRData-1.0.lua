@@ -189,7 +189,6 @@ local spellsAndProvidersByCategory = {
 		[ 61780] = true, -- Polymorph (turkey)
 		[ 82691] = true, -- Ring of Frost
 		[ 31661] = true, -- Dragon's Breath
-		[157997] = true, -- Ice Nova
 		-- Monk
 		[115078] = true, -- Paralysis
 		[123393] = true, -- Breath of Fire (Glyphed)
@@ -316,6 +315,7 @@ local spellsAndProvidersByCategory = {
 		[   122] = true, -- Frost Nova
 		[ 33395] = true, -- Freeze (Water Elemental)
 		[111340] = true, -- Ice Ward
+		[157997] = true, -- Ice Nova
 		-- Monk
 		[116706] = 116095, -- Disable
 		-- Priest
