@@ -1,5 +1,5 @@
 local major = "DRData-1.0"
-local minor = 1039
+local minor = 1042
 assert(LibStub, string.format("%s requires LibStub.", major))
 
 local Data = LibStub:NewLibrary(major, minor)
@@ -32,7 +32,6 @@ if locale == "deDE" then
 	L["Stuns"] = "Betäubungseffekte" -- Needs review
 	L["Stuns (short)"] = "Betäubungseffekte (kurz)" -- Needs review
 	L["Taunts"] = "Spotteffekte" -- Needs review
-
 elseif locale == "esES" then
 	L["Cyclone"] = "Ciclón"
 	L["Disarms"] = "Desarmes"
@@ -48,7 +47,6 @@ elseif locale == "esES" then
 	L["Stuns"] = "Aturdimientos"
 	L["Stuns (short)"] = "Aturdimientos (cortos)"
 	L["Taunts"] = "Provocaciones"
-
 elseif locale == "esMX" then
 	L["Cyclone"] = "Ciclón"
 	L["Disarms"] = "Desarmes"
@@ -64,7 +62,6 @@ elseif locale == "esMX" then
 	L["Stuns"] = "Aturdimientos"
 	L["Stuns (short)"] = "Aturdimientos (cortos)"
 	L["Taunts"] = "Provocaciones"
-
 elseif locale == "frFR" then
 	L["Cyclone"] = "Cyclone"
 	L["Disarms"] = "Désarmements"
@@ -80,7 +77,6 @@ elseif locale == "frFR" then
 	L["Stuns"] = "Etourdissements"
 	L["Stuns (short)"] = "Etourdissements (courts)"
 	L["Taunts"] = "Provocations"
-
 elseif locale == "itIT" then
 	
 elseif locale == "koKR" then
@@ -106,14 +102,12 @@ elseif locale == "zhTW" then
 	L["Stuns"] = "昏迷"
 	L["Stuns (short)"] = "昏迷(短)"
 	L["Taunts"] = "嘲諷"
-
 end
 
 -- How long before DR resets ?
 Data.resetTimes = {
-	-- The official delay is 15 seconds, but the server only checks this every 5 seconds, so it
-	-- actually ranges from 15 to 20 seconds, 18 is a good average.
-	default   = 20,
+	-- As of 6.1, this is always 18 seconds, and no longer has a range between 15 and 20 seconds.
+	default   = 18,
 	-- Knockbacks are a special case
 	knockback = 10,
 }
@@ -188,7 +182,6 @@ local spellsAndProvidersByCategory = {
 		[ 61721] = true, -- Polymorph (rabbit)
 		[ 61780] = true, -- Polymorph (turkey)
 		[ 82691] = true, -- Ring of Frost
-		[ 31661] = true, -- Dragon's Breath
 		-- Monk
 		[115078] = true, -- Paralysis
 		[123393] = true, -- Breath of Fire (Glyphed)
@@ -240,6 +233,8 @@ local spellsAndProvidersByCategory = {
 	disorient = {
 		-- Druid
 		[ 33786] = true, -- Cyclone
+		-- Mage
+		[ 31661] = true, -- Dragon's Breath
 		-- Paladin
 		[105421] = true, -- Blinding Light -- FIXME: is this the right category? Its missing from blizzard's list
 		[ 10326] = true, -- Turn Evil
@@ -315,7 +310,6 @@ local spellsAndProvidersByCategory = {
 		[   122] = true, -- Frost Nova
 		[ 33395] = true, -- Freeze (Water Elemental)
 		[111340] = true, -- Ice Ward
-		[157997] = true, -- Ice Nova
 		-- Monk
 		[116706] = 116095, -- Disable
 		-- Priest
@@ -345,31 +339,31 @@ local spellsAndProvidersByCategory = {
 
 -- Map deprecatedCategories to the new ones
 local deprecatedCategories = {
-	ctrlroot       = true,
-	shortroot      = true,
-	ctrlstun       = true,
-	rndstun        = true,
-	cyclone        = true,
-	shortdisorient = true,
-	fear           = true,
-	horror         = true,
-	mc             = true,
-	disarm         = true,
+	ctrlroot		= true,
+	shortroot		= true,
+	ctrlstun		= true,
+	rndstun			= true,
+	cyclone			= true,
+	shortdisorient	= true,
+	fear			= true,
+	horror			= true,
+	mc				= true,
+	disarm			= true,
 }
 
 Data.categoryNames = {
-	root           = L["Roots"],
-	stun           = L["Stuns"],
-	disorient      = L["Disorients"],
-	silence        = L["Silences"],
-	taunt          = L["Taunts"],
-	incapacitate   = L["Incapacitates"],
-	knockback      = L["Knockbacks"],
+	root			= L["Roots"],
+	stun			= L["Stuns"],
+	disorient		= L["Disorients"],
+	silence			= L["Silences"],
+	taunt			= L["Taunts"],
+	incapacitate	= L["Incapacitates"],
+	knockback		= L["Knockbacks"],
 }
 
 Data.pveDR = {
-	stun     = true,
-	taunt    = true,
+	stun			= true,
+	taunt			= true,
 }
 
 --- List of spellID -> DR category
