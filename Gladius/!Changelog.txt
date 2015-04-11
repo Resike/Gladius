@@ -1,3 +1,8 @@
+**4.0.8**
+* The Dispel module's gloss should no longer shown for classes/specs with no dispel.
+* Library updates.
+* Some other smaller fixes.
+
 **4.0.7**
 * DRData updates.
 

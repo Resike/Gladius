@@ -337,7 +337,15 @@ function Dispel:Show(unit)
 				dispellIcon = "Interface\\Icons\\spell_holy_removecurse"
 			end
 		end
-		self.frame[unit].texture:SetTexture(dispellIcon)
+		if dispellIcon then
+			self.frame[unit].texture:SetTexture(dispellIcon)
+			if Gladius.db.dispellGloss then
+				self.frame[unit].normalTexture:Show()
+			end
+		else
+			self.frame[unit].texture:SetTexture("")
+			self.frame[unit].normalTexture:Hide()
+		end
 		if Gladius.db.dispellIconCrop then
 			self.frame[unit].texture:SetTexCoord(0.07, 0.93, 0.07, 0.93)
 		end
