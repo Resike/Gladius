@@ -15,8 +15,6 @@ local UnitClass = UnitClass
 local UnitHealth = UnitHealth
 local UnitHealthMax = UnitHealthMax
 
-local RAID_CLASS_COLORS = RAID_CLASS_COLORS
-
 local HealthBar = Gladius:NewModule("HealthBar", true, true, {
 	healthBarAttachTo = "Frame",
 	healthBarHeight = 25,
