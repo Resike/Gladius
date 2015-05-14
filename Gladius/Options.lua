@@ -160,7 +160,7 @@ function Gladius:SetColorOption(info, r, g, b, a)
 	end
 	if info[1] == "general" then
 		self:UpdateColors()
-	elseif info[1] == "Auras" or info[1] == "CastBar" or info[1] == "ClassIcon" or info[1] == "Dispel" or info[1] == "DRTracker" or info[1] == "HealthBar" or info[1] == "PowerBar" then
+	elseif info[1] == "Auras" or info[1] == "CastBar" or info[1] == "ClassIcon" or info[1] == "Dispel" or info[1] == "DRTracker" or info[1] == "HealthBar" or info[1] == "PowerBar" or info[1] == "Timer" then
 		local m = self:GetModule(info[1])
 		for unit, _ in pairs(self.buttons) do
 			self:Call(m, "UpdateColors", unit)
