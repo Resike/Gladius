@@ -1,3 +1,6 @@
+**4.1.0**
+* Timer module's color picker optimization.
+
 **4.0.9**
 * Fixed some coloring issues.
 
