@@ -30,11 +30,11 @@ local PowerBar = Gladius:NewModule("PowerBar", true, true, {
 	powerBarAnchor = "TOPLEFT",
 	powerBarRelativePoint = "BOTTOMLEFT",
 	powerBarUseDefaultColorMana = false,
-	powerBarColorMana = {r = .18, g = .44, b = .75, a = 1},
+	powerBarColorMana = {r = 0.18, g = 0.44, b = 0.75, a = 1},
 	powerBarUseDefaultColorRage = false,
 	powerBarColorRage = {r = 1, g = 0, b = 0, a = 1},
 	powerBarUseDefaultColorFocus = false,
-	powerBarColorFocus = PowerBarColor[2],
+	powerBarColorFocus = {r = 1, g = 0.5, b = 0.25, a = 1},
 	powerBarUseDefaultColorEnergy = false,
 	powerBarColorEnergy = {r = 1, g = 1, b = 0, a = 1},
 	powerBarUseDefaultColorRunicPower = false,
@@ -110,7 +110,10 @@ function PowerBar:UpdatePower(unit, power, maxPower, powerType)
 		self.frame[unit]:SetValue(power)
 	end
 	-- update bar color
-	if Gladius.db.powerBarDefaultColor then
+	if not Gladius.db.powerBarDefaultColor then
+		local color = Gladius.db.powerBarColor
+		self.frame[unit]:SetStatusBarColor(color.r, color.g, color.b, color.a)
+	else
 		local color = self:GetBarColor(powerType)
 		self.frame[unit]:SetStatusBarColor(color.r, color.g, color.b)
 	end
@@ -236,7 +239,14 @@ function PowerBar:Show(unit)
 	-- show frame
 	self.frame[unit]:SetAlpha(1)
 	self.frame[unit]:SetValue(1)
-	self.frame[unit]:SetStatusBarColor(0, 0, 1)
+	if not Gladius.db.powerBarDefaultColor then
+		local color = Gladius.db.powerBarColor
+		self.frame[unit]:SetStatusBarColor(color.r, color.g, color.b, color.a)
+	else
+		local powerType = UnitPowerType(unit)
+		local color = self:GetBarColor(powerType)
+		self.frame[unit]:SetStatusBarColor(color.r, color.g, color.b)
+	end
 	if not Gladius.test then
 		self:UNIT_POWER("UNIT_POWER", unit)
 	end
@@ -245,7 +255,14 @@ end
 function PowerBar:Reset(unit)
 	-- reset bar
 	self.frame[unit]:SetMinMaxValues(0, 1)
-	self.frame[unit]:SetStatusBarColor(0, 0, 1)
+	if not Gladius.db.powerBarDefaultColor then
+		local color = Gladius.db.powerBarColor
+		self.frame[unit]:SetStatusBarColor(color.r, color.g, color.b, color.a)
+	else
+		local powerType = UnitPowerType(unit)
+		local color = self:GetBarColor(powerType)
+		self.frame[unit]:SetStatusBarColor(color.r, color.g, color.b)
+	end
 	self.frame[unit]:SetValue(1)
 	-- hide
 	self.frame[unit]:SetAlpha(0)

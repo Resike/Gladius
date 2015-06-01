@@ -12,6 +12,7 @@ local strfind = string.find
 
 local CreateFrame = CreateFrame
 local UnitClass = UnitClass
+local UnitExists = UnitExists
 local UnitHealth = UnitHealth
 local UnitHealthMax = UnitHealthMax
 
@@ -230,15 +231,13 @@ function HealthBar:GetBarColor(class)
 end
 
 function HealthBar:Show(unit)
-	local testing = Gladius.test
 	-- show frame
-
 	self.frame[unit]:SetAlpha(1)
 
 	-- get unit class
 	local class
-	if not testing then
-		frame = Gladius:GetUnitFrame(unit)
+	if not Gladius.test then
+		local frame = Gladius:GetUnitFrame(unit)
 		class = frame.class
 	else
 		class = Gladius.testing[unit].unitClass
@@ -250,6 +249,9 @@ function HealthBar:Show(unit)
 		self.frame[unit]:SetStatusBarColor(color.r, color.g, color.b, color.a)
 	else
 		local color = self:GetBarColor(class)
+		if not color then
+			color = Gladius.db.healthBarColor
+		end
 		self.frame[unit]:SetStatusBarColor(color.r, color.g, color.b, color.a or 1)
 	end
 

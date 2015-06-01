@@ -423,12 +423,11 @@ end
 
 function Gladius:ARENA_PREP_OPPONENT_SPECIALIZATIONS(event)
 	-- Update spec from API
-	local numOpps = GetNumArenaOpponentSpecs()
-	for i = 1, numOpps do
+	for i = 1, GetNumArenaOpponentSpecs() do
 		local unit = "arena"..i
 		local specID = GetArenaOpponentSpec(i)
-		if specID > 0 then
-			local _, spec, _, specIcon, _, _, class = GetSpecializationInfoByID(specID);
+		if specID and specID > 0 then
+			local _, spec, _, specIcon, _, _, class = GetSpecializationInfoByID(specID)
 			if not self.buttons[unit] then
 				self:CreateButton(unit)
 			end

@@ -6,9 +6,17 @@ local L = Gladius.L
 local LSM
 
 -- global functions
-local strfind = string.find
 local pairs = pairs
-local UnitClass, UnitGUID, UnitHealth, UnitHealthMax = UnitClass, UnitGUID, UnitHealth, UnitHealthMax
+local select = select
+local strfind = string.find
+local unpack = unpack
+
+local CreateFrame = CreateFrame
+local InCombatLockdown = InCombatLockdown
+local UnitClass = UnitClass
+local UnitGUID = UnitGUID
+local UnitHealth = UnitHealth
+local UnitHealthMax = UnitHealthMax
 
 local TargetBar = Gladius:NewModule("TargetBar", true, true, {
 	targetBarAttachTo = "Trinket",
@@ -121,8 +129,8 @@ function TargetBar:SetClassIcon(unit)
 	if class then
 		-- color
 		local colorx = self:GetBarColor(class)
-		if colorx == nil then
-			--fallback, when targeting a pet or totem 
+		if not colorx then
+			-- fallback, when targeting a pet or totem 
 			colorx = Gladius.db.targetBarColor
 		end
 		self.frame[unit]:SetStatusBarColor(colorx.r, colorx.g, colorx.b, colorx.a or 1)
@@ -177,6 +185,30 @@ function TargetBar:UpdateHealth(unit, health, maxHealth)
 	else
 		self.frame[unit]:SetValue(health)
 	end
+end
+
+function TargetBar:UpdateColors(unit)
+	local testing = Gladius.test
+	-- get unit class
+	local class
+	if not testing then
+		class = select(2, UnitClass(unit.."target"))
+	else
+		class = Gladius.testing[unit].unitClass
+	end
+	-- set color
+	if not Gladius.db.targetBarClassColor then
+		local color = Gladius.db.targetBarColor
+		self.frame[unit]:SetStatusBarColor(color.r, color.g, color.b, color.a)
+	else
+		local color = self:GetBarColor(class)
+		if not color then
+			-- fallback, when targeting a pet or totem 
+			color = Gladius.db.targetBarColor
+		end
+		self.frame[unit]:SetStatusBarColor(color.r, color.g, color.b, color.a or 1)
+	end
+	self.frame[unit].background:SetVertexColor(Gladius.db.targetBarBackgroundColor.r, Gladius.db.targetBarBackgroundColor.g, Gladius.db.targetBarBackgroundColor.b, Gladius.db.targetBarBackgroundColor.a)
 end
 
 function TargetBar:CreateBar(unit)
@@ -242,8 +274,10 @@ function TargetBar:Update(unit)
 		self.frame[unit].icon:SetWidth(self.frame[unit].frame:GetHeight())
 		self.frame[unit].icon:SetHeight(self.frame[unit].frame:GetHeight())
 		self.frame[unit].icon:SetTexCoord(0, 1, 0, 1)
+		self.frame[unit].icon:SetAlpha(1)
 		self.frame[unit].icon:Show()
 	else
+		self.frame[unit].icon:SetAlpha(0)
 		self.frame[unit].icon:Hide()
 	end
 	if Gladius.db.targetBarEnableBar then
@@ -271,16 +305,21 @@ function TargetBar:Update(unit)
 		-- disable tileing
 		self.frame[unit].background:SetHorizTile(false)
 		self.frame[unit].background:SetVertTile(false)
+		self.frame[unit]:SetAlpha(1)
 		self.frame[unit]:Show()
 	else
+		self.frame[unit]:SetAlpha(0)
 		self.frame[unit]:Hide()
 	end
+	self:UpdateColors(unit)
 	-- update secure frame
 	self.frame[unit].secure:RegisterForClicks("AnyUp")
 	self.frame[unit].secure:SetAllPoints(self.frame[unit].frame)
 	self.frame[unit].secure:SetWidth(self.frame[unit].frame:GetWidth())
 	self.frame[unit].secure:SetHeight(self.frame[unit].frame:GetHeight())
-	self.frame[unit].secure:SetFrameStrata("LOW")
+	if not InCombatLockdown() then
+		self.frame[unit].secure:SetFrameStrata("LOW")
+	end
 	self.frame[unit].secure:SetAttribute("unit", unit.."target")
 	self.frame[unit].secure:SetAttribute("type1", "target")
 	-- update highlight texture
@@ -325,7 +364,9 @@ function TargetBar:Show(unit)
 	-- show frame
 	self.frame[unit].frame:SetAlpha(1)
 	-- set secure frame
-	self.frame[unit].secure:SetFrameStrata("DIALOG")
+	if not InCombatLockdown() then
+		self.frame[unit].secure:SetFrameStrata("DIALOG")
+	end
 	-- get unit class
 	local class
 	if not testing then
@@ -339,14 +380,14 @@ function TargetBar:Show(unit)
 		self.frame[unit]:SetStatusBarColor(color.r, color.g, color.b, color.a)
 	else
 		local color = self:GetBarColor(class)
-		if color == nil then
+		if not color then
 			-- fallback, when targeting a pet or totem 
 			color = Gladius.db.targetBarColor
 		end
 		self.frame[unit]:SetStatusBarColor(color.r, color.g, color.b, color.a or 1)
 	end
 	-- set class icon
-	TargetBar:SetClassIcon(unit)
+	self:SetClassIcon(unit)
 	-- call event
 	if not Gladius.test then
 		self:UNIT_HEALTH("UNIT_HEALTH", unit)
@@ -514,7 +555,7 @@ function TargetBar:GetOptions()
 							name = L["Target Bar Icon Crop Borders"],
 							desc = L["Toggle if the target bar icon borders should be cropped or not."],
 							disabled = function()
-								return not Gladius.dbi.profile.modules[self.name]
+								return not Gladius.dbi.profile.targetBarIcon or not Gladius.dbi.profile.modules[self.name]
 							end,
 							hidden = function()
 								return not Gladius.db.advancedOptions
@@ -588,7 +629,7 @@ function TargetBar:GetOptions()
 							values = function()
 								return Gladius:GetModules(self.name)
 							end,
-							set = function(info, value) 
+							set = function(info, value)
 								local key = info.arg or info[#info]
 								Gladius.dbi.profile[key] = value
 								-- set frame type
