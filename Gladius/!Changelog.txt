@@ -1,3 +1,16 @@
+**4.1.1**
+* Channeling spells should properly show up on the CastBar.
+* Fixed an issue with the inverse castbar option for both castable and channelable spells.
+* CastBar coloring fixes.
+* PowerBar coloring fixes.
+* Fixed an error with the Tags module.
+* TargetBar's statusbar and icon can be properly enabled and disabled.
+* TargetBar coloring fixes.
+* Fixed a taint with the Tags module.
+* Some GUI fixes and updates.
+* Some smaller optimizations.
+* Fixed some global leak.
+
 **4.1.0**
 * Timer module's color picker optimization.
 

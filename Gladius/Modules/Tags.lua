@@ -97,11 +97,11 @@ function Tags:OnEnable()
 	self.func = { }
 	-- gather events
 	self.events = { }
-	for k,v in pairs(Gladius.db.tagsTexts) do
+	for k, v in pairs(Gladius.db.tagsTexts) do
 		-- get tags
 		for tagName in v.text:gmatch("%[(.-)%]") do
 			-- get events
-			tag = Gladius.db.tags[tagName]
+			local tag = Gladius.db.tags[tagName]
 			if tag then
 				for event in tag.events:gmatch("%S+") do
 					if not self.events[event] then
@@ -206,7 +206,8 @@ function Tags:UpdateText(unit, text)
 			else
 				-- create function
 				local func = self.func[tagName]
-				if not func then
+				local error
+				if not func and tag.func then
 					func, error = loadstring("local strformat = string.format return "..tag.func)
 					self.func[tagName] = func
 				end

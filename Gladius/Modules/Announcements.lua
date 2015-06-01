@@ -23,7 +23,6 @@ local IsAddOnLoaded = IsAddOnLoaded
 local IsInInstance = IsInInstance
 local IsRaidLeader = IsRaidLeader
 local IsRaidOfficer = IsRaidOfficer
-local RAID_CLASS_COLORS = RAID_CLASS_COLORS
 local SendChatMessage = SendChatMessage
 local UnitAura = UnitAura
 local UnitClass = UnitClass
