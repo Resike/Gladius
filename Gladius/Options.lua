@@ -67,6 +67,9 @@ SLASH_GLADIUS1 = "/gladius"
 SlashCmdList["GLADIUS"] = function(msg)
 	if msg:find("test") and not Gladius.test then
 		if Gladius.instanceType ~= "arena" then
+			if InCombatLockdown() then
+				return
+			end
 			local test
 			if msg == "test2" then
 				test = 2
@@ -99,6 +102,9 @@ SlashCmdList["GLADIUS"] = function(msg)
 			Gladius:Print(L["You can't use this function inside arenas."])
 		end
 	elseif msg == "hide" or (msg:find("test") and Gladius.test) then
+		if InCombatLockdown() then
+			return
+		end
 		-- reset test environment
 		Gladius.testCount = 0
 		Gladius.test = false
@@ -168,7 +174,7 @@ function Gladius:SetColorOption(info, r, g, b, a)
 			self:Call(m, "UpdateColors", unit)
 			self:Call(mt, "UpdateColors", unit)
 		end
-	elseif module == "Auras" or module == "CastBar" or module == "ClassIcon" or module == "Dispel" or module == "DRTracker" or module == "PowerBar" or module == "TargetBar" or module == "Timer" then
+	elseif module == "Auras" or module == "CastBar" or module == "ClassIcon" or module == "Dispel" or module == "DRTracker" or module == "Highlight" or module == "PowerBar" or module == "TargetBar" or module == "Timer" then
 		local m = self:GetModule(module)
 		for unit, _ in pairs(self.buttons) do
 			self:Call(m, "UpdateColors", unit)

@@ -10,7 +10,6 @@ local strfind = string.find
 local string = string
 
 local GetArenaOpponentSpec = GetArenaOpponentSpec
-local GetCurrentArenaSeason = GetCurrentArenaSeason
 local GetNumArenaOpponentSpecs = GetNumArenaOpponentSpecs
 local GetNumGroupMembers = GetNumGroupMembers
 local GetRealNumPartyMembers = GetRealNumPartyMembers
@@ -20,6 +19,7 @@ local GetSpellInfo = GetSpellInfo
 local GetTime = GetTime
 local IsActiveBattlefieldArena = IsActiveBattlefieldArena
 local IsAddOnLoaded = IsAddOnLoaded
+local IsArenaSkirmish = IsArenaSkirmish
 local IsInInstance = IsInInstance
 local IsRaidLeader = IsRaidLeader
 local IsRaidOfficer = IsRaidOfficer
@@ -175,9 +175,9 @@ end
 function Announcements:Send(msg, throttle, unit)
 	local color = unit and RAID_CLASS_COLORS[UnitClass(unit)] or {r = 0, g = 1, b = 0}
 	local dest = Gladius.db.announcements.dest
-	local season = GetCurrentArenaSeason()
+	local skirmish = IsArenaSkirmish()
 	local isArena, isRegistered = IsActiveBattlefieldArena()
-	if not isRegistered or season == 0 then
+	if skirmish or not isRegistered then
 		dest = "instance"
 	end
 	if not self.throttled then
