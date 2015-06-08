@@ -260,7 +260,7 @@ function CastBar:CreateBar(unit)
 		return
 	end
 	-- create bar + text
-	self.frame[unit] = CreateFrame("STATUSBAR", "Gladius"..self.name..unit, button)
+	self.frame[unit] = CreateFrame("StatusBar", "Gladius"..self.name..unit, button)
 	self.frame[unit].background = self.frame[unit]:CreateTexture("Gladius"..self.name..unit.."Background", "BACKGROUND")
 	self.frame[unit].highlight = self.frame[unit]:CreateTexture("Gladius"..self.name.."Highlight"..unit, "OVERLAY")
 	self.frame[unit].castText = self.frame[unit]:CreateFontString("Gladius"..self.name.."CastText"..unit, "OVERLAY")

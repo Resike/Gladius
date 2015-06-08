@@ -1,7 +1,21 @@
+**4.1.2**
+* Highlight module updates.
+* The Announcements module should properly use the instance chat channel, when in skirmish arenas.
+* Added highlight upvalues.
+* Highlight colors should update properly, without excessive CPU usage.
+* Focus highlight should properly apperar in test mode too.
+* Target highlight should not disappear in test mode, when you change target/focus.
+* Target and Focus highlight should proeprly show/hide in test mode too, when enabling/disabling them.
+* Removed the Main Assist functions from the Highlight module.
+* Removed the Raid Target functions from the Highlight module.
+* Fixed a taint caused by showing/hiding the test frames in combat.
+* Highlight GUI updates.
+
 **4.1.1**
 * Channeling spells should properly show up on the CastBar.
 * Fixed an issue with the inverse castbar option for both castable and channelable spells.
 * CastBar coloring fixes.
+* HealthBar coloring fixes, which could potentially broke the addon.
 * PowerBar coloring fixes.
 * Fixed an error with the Tags module.
 * TargetBar's statusbar and icon can be properly enabled and disabled.

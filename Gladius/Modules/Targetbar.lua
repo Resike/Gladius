@@ -217,7 +217,7 @@ function TargetBar:CreateBar(unit)
 		return
 	end
 	-- create bar + text
-	self.frame[unit] = CreateFrame("STATUSBAR", "Gladius"..self.name.."Bar"..unit, button)
+	self.frame[unit] = CreateFrame("StatusBar", "Gladius"..self.name.."Bar"..unit, button)
 	self.frame[unit].frame = CreateFrame("Frame", "Gladius"..self.name..unit, button)
 	self.frame[unit]:SetParent(self.frame[unit].frame)
 	self.frame[unit].secure = CreateFrame("Button", "Gladius"..self.name.."Secure"..unit, self.frame[unit].frame, "SecureActionButtonTemplate")
