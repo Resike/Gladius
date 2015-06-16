@@ -32,7 +32,7 @@ local CastBar = Gladius:NewModule("CastBar", true, true, {
 	castBarColorUninterruptible = {r = 1, g = 0, b = 0, a = 1},
 	castBarBackgroundColor = {r = 1, g = 1, b = 1, a = 0.3},
 	castBarTexture = "Minimalist",
-	castBarTextureUninterruptible = "CastBarLockFull",
+	castBarTextureUninterruptible = "Bars",
 	castIcon = true,
 	castIconPosition = "LEFT",
 	castText = true,
@@ -357,7 +357,11 @@ function CastBar:Update(unit)
 		if not Gladius:GetModule(Gladius.db.castBarAttachTo).frame or not Gladius:GetModule(Gladius.db.castBarAttachTo).frame[unit] then
 			Gladius:GetModule(Gladius.db.castBarAttachTo):Update(unit)
 		end
-		width = width + Gladius:GetModule(Gladius.db.castBarAttachTo).frame[unit]:GetWidth()
+		if Gladius.db.castBarAttachTo == "ClassIcon" then
+			width = width + Gladius:GetModule(Gladius.db.castBarAttachTo).frame[unit]:GetWidth() - Gladius.db.classIconOffsetX
+		else
+			width = width + Gladius:GetModule(Gladius.db.castBarAttachTo).frame[unit]:GetWidth()
+		end
 	end
 	self.frame[unit]:SetHeight(Gladius.db.castBarHeight)
 		self.frame[unit]:SetWidth(width)

@@ -241,7 +241,8 @@ function Gladius:SetupModule(key, module, order)
 			for k, v in pairs(module.defaults) do
 				self.dbi.profile[k] = v
 			end
-			Gladius:UpdateFrame()
+			self:Call(module, "ResetModule")
+			self:UpdateFrame()
 		end,
 		order = 0.5,
 	}
