@@ -1,3 +1,20 @@
+**4.1.3**
+* Moved the important auras from Auras to ClassIcon tab.
+* Reseting the ClassIcon module should properly reset the Auras too.
+* Disabling the ClassIcon module should properly disable the Auras tab.
+* Disabling the Class Icon Important Auras should properly disable the Auras tab.
+* The Add New Aura button is now disabled untill a valid spell name or id is entered.
+* The Add New Aura button should properly update the aura list.
+* Adding auras without priority should no longer cause issues.
+* Changing the name or id of an aura should properly work and update the aura list.
+* Deleing an aura should properly update the aura list.
+* Adding an aura with spell id should properly add the name of that spell to the list.
+* Changing an aura's spell id should properly update the list with the spell name.
+* Added an option to reset only the Aura list.
+* Fixed a texture issue with the uninterruptible castbars.
+* Some other smaller CastBar module fixes.
+* Some other smaller fixes.
+
 **4.1.2**
 * Highlight module updates.
 * The Announcements module should properly use the instance chat channel, when in skirmish arenas.

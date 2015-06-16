@@ -24,6 +24,7 @@
 			["Bottom Right"] = "Bottom Right",
 			["Enable Module"] = "Enable Module",
 			["Reset Module"] = "Reset Module",
+			["Reset Auras"] = "Reset Auras",
 			["Module Templates"] = "Module Templates",
 			["General"] = "General",
 			["General settings"] = "General settings",

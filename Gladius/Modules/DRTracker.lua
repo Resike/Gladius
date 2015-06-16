@@ -28,7 +28,7 @@ local DRTracker = Gladius:NewModule("DRTracker", false, true, {
 	drTrackerSize = 52,
 	drTrackerOffsetX = 0,
 	drTrackerOffsetY = -5,
-	drTrackerFrameLevel = 2,
+	drTrackerFrameLevel = 1,
 	drTrackerGloss = false,
 	drTrackerGlossColor = {r = 1, g = 1, b = 1, a = 0.4},
 	drTrackerCooldown = false,

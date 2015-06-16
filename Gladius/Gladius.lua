@@ -231,6 +231,12 @@ function Gladius:OnInitialize()
 		end
 	end
 
+	for k, v in pairs(self.dbi["profiles"]) do
+		if self.dbi["profiles"][k]["aurasFrameAuras"] ~= nil then
+			self.dbi["profiles"][k]["aurasFrameAuras"] = nil
+		end
+	end
+
 	self.db = setmetatable(self.dbi.profile, {
 		__newindex = function(t, index, value)
 		if type(value) == "table" then
