@@ -366,6 +366,10 @@ function Tags:GetOptions()
 									-- update
 									Gladius:UpdateFrame()
 								end
+								self.addTextName = ""
+							end,
+							disabled = function()
+								return not Gladius.dbi.profile.modules[self.name] or not self.addTextName or self.addTextName == ""
 							end,
 						},
 					},
@@ -402,56 +406,59 @@ function Tags:GetOptions()
 							end,
 						},
 						add = {
-						type = "execute",
-						name = L["Add Tag"],
-						order = 10,
-						func = function()
-							if self.addTagName ~= "" and not Gladius.db.tags[self.addTagName] then
-								-- add to db
-								Gladius.db.tags[self.addTagName] = {
-									func = [[function(unit) 
-									end]],
-									events = ""
-								}
-								-- add to options
-								Gladius.options.args[self.name].args.tagList.args[self.addTagName] = self:GetTagOptionTable(self.addTagName, self.order)
-								-- add to text option tags
-								for text, v in pairs(Gladius.options.args[self.name].args.textList.args) do
-									if v.args.tag then
-										local tag = self.addTagName
-										local tagName = L[tag.."Tag"] ~= tag.."Tag" and L[tag.."Tag"] or strformat(L["Tag: %s"], tag)
-										Gladius.options.args[self.name].args.textList.args[text].args.tag.args[tag] = {
-											type = "toggle",
-											name = tagName,
-											get = function(info)
-												local key = info[#info - 2]
-												-- check if the tag is in the text
-												if (strfind(Gladius.dbi.profile.tagsTexts[key].text, "%["..info[#info].."%]")) then
-													return true
-												else
-													return false
-												end
+							type = "execute",
+							name = L["Add Tag"],
+							order = 10,
+							func = function()
+								if self.addTagName ~= "" and not Gladius.db.tags[self.addTagName] then
+									-- add to db
+									Gladius.db.tags[self.addTagName] = {
+										func = [[function(unit) 
+										end]],
+										events = ""
+									}
+									-- add to options
+									Gladius.options.args[self.name].args.tagList.args[self.addTagName] = self:GetTagOptionTable(self.addTagName, self.order)
+									-- add to text option tags
+									for text, v in pairs(Gladius.options.args[self.name].args.textList.args) do
+										if v.args.tag then
+											local tag = self.addTagName
+											local tagName = L[tag.."Tag"] ~= tag.."Tag" and L[tag.."Tag"] or strformat(L["Tag: %s"], tag)
+											Gladius.options.args[self.name].args.textList.args[text].args.tag.args[tag] = {
+												type = "toggle",
+												name = tagName,
+												get = function(info)
+													local key = info[#info - 2]
+													-- check if the tag is in the text
+													if (strfind(Gladius.dbi.profile.tagsTexts[key].text, "%["..info[#info].."%]")) then
+														return true
+													else
+														return false
+													end
 												end,
 												set = function(info, v) 
-												local key = info[#info - 2]
-												-- add/remove tag to the text
-												if not v then
-													Gladius.dbi.profile.tagsTexts[key].text = strgsub(Gladius.dbi.profile.tagsTexts[key].text, "%["..info[#info].."%]", "")
-													-- trim right
-													Gladius.dbi.profile.tagsTexts[key].text = strgsub(Gladius.dbi.profile.tagsTexts[key].text, "^(.-)%s*$", "%1")
-												else
-													Gladius.dbi.profile.tagsTexts[key].text = Gladius.dbi.profile.tagsTexts[key].text.." ["..info[#info].."]"
-												end
-												-- update
-												Gladius:UpdateFrame()
-											end,
-										}
+													local key = info[#info - 2]
+													-- add/remove tag to the text
+													if not v then
+														Gladius.dbi.profile.tagsTexts[key].text = strgsub(Gladius.dbi.profile.tagsTexts[key].text, "%["..info[#info].."%]", "")
+														-- trim right
+														Gladius.dbi.profile.tagsTexts[key].text = strgsub(Gladius.dbi.profile.tagsTexts[key].text, "^(.-)%s*$", "%1")
+													else
+														Gladius.dbi.profile.tagsTexts[key].text = Gladius.dbi.profile.tagsTexts[key].text.." ["..info[#info].."]"
+													end
+													-- update
+													Gladius:UpdateFrame()
+												end,
+											}
+										end
 									end
+									-- update
+									Gladius:UpdateFrame()
 								end
-								-- update
-								Gladius:UpdateFrame()
-							end
-						end,
+							end,
+							disabled = function()
+								return not Gladius.dbi.profile.modules[self.name]
+							end,
 						},
 					},
 				},
@@ -498,6 +505,9 @@ function Tags:GetOptions()
 				end
 				-- update
 				Gladius:UpdateFrame()
+			end,
+			disabled = function()
+				return not Gladius.dbi.profile.modules[self.name]
 			end,
 			order = order,
 		}
@@ -547,6 +557,9 @@ function Tags:GetTextOptionTable(text, order)
 					Gladius.options.args[self.name].args.textList.args[text] = nil
 					-- update
 					Gladius:UpdateFrame()
+				end,
+				disabled = function()
+					return not Gladius.dbi.profile.modules[self.name]
 				end,
 			},
 			tag = {
@@ -676,6 +689,9 @@ function Tags:GetTagOptionTable(tag, order)
 					end
 					-- update
 					Gladius:UpdateFrame()
+				end,
+				disabled = function()
+					return not Gladius.dbi.profile.modules[self.name]
 				end,
 			},
 			tag = {
