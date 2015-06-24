@@ -1,5 +1,5 @@
 **4.1.5**
-* Update for 6.2.0.
+* Updated for 6.2.0.
 * Library updates.
 
 **4.1.4**
