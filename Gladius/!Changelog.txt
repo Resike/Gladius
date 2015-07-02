@@ -1,3 +1,6 @@
+**4.1.7**
+* Tags colors should update properly, without excessive CPU usage.
+
 **4.1.6**
 * Localization fixes, clean ups and updates.
 
