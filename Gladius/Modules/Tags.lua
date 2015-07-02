@@ -253,6 +253,13 @@ function Tags:Update(unit)
 	end
 end
 
+function Tags:UpdateColors(unit, text)
+	if not self.frame[unit] then
+		return
+	end
+	self.frame[unit][text]:SetTextColor(Gladius.db.tagsTexts[text].color.r, Gladius.db.tagsTexts[text].color.g, Gladius.db.tagsTexts[text].color.b, Gladius.db.tagsTexts[text].color.a)
+end
+
 function Tags:Show(unit)
 	if not self.frame[unit] then
 		self.frame[unit] = { }
@@ -590,7 +597,10 @@ function Tags:GetTextOptionTable(text, order)
 						set = function(info, r, g, b, a)
 							local key = info[#info - 2]
 							Gladius.dbi.profile.tagsTexts[key][info[#info]].r, Gladius.dbi.profile.tagsTexts[key][info[#info]].g, Gladius.dbi.profile.tagsTexts[key][info[#info]].b, Gladius.dbi.profile.tagsTexts[key][info[#info]].a = r, g, b, a
-							Gladius:UpdateFrame()
+							for i = 1, 5 do
+								local unit = "arena"..i
+								self:UpdateColors(unit, key)
+							end
 						end,
 						disabled = function()
 							return not Gladius.dbi.profile.modules[self.name]
