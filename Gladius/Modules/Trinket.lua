@@ -174,6 +174,17 @@ function Trinket:CreateFrame(unit)
 	self.frame[unit].secure = secure
 end
 
+function Trinket:UpdateColors(unit)
+	if Gladius.db.trinketGridStyleIcon then
+		if not self.frame[unit].timeleft or (self.frame[unit].timeleft and self.frame[unit].timeleft <= 0) then
+			self.frame[unit].texture:SetVertexColor(Gladius.db.trinketGridStyleIconColor.r, Gladius.db.trinketGridStyleIconColor.g, Gladius.db.trinketGridStyleIconColor.b, Gladius.db.trinketGridStyleIconColor.a)
+		else
+			self.frame[unit].texture:SetVertexColor(Gladius.db.trinketGridStyleIconUsedColor.r, Gladius.db.trinketGridStyleIconUsedColor.g, Gladius.db.trinketGridStyleIconUsedColor.b, Gladius.db.trinketGridStyleIconUsedColor.a)
+		end
+	end
+	self.frame[unit].normalTexture:SetVertexColor(Gladius.db.trinketGlossColor.r, Gladius.db.trinketGlossColor.g, Gladius.db.trinketGlossColor.b, Gladius.db.trinketGloss and Gladius.db.trinketGlossColor.a or 0)
+end
+
 function Trinket:Update(unit)
 	-- create frame
 	if not self.frame[unit] then

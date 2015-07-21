@@ -174,7 +174,7 @@ function Gladius:SetColorOption(info, r, g, b, a)
 			self:Call(m, "UpdateColors", unit)
 			self:Call(mt, "UpdateColors", unit)
 		end
-	elseif module == "Auras" or module == "CastBar" or module == "ClassIcon" or module == "Dispel" or module == "DRTracker" or module == "Highlight" or module == "PowerBar" or module == "TargetBar" or module == "Timer" then
+	elseif module == "Auras" or module == "CastBar" or module == "ClassIcon" or module == "Dispel" or module == "DRTracker" or module == "Highlight" or module == "PowerBar" or module == "TargetBar" or module == "Timer" or module == "Trinket" then
 		local m = self:GetModule(module)
 		for unit, _ in pairs(self.buttons) do
 			self:Call(m, "UpdateColors", unit)

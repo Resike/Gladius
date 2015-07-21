@@ -1,6 +1,6 @@
 ﻿## Interface: 60200
-## Title: Gladius |cFF99CC01rev|r |cFFFF00004.1.7|r
-## Version: 4.1.7
+## Title: Gladius |cFF99CC01rev|r |cFFFF00004.1.8|r
+## Version: 4.1.8
 ## Notes: Arena enemy unit frames.
 ## Author: Resike and Firebunny. Original author: Proditor
 ## SavedVariables: Gladius2DB
