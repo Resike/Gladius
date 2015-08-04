@@ -1,3 +1,6 @@
+**4.1.9**
+* Announcementes and Trinket module updates.
+
 **4.1.8**
 * Trinket colors should update properly, without excessive CPU usage.
 

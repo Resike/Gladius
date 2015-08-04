@@ -266,15 +266,15 @@ function Announcements:GetOptions()
 			order = 1,
 			get = getOption,
 			set = setOption,
-			disabled = function()
-				return not Gladius.db.modules[self.name]
-			end,
 			args = {
 				options = {
 					type = "group",
 					name = L["Options"],
 					inline = true,
 					order = 1,
+					disabled = function()
+						return not Gladius.db.modules[self.name]
+					end,
 					args = {
 						dest = {
 							type = "select",
@@ -302,6 +302,9 @@ function Announcements:GetOptions()
 					name = L["Announcement toggles"],
 					inline = true,
 					order = 5,
+					disabled = function()
+						return not Gladius.db.modules[self.name]
+					end,
 					args = {
 						enemies = {
 							type = "toggle",
