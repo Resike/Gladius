@@ -375,7 +375,7 @@ function Trinket:OptionsLoad()
 		name = L["Trinket"],
 		desc = L["Announces when an enemy uses a PvP trinket."],
 		disabled = function()
-			return not Gladius.db.modules[self.name]
+			return not Gladius.db.modules[self.name] or not Gladius.db.modules["Announcements"]
 		end,
 	}
 end
