@@ -575,11 +575,11 @@ function Gladius:UpdateUnit(unit, module)
 			end
 			if self.db.growLeft then
 				local left, right = self.buttons[unit]:GetHitRectInsets()
-				self.buttons[unit]:SetPoint("TOPLEFT", parentButton, "TOPLEFT", - self.buttons[unit]:GetWidth() - self.db.backgroundPadding - abs(left), 0)
+				self.buttons[unit]:SetPoint("TOPLEFT", parentButton, "TOPLEFT", - self.buttons[unit]:GetWidth() - self.db.bottomMargin - abs(left), 0)
 			end
 			if self.db.growRight then
 				local left, right = self.buttons[unit]:GetHitRectInsets()
-				self.buttons[unit]:SetPoint("TOPLEFT", parentButton, "TOPLEFT", self.buttons[unit]:GetWidth() + self.db.backgroundPadding + abs(left), 0)
+				self.buttons[unit]:SetPoint("TOPLEFT", parentButton, "TOPLEFT", self.buttons[unit]:GetWidth() + self.db.bottomMargin + abs(left), 0)
 			end
 		end
 	end
@@ -605,11 +605,17 @@ function Gladius:UpdateUnit(unit, module)
 		self.background:ClearAllPoints()
 		if self.db.growUp then
 			self.background:SetPoint("BOTTOMLEFT", self.buttons["arena1"], "BOTTOMLEFT", - self.db.backgroundPadding + left, - self.db.backgroundPadding)
+		--[[elseif self.db.growLeft then
+			self.background:SetPoint("TOPLEFT", self.buttons["arena5"], "TOPLEFT", - self.db.backgroundPadding + left, self.db.backgroundPadding)
+			self.background:SetPoint("BOTTOMRIGHT", self.buttons["arena1"], "BOTTOMRIGHT", self.db.backgroundPadding, - self.db.backgroundPadding)
+		elseif self.db.growRight then
+			self.background:SetPoint("TOPLEFT", self.buttons["arena1"], "TOPLEFT", - self.db.backgroundPadding + left, self.db.backgroundPadding)
+			self.background:SetPoint("BOTTOMRIGHT", self.buttons["arena5"], "BOTTOMRIGHT", self.db.backgroundPadding, - self.db.backgroundPadding)]]
 		else
 			self.background:SetPoint("TOPLEFT", self.buttons["arena1"], "TOPLEFT", - self.db.backgroundPadding + left, self.db.backgroundPadding)
 		end
 		self.background:SetScale(self.db.frameScale)
-		if self.db.groupButtons then
+		if self.db.groupButtons and not self.db.growLeft and not self.db.growRight then
 			self.background:Show()
 			self.background:SetAlpha(0)
 		else
