@@ -364,7 +364,7 @@ function CastBar:Update(unit)
 		end
 	end
 	self.frame[unit]:SetHeight(Gladius.db.castBarHeight)
-		self.frame[unit]:SetWidth(width)
+	self.frame[unit]:SetWidth(width)
 	local offsetX
 	if not strfind(Gladius.db.castBarAnchor, "RIGHT") and strfind(Gladius.db.castBarRelativePoint, "RIGHT") then
 		offsetX = Gladius.db.castIcon and Gladius.db.castIconPosition == "LEFT" and self.frame[unit]:GetHeight() or 0

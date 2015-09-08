@@ -227,6 +227,10 @@ function DRTracker:Update(unit)
 	self.frame[unit]:SetPoint(Gladius.db.drTrackerAnchor, parent, Gladius.db.drTrackerRelativePoint, Gladius.db.drTrackerOffsetX, Gladius.db.drTrackerOffsetY)
 	-- frame level
 	self.frame[unit]:SetFrameLevel(Gladius.db.drTrackerFrameLevel)
+	-- when the attached module is disabled
+	if not Gladius:GetModule(self:GetAttachTo()) then
+		Gladius.db.drTrackerAttachTo = "Frame"
+	end
 	if Gladius.db.drTrackerAdjustSize then
 		if self:GetAttachTo() == "Frame" then
 			local height = false

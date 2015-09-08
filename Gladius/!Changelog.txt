@@ -1,3 +1,7 @@
+**4.2.1**
+* Fixed an issue with the DRTracker module.
+* Some other smaller fixes.
+
 **4.2.0**
 * Bottom Margin funciton should get properly applied for left and right growing directions too.
 * Disabled background frame for left and right growing directions.
