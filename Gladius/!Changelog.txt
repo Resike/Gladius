@@ -1,3 +1,8 @@
+**4.2.2**
+* Fixed an issue which ignored the settings for the buffs/debuffs visibility.
+* Library updates.
+* Some other smaller fixes.
+
 **4.2.1**
 * Fixed an issue with the DRTracker module.
 * Some other smaller fixes.
