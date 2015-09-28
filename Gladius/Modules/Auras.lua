@@ -134,35 +134,39 @@ function Auras:UNIT_AURA(event, unit)
 		return
 	end
 	-- buff frame
-	for i = 1, Gladius.db.aurasBuffsMax do
-		local name, rank, icon, count, dispelType, duration, expires, caster, isStealable = UnitAura(unit, i, "HELPFUL")
-		if not self.buffFrame[unit] or not self.buffFrame[unit][i] then
-			break
-		end
-		if name then
-			self.buffFrame[unit][i].texture:SetTexture(icon)
-			Gladius:Call(Gladius.modules.Timer, "SetTimer", self.buffFrame[unit][i], duration)
-			self.buffFrame[unit][i]:Show()
-			--self.buffFrame[unit][i].tooltip:Show()
-		else
-			self.buffFrame[unit][i]:Hide()
-			--self.buffFrame[unit][i].tooltip:Hide()
+	if Gladius.db.aurasBuffs then
+		for i = 1, Gladius.db.aurasBuffsMax do
+			local name, rank, icon, count, dispelType, duration, expires, caster, isStealable = UnitAura(unit, i, "HELPFUL")
+			if not self.buffFrame[unit] or not self.buffFrame[unit][i] then
+				break
+			end
+			if name then
+				self.buffFrame[unit][i].texture:SetTexture(icon)
+				Gladius:Call(Gladius.modules.Timer, "SetTimer", self.buffFrame[unit][i], duration)
+				self.buffFrame[unit][i]:Show()
+				--self.buffFrame[unit][i].tooltip:Show()
+			else
+				self.buffFrame[unit][i]:Hide()
+				--self.buffFrame[unit][i].tooltip:Hide()
+			end
 		end
 	end
 	-- debuff frame
-	for i = 1, Gladius.db.aurasDebuffsMax do
-		local name, rank, icon, count, dispelType, duration, expires, caster, isStealable = UnitAura(unit, i, "HARMFUL")
-		if not self.debuffFrame[unit] or not self.debuffFrame[unit][i] then
-			break
-		end
-		if name then
-			self.debuffFrame[unit][i].texture:SetTexture(icon)
-			Gladius:Call(Gladius.modules.Timer, "SetTimer", self.debuffFrame[unit][i], duration)
-			self.debuffFrame[unit][i]:Show()
-			--self.debuffFrame[unit][i].tooltip:Show()
-		else
-			self.debuffFrame[unit][i]:Hide()
-			--self.debuffFrame[unit][i].tooltip:Hide()
+	if Gladius.db.aurasDebuffs then
+		for i = 1, Gladius.db.aurasDebuffsMax do
+			local name, rank, icon, count, dispelType, duration, expires, caster, isStealable = UnitAura(unit, i, "HARMFUL")
+			if not self.debuffFrame[unit] or not self.debuffFrame[unit][i] then
+				break
+			end
+			if name then
+				self.debuffFrame[unit][i].texture:SetTexture(icon)
+				Gladius:Call(Gladius.modules.Timer, "SetTimer", self.debuffFrame[unit][i], duration)
+				self.debuffFrame[unit][i]:Show()
+				--self.debuffFrame[unit][i].tooltip:Show()
+			else
+				self.debuffFrame[unit][i]:Hide()
+				--self.debuffFrame[unit][i].tooltip:Hide()
+			end
 		end
 	end
 end
@@ -196,7 +200,7 @@ function Auras:CreateFrame(unit)
 		self.buffFrame[unit] = CreateFrame("Frame", "Gladius"..self.name.."BuffFrame"..unit, button)
 		self.buffFrame[unit]:EnableMouse(false)
 		for i = 1, 40 do
-			self.buffFrame[unit][i] = CreateFrame("CheckButton", "Gladius"..self.name.."BuffFrameIcon"..i..unit, button, "ActionButtonTemplate")
+			self.buffFrame[unit][i] = CreateFrame("Button", "Gladius"..self.name.."BuffFrameIcon"..i..unit, button, "ActionButtonTemplate")
 			self.buffFrame[unit][i].tooltip = CreateFrame("Frame", nil, self.buffFrame[unit][i])
 			self.buffFrame[unit][i].tooltip:SetAllPoints(self.buffFrame[unit][i])
 			self.buffFrame[unit][i].tooltip:SetScript("OnEnter", function(f)
@@ -228,7 +232,7 @@ function Auras:CreateFrame(unit)
 		self.debuffFrame[unit] = CreateFrame("Frame", "Gladius"..self.name.."DebuffFrame"..unit, button)
 		self.debuffFrame[unit]:EnableMouse(false)
 		for i = 1, 40 do
-			self.debuffFrame[unit][i] = CreateFrame("CheckButton", "Gladius"..self.name.."DebuffFrameIcon"..i..unit, button, "ActionButtonTemplate")
+			self.debuffFrame[unit][i] = CreateFrame("Button", "Gladius"..self.name.."DebuffFrameIcon"..i..unit, button, "ActionButtonTemplate")
 			self.debuffFrame[unit][i].tooltip = CreateFrame("Frame", nil, self.debuffFrame[unit][i])
 			self.debuffFrame[unit][i].tooltip:SetAllPoints(self.debuffFrame[unit][i])
 			self.debuffFrame[unit][i].tooltip:SetScript("OnEnter", function(f)
