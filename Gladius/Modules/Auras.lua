@@ -144,10 +144,8 @@ function Auras:UNIT_AURA(event, unit)
 				self.buffFrame[unit][i].texture:SetTexture(icon)
 				Gladius:Call(Gladius.modules.Timer, "SetTimer", self.buffFrame[unit][i], duration)
 				self.buffFrame[unit][i]:Show()
-				--self.buffFrame[unit][i].tooltip:Show()
 			else
 				self.buffFrame[unit][i]:Hide()
-				--self.buffFrame[unit][i].tooltip:Hide()
 			end
 		end
 	end
@@ -162,10 +160,8 @@ function Auras:UNIT_AURA(event, unit)
 				self.debuffFrame[unit][i].texture:SetTexture(icon)
 				Gladius:Call(Gladius.modules.Timer, "SetTimer", self.debuffFrame[unit][i], duration)
 				self.debuffFrame[unit][i]:Show()
-				--self.debuffFrame[unit][i].tooltip:Show()
 			else
 				self.debuffFrame[unit][i]:Hide()
-				--self.debuffFrame[unit][i].tooltip:Hide()
 			end
 		end
 	end

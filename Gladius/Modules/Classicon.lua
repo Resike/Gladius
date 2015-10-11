@@ -346,7 +346,7 @@ function ClassIcon:ShowAura(unit, aura)
 	-- display aura
 	unitFrame.texture:SetTexture(aura.icon)
 	if Gladius.db.classIconCrop then
-		unitFrame.texture:SetTexCoord(0.07, 0.93, 0.07, 0.93)
+		unitFrame.texture:SetTexCoord(0.075, 0.925, 0.075, 0.925)
 	else
 		unitFrame.texture:SetTexCoord(0, 1, 0, 1)
 	end
@@ -384,10 +384,10 @@ function ClassIcon:SetClassIcon(unit)
 			local left, right, top, bottom = 0, 1, 0, 1
 			-- Crop class icon borders
 			if Gladius.db.classIconCrop then
-				left = left + (right - left) * 0.07
-				right = right - (right - left) * 0.07
-				top = top + (bottom - top) * 0.07
-				bottom = bottom - (bottom - top) * 0.07
+				left = left + (right - left) * 0.075
+				right = right - (right - left) * 0.075
+				top = top + (bottom - top) * 0.075
+				bottom = bottom - (bottom - top) * 0.075
 			end
 			self.frame[unit].texture:SetTexCoord(left, right, top, bottom)
 		end
@@ -397,10 +397,10 @@ function ClassIcon:SetClassIcon(unit)
 			local left, right, top, bottom = unpack(CLASS_BUTTONS[class])
 			-- Crop class icon borders
 			if Gladius.db.classIconCrop then
-				left = left + (right - left) * 0.07
-				right = right - (right - left) * 0.07
-				top = top + (bottom - top) * 0.07
-				bottom = bottom - (bottom - top) * 0.07
+				left = left + (right - left) * 0.075
+				right = right - (right - left) * 0.075
+				top = top + (bottom - top) * 0.075
+				bottom = bottom - (bottom - top) * 0.075
 			end
 			self.frame[unit].texture:SetTexCoord(left, right, top, bottom)
 		end
