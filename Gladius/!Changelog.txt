@@ -1,3 +1,7 @@
+**4.2.4**
+* Class icon crop fix for the targetbars.
+* Targetbar module updates.
+
 **4.2.3**
 * Class icon crop fix.
 * Some other smaller fixes.

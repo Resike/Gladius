@@ -140,10 +140,10 @@ function TargetBar:SetClassIcon(unit)
 		local left, right, top, bottom = unpack(CLASS_BUTTONS[class])
 		if Gladius.db.targetBarIconCrop then
 			-- zoom class icon
-			left = left + (right - left) * 0.07
-			right = right - (right - left) * 0.07
-			top = top + (bottom - top) * 0.07
-			bottom = bottom - (bottom - top) * 0.07
+			left = left + (right - left) * 0.075
+			right = right - (right - left) * 0.075
+			top = top + (bottom - top) * 0.075
+			bottom = bottom - (bottom - top) * 0.075
 		end
 		self.frame[unit]:Show()
 		self.frame[unit].icon:Show()
