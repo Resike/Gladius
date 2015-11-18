@@ -118,14 +118,14 @@ function Gladius:NewModule(key, bar, attachTo, defaults, templates)
 	-- module status
 	module.Enable = function(self)
 		if not self.enabled then
-			self.enabled = true	
+			self.enabled = true
 			if type(self.OnEnable) == "function" then
 				self:OnEnable()
 			end
 		end
 	end
 	module.Disable = function(self)
-		if (self.enabled) then
+		if self.enabled then
 			self.enabled = false
 			if type(self.OnDisable) == "function" then
 				self:OnDisable()
@@ -139,7 +139,7 @@ function Gladius:NewModule(key, bar, attachTo, defaults, templates)
 	module.RegisterMessage = function(self, event, func)
 		self.eventHandler.messages[event] = func or self[event]
 	end
-	
+
 	module.SendMessage = function(self, event, ...)
 		for _, module in pairs(Gladius.modules) do
 			self:Call(module, module.eventHandler.messages[event], ...)
@@ -302,7 +302,7 @@ function Gladius:OnEnable()
 	-- clique
 	--[[if IsAddOnLoaded("Clique") then
 		SlashCmdList["GLADIUS"]("test 5")
-		SlashCmdList["GLADIUS"]("hide")	
+		SlashCmdList["GLADIUS"]("hide")
 		ClickCastFrames = ClickCastFrames or { }
 		ClickCastFrames[self.buttons.arena1.secure] = true
 		ClickCastFrames[self.buttons.arena2.secure] = true
@@ -388,7 +388,7 @@ end
 
 function Gladius:LeftArena()
 	self:HideFrame()
-	
+
 	-- reset units
 	for unit, _ in pairs(self.buttons) do
 		Gladius.buttons[unit]:RegisterForDrag()
@@ -846,7 +846,7 @@ function Gladius:UNIT_HEALTH(event, unit)
 	if not self:IsValidUnit(unit) then
 		return
 	end
-	
+
 	-- update unit
 	self:ShowUnit(unit)
 
