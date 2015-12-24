@@ -415,6 +415,13 @@ function Gladius:UNIT_NAME_UPDATE(event, unit)
 end
 
 function Gladius:ARENA_OPPONENT_UPDATE(event, unit, type)
+	if not self:IsValidUnit(unit) then
+		return
+	end
+	if not self.buttons[unit] then
+		self:CreateButton(unit)
+	end
+	self:UpdateUnit(unit)
 	-- enemy seen
 	if type == "seen" or type == "destroyed" then
 		self:ShowUnit(unit, false, nil, true)
@@ -427,7 +434,7 @@ function Gladius:ARENA_OPPONENT_UPDATE(event, unit, type)
 	end
 end
 
-function Gladius:ARENA_PREP_OPPONENT_SPECIALIZATIONS(event)
+function Gladius:ARENA_PREP_OPPONENT_SPECIALIZATIONS()
 	-- Update spec from API
 	for i = 1, GetNumArenaOpponentSpecs() do
 		local unit = "arena"..i
