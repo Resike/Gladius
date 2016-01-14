@@ -420,8 +420,9 @@ function Gladius:ARENA_OPPONENT_UPDATE(event, unit, type)
 	end
 	if not self.buttons[unit] then
 		self:CreateButton(unit)
+		self:UpdateUnit(unit)
+		self:ShowUnit(unit)
 	end
-	self:UpdateUnit(unit)
 	-- enemy seen
 	if type == "seen" or type == "destroyed" then
 		self:ShowUnit(unit, false, nil, true)

@@ -114,12 +114,16 @@ function Trinket:UNIT_SPELLCAST_SUCCEEDED(event, unit, spell, rank)
 	if instanceType ~= "arena" or not strfind(unit, "arena") or strfind(unit, "pet") then
 		return
 	end
-	-- pvp trinket
+	-- PVP trinket
 	if spell == GetSpellInfo(59752) or spell == GetSpellInfo(42292) then
 		self:UpdateTrinket(unit, 120)
 	end
-	-- wotf
+	-- Will of the Forsaken
 	if spell == GetSpellInfo(7744) then
+		self:UpdateTrinket(unit, 30)
+	end
+	-- Stoneform
+	if spell == GetSpellInfo(20594) then
 		self:UpdateTrinket(unit, 30)
 	end
 end
@@ -362,7 +366,6 @@ function Trinket:Reset(unit)
 end
 
 function Trinket:Test(unit)
-	-- test
 	if unit == "arena1" then
 		self:UpdateTrinket(unit, 120)
 	end
