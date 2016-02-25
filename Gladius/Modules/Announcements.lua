@@ -218,7 +218,7 @@ function Announcements:Send(msg, throttle, unit)
 	-- floating combat text
 	elseif dest == "fct" and IsAddOnLoaded("Blizzard_CombatText") then
 		CombatText_AddMessage(msg, COMBAT_TEXT_SCROLL_FUNCTION, color.r, color.g, color.b)
-	-- MikScrollingBattleText	
+	-- MikScrollingBattleText
 	elseif dest == "msbt" and IsAddOnLoaded("MikScrollingBattleText") then
 		MikSBT.DisplayMessage(msg, MikSBT.DISPLAYTYPE_NOTIFICATION, false, color.r * 255, color.g * 255, color.b * 255)
 	-- xCT
