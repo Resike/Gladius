@@ -423,9 +423,9 @@ function Gladius:ARENA_OPPONENT_UPDATE(event, unit, type)
 		local id = string.match(unit, "arena(%d)")
 		local specID = GetArenaOpponentSpec(id)
 		if specID and specID > 0 then
-			local _, spec, _, specIcon, _, _, class = GetSpecializationInfoByID(specID)
-			self.buttons[unit].spec = spec
-			self.buttons[unit].specIcon = specIcon
+			local id, name, description, icon, background, role, class = GetSpecializationInfoByID(specID)
+			self.buttons[unit].spec = name
+			self.buttons[unit].specIcon = icon
 			self.buttons[unit].class = class
 		end
 		self:UpdateUnit(unit)
@@ -449,12 +449,12 @@ function Gladius:ARENA_PREP_OPPONENT_SPECIALIZATIONS()
 		local unit = "arena"..i
 		local specID = GetArenaOpponentSpec(i)
 		if specID and specID > 0 then
-			local _, spec, _, specIcon, _, _, class = GetSpecializationInfoByID(specID)
+			local id, name, description, icon, background, role, class = GetSpecializationInfoByID(specID)
 			if not self.buttons[unit] then
 				self:CreateButton(unit)
 			end
-			self.buttons[unit].spec = spec
-			self.buttons[unit].specIcon = specIcon
+			self.buttons[unit].spec = name
+			self.buttons[unit].specIcon = icon
 			self.buttons[unit].class = class
 			self:UpdateUnit(unit)
 			self:ShowUnit(unit)
