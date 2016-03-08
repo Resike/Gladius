@@ -1,3 +1,6 @@
+**4.3.0**
+* Clique keyboard functions should properly work on the frames.
+
 **4.2.9**
 * Minor changes.
 

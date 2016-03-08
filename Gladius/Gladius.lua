@@ -299,17 +299,6 @@ function Gladius:OnEnable()
 		self:Print(L["/gladius reset"])
 		self:Print(L["If this is not your first run please lock or move the frame to prevent this from happening."])
 	end
-	-- clique
-	--[[if IsAddOnLoaded("Clique") then
-		SlashCmdList["GLADIUS"]("test 5")
-		SlashCmdList["GLADIUS"]("hide")
-		ClickCastFrames = ClickCastFrames or { }
-		ClickCastFrames[self.buttons.arena1.secure] = true
-		ClickCastFrames[self.buttons.arena2.secure] = true
-		ClickCastFrames[self.buttons.arena3.secure] = true
-		ClickCastFrames[self.buttons.arena4.secure] = true
-		ClickCastFrames[self.buttons.arena5.secure] = true
-	end]]
 	-- see if we are already in arena
 	if IsLoggedIn() then
 		Gladius:ZONE_CHANGED_NEW_AREA()
@@ -782,6 +771,7 @@ function Gladius:CreateButton(unit)
 	button:SetBackdropColor(0, 0, 0, 0.4)]]
 	button:SetClampedToScreen(true)
 	button:EnableMouse(true)
+	--button:EnableKeyboard(true)
 	button:SetMovable(true)
 	button:RegisterForDrag("LeftButton")
 	button:SetScript("OnDragStart", function(f)
@@ -802,6 +792,8 @@ function Gladius:CreateButton(unit)
 	end)
 	-- secure
 	local secure = CreateFrame("Button", "GladiusButton"..unit, button, "SecureActionButtonTemplate")
+	secure:EnableMouse(true)
+	secure:EnableKeyboard(true)
 	secure:RegisterForClicks("AnyUp")
 	button.secure = secure
 	-- clique
