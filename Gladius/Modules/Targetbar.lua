@@ -5,7 +5,7 @@ end
 local L = Gladius.L
 local LSM
 
--- global functions
+-- Global Functions
 local pairs = pairs
 local select = select
 local strfind = string.find
@@ -17,6 +17,9 @@ local UnitClass = UnitClass
 local UnitGUID = UnitGUID
 local UnitHealth = UnitHealth
 local UnitHealthMax = UnitHealthMax
+
+local CLASS_BUTTONS = CLASS_BUTTONS
+local RAID_CLASS_COLORS = RAID_CLASS_COLORS
 
 local TargetBar = Gladius:NewModule("TargetBar", true, true, {
 	targetBarAttachTo = "Trinket",

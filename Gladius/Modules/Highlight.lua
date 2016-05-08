@@ -5,7 +5,7 @@ end
 local L = Gladius.L
 local LSM
 
--- global functions
+-- Global Functions
 local abs = abs
 local pairs = pairs
 local strfind = string.find
@@ -254,7 +254,7 @@ end
 function Highlight:Test(unit)
 	if Gladius.db.highlightTarget then
 		if unit == "arena1" then
-			Highlight:Show(unit)
+			self:Show(unit)
 			self.frame[unit]:SetBackdropBorderColor(Gladius.db.highlightTargetColor.r, Gladius.db.highlightTargetColor.g, Gladius.db.highlightTargetColor.b, Gladius.db.highlightTargetColor.a)
 		end
 	else
@@ -264,7 +264,7 @@ function Highlight:Test(unit)
 	end
 	if Gladius.db.highlightFocus then
 		if unit == "arena2" then
-			Highlight:Show(unit)
+			self:Show(unit)
 			self.frame[unit]:SetBackdropBorderColor(Gladius.db.highlightFocusColor.r, Gladius.db.highlightFocusColor.g, Gladius.db.highlightFocusColor.b, Gladius.db.highlightFocusColor.a)
 		end
 	else

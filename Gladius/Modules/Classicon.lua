@@ -5,21 +5,23 @@ end
 local L = Gladius.L
 local LSM
 
--- global functions
+-- Global Functions
 local _G = _G
 local pairs = pairs
 local select = select
 local strfind = string.find
+local tonumber = tonumber
 local tostring = tostring
 local unpack = unpack
 
-local CLASS_BUTTONS = CLASS_BUTTONS
 local CreateFrame = CreateFrame
 local GetSpecializationInfoByID = GetSpecializationInfoByID
 local GetSpellInfo = GetSpellInfo
 local GetTime = GetTime
 local UnitAura = UnitAura
 local UnitClass = UnitClass
+
+local CLASS_BUTTONS = CLASS_BUTTONS
 
 local function GetDefaultAuraList()
 	local auraTable = {

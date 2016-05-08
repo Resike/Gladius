@@ -33,6 +33,7 @@ local UnitIsGroupLeader = UnitIsGroupLeader
 local UnitName = UnitName
 
 local UNKNOWN = UNKNOWN
+local RAID_CLASS_COLORS = RAID_CLASS_COLORS
 
 local Announcements = Gladius:NewModule("Announcements", false, false, {
 	announcements = {

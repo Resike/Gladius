@@ -5,6 +5,7 @@ local tonumber = tonumber
 local type = type
 
 local GetAddOnMetadata = GetAddOnMetadata
+local InCombatLockdown = InCombatLockdown
 
 local L = Gladius.L
 

@@ -5,7 +5,7 @@ end
 local L = Gladius.L
 local LSM
 
--- global functions
+-- Global Functions
 local loadstring = loadstring
 local pairs = pairs
 local strfind = string.find
@@ -21,6 +21,7 @@ local UnitName = UnitName
 local UnitPower = UnitPower
 local UnitPowerMax = UnitPowerMax
 local UnitRace = UnitRace
+
 local LOCALIZED_CLASS_NAMES_MALE = LOCALIZED_CLASS_NAMES_MALE
 
 local Tags = Gladius:NewModule("Tags", false, false, {
