@@ -5,11 +5,19 @@ end
 local L = Gladius.L
 local LSM
 
--- global functions
-local strfind = string.find
+-- Global Functions
+local _G = _G
 local pairs = pairs
+local strfind = string.find
 local strformat = string.format
-local UnitName, UnitClass, UnitFactionGroup, UnitLevel = UnitName, UnitClass, UnitFactionGroup, UnitLevel
+
+local CreateFrame = CreateFrame
+local GetSpellInfo = GetSpellInfo
+local IsInInstance = IsInInstance
+local UnitClass = UnitClass
+local UnitFactionGroup = UnitFactionGroup
+local UnitLevel = UnitLevel
+local UnitName = UnitName
 
 local Trinket = Gladius:NewModule("Trinket", false, true, {
 	trinketAttachTo = "Frame",

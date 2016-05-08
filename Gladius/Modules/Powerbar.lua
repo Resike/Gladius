@@ -5,15 +5,16 @@ end
 local L = Gladius.L
 local LSM
 
--- global functions
+-- Global Functions
 local strfind = string.find
 local pairs = pairs
 
+local CreateFrame = CreateFrame
+local PowerBarColor = PowerBarColor
+local UnitExists = UnitExists
 local UnitPower = UnitPower
 local UnitPowerMax = UnitPowerMax
 local UnitPowerType = UnitPowerType
-local UnitExists = UnitExists
-local CreateFrame = CreateFrame
 
 local PowerBar = Gladius:NewModule("PowerBar", true, true, {
 	powerBarAttachTo = "HealthBar",

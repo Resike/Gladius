@@ -5,7 +5,7 @@ end
 local L = Gladius.L
 local LSM
 
--- global functions
+-- Global Functions
 local pairs = pairs
 local select = select
 local strfind = string.find
@@ -15,6 +15,8 @@ local UnitClass = UnitClass
 local UnitExists = UnitExists
 local UnitHealth = UnitHealth
 local UnitHealthMax = UnitHealthMax
+
+local RAID_CLASS_COLORS = RAID_CLASS_COLORS
 
 local HealthBar = Gladius:NewModule("HealthBar", true, true, {
 	healthBarAttachTo = "Frame",
