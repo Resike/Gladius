@@ -5,7 +5,7 @@ end
 local L = Gladius.L
 local LSM
 
-RAID_CLASS_COLORS
+-- GLobal Functions
 local _G = _G
 local floor = math.floor
 local pairs = pairs
