@@ -4,9 +4,13 @@ if not Gladius then
 end
 local L = Gladius.L
 
--- global functions
+-- Global functions
 local pairs = pairs
 local string = string
+
+local FOCUS = FOCUS
+local MACRO = MACRO
+local TARGET = TARGET
 
 local Clicks = Gladius:NewModule("Clicks", false, false, {
 	clickAttributes = {
@@ -37,7 +41,7 @@ function Clicks:GetAttachTo()
 end
 
 -- Registers a secure frame and immediately applies
--- click actions to it
+-- Click actions to it
 function Clicks:RegisterSecureFrame(unit, frame)
 	if not self.secureFrames[unit] then
 		self.secureFrames[unit] = { }
@@ -85,7 +89,7 @@ function Clicks:ApplyAttributes(unit, frame)
 end
 
 function Clicks:Test(unit)
-	-- set arena1 to player
+	-- Set arena1 to player
 	for frame, _ in pairs(self.secureFrames[unit]) do
 		frame:SetAttribute("unit", "player")
 	end
@@ -159,16 +163,16 @@ function Clicks:GetOptions()
 							func = function()
 								local attr = addAttrMod ~= "" and CLICK_MODIFIERS[addAttrMod]..CLICK_BUTTONS[addAttrButton] or CLICK_BUTTONS[addAttrButton]
 								if not Gladius.db.clickAttributes[attr] then
-									-- add to db
+									-- Add to db
 									Gladius.db.clickAttributes[attr] = {
 										button = addAttrButton, 
 										modifier = addAttrMod, 
 										action = "target", 
 										macro = ""
 									}
-									-- add to options
+									-- Add to options
 									Gladius.options.args[self.name].args.attributeList.args[attr] = self:GetAttributeOptionTable(attr, self.order)
-									-- update
+									-- Update
 									Gladius:UpdateFrame()
 								end
 							end,
@@ -178,7 +182,7 @@ function Clicks:GetOptions()
 			},
 		},
 	}
-	-- attributes
+	-- Attributes
 	local order = 1
 	for attr, _ in pairs(Gladius.dbi.profile.clickAttributes) do
 		options.attributeList.args[attr] = self:GetAttributeOptionTable(attr, order)
@@ -201,11 +205,11 @@ function Clicks:GetAttributeOptionTable(attribute, order)
 				type = "execute",
 				name = L["Delete Click Action"],
 				func = function()
-					-- remove from db
+					-- Remove from db
 					Gladius.db.clickAttributes[attribute] = nil
-					-- remove from options
+					-- Remove from options
 					Gladius.options.args[self.name].args.attributeList.args[attribute] = nil
-					-- update
+					-- Update
 					Gladius:UpdateFrame()
 				end,
 				order = 1,

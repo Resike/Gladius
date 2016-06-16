@@ -1,3 +1,6 @@
+**4.3.4**
+* Click module updates.
+
 **4.3.3**
 * Fixed a lua error caused by a typo.
 

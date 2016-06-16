@@ -204,7 +204,7 @@ function Gladius:GetModule(name)
 end
 
 function Gladius:GetModules(module)
-	-- get module list for frame anchor
+	-- Get module list for frame anchor
 	local t = {["Frame"] = L["Frame"]}
 	for moduleName, m in pairs(self.modules) do
 		if moduleName ~= module and m:GetAttachTo() ~= module and m.attachTo and m:IsEnabled() then
