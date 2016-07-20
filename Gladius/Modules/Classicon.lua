@@ -21,14 +21,14 @@ local GetTime = GetTime
 local UnitAura = UnitAura
 local UnitClass = UnitClass
 
-local CLASS_BUTTONS = CLASS_BUTTONS
+local CLASS_BUTTONS = CLASS_ICON_TCOORDS
 
 local function GetDefaultAuraList()
 	local auraTable = {
 		-- Higher Number is More Priority
 		-- Priority List by P0rkz
 		-- Unpurgable long lasting buffs
-		[GetSpellInfo(108292)]	= 0,	-- Heart of the Wild
+		--[GetSpellInfo(108292)]	= 0,	-- Heart of the Wild
 		-- Mobility Auras (0)
 		[GetSpellInfo(108843)]	= 0,	-- Blazing Speed
 		[GetSpellInfo(65081)]	= 0,	-- Body and Soul
@@ -47,25 +47,25 @@ local function GetDefaultAuraList()
 		[GetSpellInfo(120)]		= 1,	-- Cone of Cold
 		[GetSpellInfo(13809)]	= 1,	-- Frost Trap
 		-- Purgable Buffs (2)
-		[GetSpellInfo(16188)]	= 2,	-- Ancestral Swiftness
+		--[GetSpellInfo(16188)]	= 2,	-- Ancestral Swiftness
 		[GetSpellInfo(31842)]	= 2,	-- Divine Favor
-		[GetSpellInfo(6346)]	= 2,	-- Fear Ward
+		--[GetSpellInfo(6346)]	= 2,	-- Fear Ward
 		[GetSpellInfo(112965)]	= 2,	-- Fingers of Frost
 		[GetSpellInfo(1044)]	= 2,	-- Hand of Freedom
 		[GetSpellInfo(1022)]	= 2,	-- Hand of Protection
-		[GetSpellInfo(114039)]	= 2,	-- Hand of Purity
+		--[GetSpellInfo(114039)]	= 2,	-- Hand of Purity
 		[GetSpellInfo(6940)]	= 2,	-- Hand of Sacrifice
 		[GetSpellInfo(11426)]	= 2,	-- Ice Barrier
 		[GetSpellInfo(53271)]	= 2,	-- Master's Call
-		[GetSpellInfo(132158)]	= 2,	-- Nature's Swiftness
-		[GetSpellInfo(12043)]	= 2,	-- Presence of Mind
+		--[GetSpellInfo(132158)]	= 2,	-- Nature's Swiftness
+		--[GetSpellInfo(12043)]	= 2,	-- Presence of Mind
 		[GetSpellInfo(48108)]	= 2,	-- Pyroblast!
 		-- Defensive - Damage Redution Auras (3)
 		[GetSpellInfo(108978)]	= 3,	-- Alter Time
 		[GetSpellInfo(108271)]	= 3,	-- Astral Shift
 		[GetSpellInfo(22812)]	= 3,	-- Barkskin
 		[GetSpellInfo(18499)]	= 3,	-- Berserker Rage
-		[GetSpellInfo(111397)]	= 3,	-- Blood Horror
+		--[GetSpellInfo(111397)]	= 3,	-- Blood Horror
 		[GetSpellInfo(74001)]	= 3,	-- Combat Readiness
 		[GetSpellInfo(31224)]	= 3,	-- Cloak of Shadows
 		[GetSpellInfo(108359)]	= 3,	-- Dark Regeneration
@@ -80,12 +80,12 @@ local function GetDefaultAuraList()
 		[GetSpellInfo(49039)]	= 3,	-- Lichborne
 		[GetSpellInfo(116849)]	= 3,	-- Life Cocoon
 		[GetSpellInfo(114028)]	= 3,	-- Mass Spell Reflection
-		[GetSpellInfo(30884)]	= 3,	-- Nature's Guardian
+		--[GetSpellInfo(30884)]	= 3,	-- Nature's Guardian
 		[GetSpellInfo(124974)]	= 3,	-- Nature's Vigil
-		[GetSpellInfo(137562)]	= 3,	-- Nimble Brew
+		--[GetSpellInfo(137562)]	= 3,	-- Nimble Brew
 		[GetSpellInfo(33206)]	= 3,	-- Pain Suppression
 		[GetSpellInfo(53480)]	= 3,	-- Roar of Sacrifice
-		[GetSpellInfo(30823)]	= 3,	-- Shamanistic Rage
+		--[GetSpellInfo(30823)]	= 3,	-- Shamanistic Rage
 		[GetSpellInfo(871)]		= 3,	-- Shield Wall
 		[GetSpellInfo(112833)]	= 3,	-- Spectral Guise
 		[GetSpellInfo(23920)]	= 3,	-- Spell Reflection
@@ -95,28 +95,28 @@ local function GetDefaultAuraList()
 		[GetSpellInfo(13750)]	= 4,	-- Adrenaline Rush
 		[GetSpellInfo(152151)]	= 4,	-- Shadow Reflection
 		[GetSpellInfo(107574)]	= 4,	-- Avatar
-		[GetSpellInfo(106952)]	= 4,	-- Berserk
+		--[GetSpellInfo(106952)]	= 4,	-- Berserk
 		[GetSpellInfo(12292)]	= 4,	-- Bloodbath
 		[GetSpellInfo(51271)]	= 4,	-- Pillar of Frost
 		[GetSpellInfo(1719)]	= 4,	-- Recklessness
-		[GetSpellInfo(51713)]	= 4,	-- Shadow Dance
+		--[GetSpellInfo(51713)]	= 4,	-- Shadow Dance
 		-- Roots (5)
 		[GetSpellInfo(91807)]	= 5,	-- Shambling Rush (Ghoul)
 		["96294"]				= 5,	-- Chains of Ice (Chilblains)
 		[GetSpellInfo(61685)]	= 5,	-- Charge (Various)
 		[GetSpellInfo(116706)]	= 5,	-- Disable
-		[GetSpellInfo(87194)]	= 5,	-- Mind Blast (Glyphed)
+		--[GetSpellInfo(87194)]	= 5,	-- Mind Blast (Glyphed)
 		[GetSpellInfo(114404)]	= 5,	-- Void Tendrils
 		[GetSpellInfo(64695)]	= 5,	-- Earthgrab
 		[GetSpellInfo(64803)]	= 5,	-- Entrapment
-		[GetSpellInfo(63685)]	= 5,	-- Freeze (Frozen Power)
-		[GetSpellInfo(111340)]	= 5,	-- Ice Ward
+		--[GetSpellInfo(63685)]	= 5,	-- Freeze (Frozen Power)
+		--[GetSpellInfo(111340)]	= 5,	-- Ice Ward
 		[GetSpellInfo(107566)]	= 5,	-- Staggering Shout
 		[GetSpellInfo(339)]		= 5,	-- Entangling Roots
-		[GetSpellInfo(113770)]	= 5,	-- Entangling Roots (Force of Nature)
+		--[GetSpellInfo(113770)]	= 5,	-- Entangling Roots (Force of Nature)
 		[GetSpellInfo(33395)]	= 5,	-- Freeze (Water Elemental)
 		[GetSpellInfo(122)]		= 5,	-- Frost Nova
-		[GetSpellInfo(102051)]	= 5,	-- Frostjaw
+		--[GetSpellInfo(102051)]	= 5,	-- Frostjaw
 		[GetSpellInfo(102359)]	= 5,	-- Mass Entanglement
 		[GetSpellInfo(136634)]	= 5,	-- Narrow Escape
 		[GetSpellInfo(105771)]	= 5,	-- Warbringer
@@ -124,9 +124,9 @@ local function GetDefaultAuraList()
 		[GetSpellInfo(12042)]	= 6,	-- Arcane Power
 		[GetSpellInfo(114049)]	= 6,	-- Ascendance
 		[GetSpellInfo(31884)]	= 6,	-- Avenging Wrath
-		[GetSpellInfo(113858)]	= 6,	-- Dark Soul: Instability
-		[GetSpellInfo(113861)]	= 6,	-- Dark Soul: Knowledge
-		[GetSpellInfo(113860)]	= 6,	-- Dark Soul: Misery
+		--[GetSpellInfo(113858)]	= 6,	-- Dark Soul: Instability
+		--[GetSpellInfo(113861)]	= 6,	-- Dark Soul: Knowledge
+		--[GetSpellInfo(113860)]	= 6,	-- Dark Soul: Misery
 		[GetSpellInfo(16166)]	= 6,	-- Elemental Mastery
 		[GetSpellInfo(12472)]	= 6,	-- Icy Veins
 		[GetSpellInfo(33891)]	= 6,	-- Incarnation: Tree of Life
@@ -135,21 +135,21 @@ local function GetDefaultAuraList()
 		[GetSpellInfo(102558)]	= 6,	-- Incarnation: Son of Ursoc
 		[GetSpellInfo(10060)]	= 6,	-- Power Infusion
 		[GetSpellInfo(3045)]	= 6,	-- Rapid Fire
-		[GetSpellInfo(48505)]	= 6,	-- Starfall
+		--[GetSpellInfo(48505)]	= 6,	-- Starfall
 		-- Silence and Spell Immunities Auras (7)
 		[GetSpellInfo(31821)]	= 7,	-- Devotion Aura
-		[GetSpellInfo(115723)]	= 7,	-- Glyph of Ice Block
+		--[GetSpellInfo(115723)]	= 7,	-- Glyph of Ice Block
 		[GetSpellInfo(8178)]	= 7,	-- Grounding Totem Effect
 		[GetSpellInfo(131558)]	= 7,	-- Spiritwalker's Aegis
 		[GetSpellInfo(104773)]	= 7,	-- Unending Resolve
 		[GetSpellInfo(124488)]	= 7,	-- Zen Focus
-		[GetSpellInfo(159630)]  = 7,    -- Shadow Magic
+		--[GetSpellInfo(159630)]  = 7,    -- Shadow Magic
 		-- Silence Auras (8)
 		[GetSpellInfo(1330)]	= 8,	-- Garrote (Silence)
 		[GetSpellInfo(15487)]	= 8,	-- Silence
 		[GetSpellInfo(47476)]	= 8,	-- Strangulate
 		[GetSpellInfo(31935)]	= 8,	-- Avenger's Shield
-		[GetSpellInfo(137460)]	= 8,	-- Ring of Peace
+		--[GetSpellInfo(137460)]	= 8,	-- Ring of Peace
 		[GetSpellInfo(28730)]	= 8,	-- Arcane Torrent (Mana version)
 		[GetSpellInfo(80483)]	= 8,	-- Arcane Torrent (Focus version)
 		[GetSpellInfo(25046)]	= 8,	-- Arcane Torrent (Energy version)
@@ -164,29 +164,29 @@ local function GetDefaultAuraList()
 		[GetSpellInfo(24394)]	= 9,	-- Intimidation
 		[GetSpellInfo(105421)]	= 9,	-- Blinding Light
 		[GetSpellInfo(7922)]	= 9,	-- Charge Stun
-		[GetSpellInfo(119392)]	= 9,	-- Charging Ox Wave
+		--[GetSpellInfo(119392)]	= 9,	-- Charging Ox Wave
 		[GetSpellInfo(1833)]	= 9,	-- Cheap Shot
-		[GetSpellInfo(118895)]	= 9,	-- Dragon Roar
+		--[GetSpellInfo(118895)]	= 9,	-- Dragon Roar
 		[GetSpellInfo(77505)]	= 9,	-- Earthquake
 		[GetSpellInfo(120086)]	= 9,	-- Fist of Fury
-		[GetSpellInfo(44572)]	= 9,	-- Deep Freeze
+		--[GetSpellInfo(44572)]	= 9,	-- Deep Freeze
 		[GetSpellInfo(99)]		= 9,	-- Disorienting Roar
 		[GetSpellInfo(31661)]	= 9,	-- Dragon's Breath
-		[GetSpellInfo(123393)]	= 9,	-- Breath of Fire (Glyphed)
-		[GetSpellInfo(105593)]	= 9,	-- Fist of Justice
+		--[GetSpellInfo(123393)]	= 9,	-- Breath of Fire (Glyphed)
+		--[GetSpellInfo(105593)]	= 9,	-- Fist of Justice
 		[GetSpellInfo(47481)]	= 9,	-- Gnaw
 		[GetSpellInfo(1776)]	= 9,	-- Gouge
 		[GetSpellInfo(853)]		= 9,	-- Hammer of Justice
-		[GetSpellInfo(119072)]	= 9,	-- Holy Wrath
+		--[GetSpellInfo(119072)]	= 9,	-- Holy Wrath
 		[GetSpellInfo(88625)]	= 9,	-- Holy Word: Chastise
 		[GetSpellInfo(19577)]	= 9,	-- Intimidation
 		[GetSpellInfo(408)]		= 9,	-- Kidney Shot
 		[GetSpellInfo(119381)]	= 9,	-- Leg Sweep
 		[GetSpellInfo(22570)]	= 9,	-- Maim
 		[GetSpellInfo(5211)]	= 9,	-- Mighty Bash
-		[GetSpellInfo(113801)]	= 9,	-- Bash (Treants)
+		--[GetSpellInfo(113801)]	= 9,	-- Bash (Treants)
 		[GetSpellInfo(118345)]	= 9,	-- Pulverize (Primal Earth Elemental)
-		[GetSpellInfo(115001)]	= 9,	-- Remorseless Winter
+		--[GetSpellInfo(115001)]	= 9,	-- Remorseless Winter
 		[GetSpellInfo(30283)]	= 9,	-- Shadowfury
 		[GetSpellInfo(22703)]	= 9,	-- Summon Infernal
 		[GetSpellInfo(46968)]	= 9,	-- Shockwave
@@ -199,7 +199,7 @@ local function GetDefaultAuraList()
 		-- Crowd Controls Auras (10)
 		[GetSpellInfo(710)]		= 10,	-- Banish
 		[GetSpellInfo(2094)]	= 10,	-- Blind
-		[GetSpellInfo(137143)]	= 10,	-- Blood Horror
+		--[GetSpellInfo(137143)]	= 10,	-- Blood Horror
 		[GetSpellInfo(33786)]	= 10,	-- Cyclone
 		[GetSpellInfo(605)]		= 10,	-- Dominate Mind
 		[GetSpellInfo(118699)]	= 10,	-- Fear
@@ -219,12 +219,12 @@ local function GetDefaultAuraList()
 		[GetSpellInfo(107079)]	= 10,	-- Quaking Palm
 		[GetSpellInfo(6358)]	= 10,	-- Seduction (Succubus)
 		[GetSpellInfo(9484)]	= 10,	-- Shackle Undead
-		[GetSpellInfo(10326)]	= 10,	-- Turn Evil
+		--[GetSpellInfo(10326)]	= 10,	-- Turn Evil
 		[GetSpellInfo(19386)]	= 10,	-- Wyvern Sting
 		-- Immunity Auras (11)
 		[GetSpellInfo(48707)]	= 11,	-- Anti-Magic Shell
 		[GetSpellInfo(46924)]	= 11,	-- Bladestorm
-		[GetSpellInfo(110913)]	= 11,	-- Dark Bargain
+		--[GetSpellInfo(110913)]	= 11,	-- Dark Bargain
 		[GetSpellInfo(19263)]	= 11,	-- Deterrence
 		[GetSpellInfo(47585)]	= 11,	-- Dispersion
 		[GetSpellInfo(642)]		= 11,	-- Divine Shield
