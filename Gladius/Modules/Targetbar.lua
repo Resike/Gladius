@@ -18,7 +18,7 @@ local UnitGUID = UnitGUID
 local UnitHealth = UnitHealth
 local UnitHealthMax = UnitHealthMax
 
-local CLASS_BUTTONS = CLASS_BUTTONS
+local CLASS_BUTTONS = CLASS_ICON_TCOORDS
 local RAID_CLASS_COLORS = RAID_CLASS_COLORS
 
 local TargetBar = Gladius:NewModule("TargetBar", true, true, {
