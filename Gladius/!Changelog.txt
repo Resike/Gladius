@@ -1,3 +1,6 @@
+**5.0.2**
+* Color updates for Demon Hunters.
+
 **5.0.1**
 * Trinket fixes.
 * Library updates.
