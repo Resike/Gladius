@@ -122,16 +122,24 @@ function Trinket:UNIT_SPELLCAST_SUCCEEDED(event, unit, spell, rank)
 	if instanceType ~= "arena" or not strfind(unit, "arena") or strfind(unit, "pet") then
 		return
 	end
-	-- PVP trinket
+	-- PVP trinkets
 	if spell == GetSpellInfo(59752) or spell == GetSpellInfo(42292) then
 		self:UpdateTrinket(unit, 120)
 	end
-	-- Will of the Forsaken
-	if spell == GetSpellInfo(7744) then
+	-- Honorable Medallion
+	if spell == GetSpellInfo(195710) then
+		self:UpdateTrinket(unit, 180)
+	end
+	-- Every Man For Himself
+	if spell == GetSpellInfo(59752) then
 		self:UpdateTrinket(unit, 30)
 	end
 	-- Stoneform
 	if spell == GetSpellInfo(20594) then
+		self:UpdateTrinket(unit, 30)
+	end
+	-- Will of the Forsaken
+	if spell == GetSpellInfo(7744) then
 		self:UpdateTrinket(unit, 30)
 	end
 end
@@ -318,11 +326,7 @@ function Trinket:Show(unit)
 					trinketIcon = "Interface\\Icons\\INV_Jewelry_Necklace_37"
 				end
 			else
-				if UnitFactionGroup(unit) == "Horde" then
-					trinketIcon = "Interface\\Icons\\INV_Jewelry_TrinketPVP_02"
-				else
-					trinketIcon = "Interface\\Icons\\INV_Jewelry_TrinketPVP_01"
-				end
+				trinketIcon = 338784
 			end
 		else
 			if Gladius.db.trinketFaction then
@@ -332,11 +336,7 @@ function Trinket:Show(unit)
 					trinketIcon = "Interface\\Icons\\INV_Jewelry_Necklace_37"
 				end
 			else
-				if UnitFactionGroup("player") == "Horde" then
-					trinketIcon = "Interface\\Icons\\INV_Jewelry_TrinketPVP_02"
-				else
-					trinketIcon = "Interface\\Icons\\INV_Jewelry_TrinketPVP_01"
-				end
+				trinketIcon = 338784
 			end
 		end
 		self.frame[unit].texture:SetTexture(trinketIcon)
@@ -375,6 +375,8 @@ end
 
 function Trinket:Test(unit)
 	if unit == "arena1" then
+		self:UpdateTrinket(unit, 180)
+	elseif unit == "arena2" then
 		self:UpdateTrinket(unit, 120)
 	end
 end
