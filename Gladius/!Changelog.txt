@@ -1,3 +1,6 @@
+**5.0.3**
+* Trinket module updates.
+
 **5.0.2**
 * Color updates for Demon Hunters.
 
