@@ -130,6 +130,10 @@ function Trinket:UNIT_SPELLCAST_SUCCEEDED(event, unit, spell, rank)
 	if spell == GetSpellInfo(195710) then
 		self:UpdateTrinket(unit, 180)
 	end
+	-- Gladiator's Medallion
+	if spell == GetSpellInfo(208683) then
+		self:UpdateTrinket(unit, 120)
+	end
 	-- Every Man For Himself
 	if spell == GetSpellInfo(59752) then
 		self:UpdateTrinket(unit, 30)
