@@ -339,10 +339,10 @@ function Gladius:JoinedArena()
 	self:RegisterEvent("UNIT_NAME_UPDATE")
 	self:RegisterEvent("ARENA_OPPONENT_UPDATE") 
 	self:RegisterEvent("ARENA_PREP_OPPONENT_SPECIALIZATIONS")
-	self:RegisterEvent("UNIT_HEALTH") 
-	self:RegisterEvent("UNIT_MAXHEALTH", "UNIT_HEALTH")
-	self:RegisterEvent("UNIT_AURA")
-	self:RegisterEvent("UNIT_SPELLCAST_START")
+	--self:RegisterEvent("UNIT_HEALTH") 
+	--self:RegisterEvent("UNIT_MAXHEALTH", "UNIT_HEALTH")
+	--self:RegisterEvent("UNIT_AURA")
+	--self:RegisterEvent("UNIT_SPELLCAST_START")
 
 	-- reset test
 	self.test = false
@@ -421,12 +421,15 @@ function Gladius:ARENA_OPPONENT_UPDATE(event, unit, type)
 	self:UpdateUnit(unit)
 	self:ShowUnit(unit)
 	-- enemy seen
-	if type == "seen" or type == "destroyed" then
-		self:ShowUnit(unit, false, nil, true)
+	if type == "seen" then
+		self:ShowUnit(unit, false, nil)
 	-- enemy stealth
 	elseif type == "unseen" then
-		self:UpdateAlpha(unit, self.db.stealthAlpha)
+		self:UpdateAlpha(unit, 0.5)
 	-- enemy left arena
+	elseif type == "destroyed" then
+		self:UpdateAlpha(unit, 0.3)
+	-- arena over
 	elseif type == "cleared" then
 		self:UpdateAlpha(unit, 0)
 	end
@@ -755,7 +758,7 @@ end
 
 function Gladius:UpdateAlpha(unit, alpha)
 	-- update button alpha
-	alpha = alpha and alpha or 0.25
+	--alpha = alpha and alpha or 0.25
 	if self.buttons[unit] then 
 		self.buttons[unit]:SetAlpha(alpha)
 	end

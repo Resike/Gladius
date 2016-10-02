@@ -261,7 +261,7 @@ function HealthBar:Show(unit)
 		self.frame[unit]:SetStatusBarColor(color.r, color.g, color.b, color.a or 1)
 	end
 
-	self.frame[unit]:SetValue(1)
+	--self.frame[unit]:SetValue(1)
 
 	-- call event
 	if not Gladius.test then
