@@ -1,3 +1,7 @@
+**5.0.4**
+* Stealth alpha fixes.
+* Trinket module updates.
+
 **5.0.3**
 * Trinket module updates.
 
