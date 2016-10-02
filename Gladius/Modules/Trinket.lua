@@ -330,7 +330,7 @@ function Trinket:Show(unit)
 					trinketIcon = "Interface\\Icons\\INV_Jewelry_Necklace_37"
 				end
 			else
-				trinketIcon = 338784
+				trinketIcon = 1322720
 			end
 		else
 			if Gladius.db.trinketFaction then
@@ -340,7 +340,7 @@ function Trinket:Show(unit)
 					trinketIcon = "Interface\\Icons\\INV_Jewelry_Necklace_37"
 				end
 			else
-				trinketIcon = 338784
+				trinketIcon = 1322720
 			end
 		end
 		self.frame[unit].texture:SetTexture(trinketIcon)
