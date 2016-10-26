@@ -159,6 +159,9 @@ function TargetBar:UNIT_TARGET(event, unit)
 end
 
 function TargetBar:UNIT_HEALTH(event, unit)
+	if not unit then
+		return
+	end
 	local foundUnit = nil
 	for u, _ in pairs(self.frame) do
 		if UnitGUID(unit) == UnitGUID(u.."target") then

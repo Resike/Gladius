@@ -158,6 +158,10 @@ function Tags:OnMessage(unit, event)
 end
 
 function Tags:OnEvent(event, unit)
+	if not unit then
+		return
+	end
+
 	if not strfind(unit, "arena") or strfind(unit, "pet") then
 		return
 	end
