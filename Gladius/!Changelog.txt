@@ -1,3 +1,6 @@
+**5.0.5**
+* Updated for 7.1.0.
+
 **5.0.4**
 * Stealth alpha fixes.
 * Trinket module updates.

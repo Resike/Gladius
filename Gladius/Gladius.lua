@@ -875,5 +875,9 @@ function Gladius:GetUnitFrame(unit)
 end
 
 function Gladius:IsValidUnit(unit)
+	if not unit then
+		return
+	end
+
 	return strfind(unit, "arena") and not strfind(unit, "pet")
 end
