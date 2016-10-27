@@ -854,6 +854,9 @@ function Gladius:UNIT_SPELLCAST_START(event, unit)
 end
 
 function Gladius:UNIT_HEALTH(event, unit)
+	if not unit then
+		return
+	end
 	if not self:IsValidUnit(unit) then
 		return
 	end
