@@ -109,6 +109,9 @@ end
 end]]
 
 function Announcements:UNIT_HEALTH(event, unit)
+	if not unit then
+		return
+	end
 	local _, instanceType = IsInInstance()
 	if instanceType ~= "arena" or not strfind(unit, "arena") or strfind(unit, "pet") or not Gladius.db.announcements.health then
 		return
