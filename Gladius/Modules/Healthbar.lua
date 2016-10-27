@@ -89,6 +89,9 @@ function HealthBar:GetFrame(unit)
 end
 
 function HealthBar:UNIT_HEALTH(event, unit)
+	if not unit then
+		return
+	end
 	if not Gladius:IsValidUnit(unit) or not UnitExists(unit) then
 		return
 	end

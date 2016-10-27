@@ -1,3 +1,6 @@
+**5.0.6**
+* Workaround for some other broken events.
+
 **5.0.5**
 * Updated for 7.1.0.
 
