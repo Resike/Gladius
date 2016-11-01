@@ -161,6 +161,8 @@ local function GetDefaultAuraList()
 		[GetSpellInfo(91797)]	= 9,	-- Monstrous Blow (Dark Transformation Ghoul)
 		[GetSpellInfo(89766)]	= 9,	-- Axe Toss (Felguard)
 		[GetSpellInfo(117526)]	= 9,	-- Binding Shot
+		[GetSpellInfo(224729)]	= 9,	-- Bursting Shot
+		[GetSpellInfo(213691)]	= 9,	-- Scatter Shot
 		[GetSpellInfo(24394)]	= 9,	-- Intimidation
 		[GetSpellInfo(105421)]	= 9,	-- Blinding Light
 		[GetSpellInfo(7922)]	= 9,	-- Charge Stun
@@ -204,6 +206,7 @@ local function GetDefaultAuraList()
 		[GetSpellInfo(605)]		= 10,	-- Dominate Mind
 		[GetSpellInfo(118699)]	= 10,	-- Fear
 		[GetSpellInfo(3355)]	= 10,	-- Freezing Trap
+		[GetSpellInfo(209790)]	= 10,	-- Freezing Arrow
 		[GetSpellInfo(51514)]	= 10,	-- Hex
 		[GetSpellInfo(5484)]	= 10,	-- Howl of Terror
 		[GetSpellInfo(5246)]	= 10,	-- Intimidating Shout
