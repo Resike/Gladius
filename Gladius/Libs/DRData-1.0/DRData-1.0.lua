@@ -1,5 +1,5 @@
 local major = "DRData-1.0"
-local minor = 1045
+local minor = 1047
 assert(LibStub, string.format("%s requires LibStub.", major))
 
 local Data = LibStub:NewLibrary(major, minor)
@@ -181,6 +181,7 @@ local spellsAndProvidersByCategory = {
 		[  3355] = 187650, -- Freezing Trap
 		[ 19386] = true, -- Wyvern Sting
 		[209790] = true, -- Freezing Arrow
+		[213691] = true, -- Scatter Shot
 		-- Mage
 		[   118] = true, -- Polymorph
 		[ 28272] = true, -- Polymorph (pig)
@@ -256,7 +257,6 @@ local spellsAndProvidersByCategory = {
 		-- Druid
 		[ 33786] = true, -- Cyclone
 		-- Hunter
-		[213691] = true, -- Scatter Shot
 		[186387] = true, -- Bursting Shot
 		-- Mage
 		[ 31661] = true, -- Dragon's Breath
@@ -306,6 +306,8 @@ local spellsAndProvidersByCategory = {
 		-- Mage
 
 		-- Monk
+		[120086] =   true, -- Fists of Fury (with Heavy-Handed Strikes, pvp talent)
+		[232055] =   true, -- Fists of Fury (new ID in 7.1)
 		[119381] =   true, -- Leg Sweep
 		-- Paladin
 		[   853] = true, -- Hammer of Justice
