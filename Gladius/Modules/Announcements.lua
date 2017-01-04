@@ -134,6 +134,9 @@ function Announcements:UNIT_AURA(event, unit)
 end
 
 function Announcements:ARENA_PREP_OPPONENT_SPECIALIZATIONS(event, ...)
+	if not Gladius.db.announcements.spec then
+		return
+	end
 	local numOpps = GetNumArenaOpponentSpecs()
 	for i = 1, numOpps do
 		--local prepFrame = _G["ArenaPrepFrame"..i]
