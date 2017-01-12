@@ -153,7 +153,7 @@ function Announcements:ARENA_PREP_OPPONENT_SPECIALIZATIONS(event, ...)
 				prepFrame:Show()
 			else
 				prepFrame:Hide()]]
-			self:Send("Enemy Spec: "..spec.." "..class)
+			self:Send("Enemy Spec: "..name.." "..class)
 		end
 		--else
 		--prepFrame:Hide()
