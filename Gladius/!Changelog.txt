@@ -1,3 +1,6 @@
+**5.1.0**
+* Fixed a typo.
+
 **5.0.9**
 * Updated for 7.1.5.
 * Fix for the class icon argument changes.
