@@ -218,6 +218,9 @@ local spellsAndProvidersByCategory = {
 		[  6789] = true, -- Mortal Coil
 		-- Pandaren
 		[107079] = true, -- Quaking Palm
+		-- Demon Hunter
+		[217832] = true, -- Imprison
+		[221527] = true, -- Improve Imprison
 	},
 
 	--[[ SILENCES ]]--
