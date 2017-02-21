@@ -202,7 +202,8 @@ local function GetDefaultAuraList()
 		[GetSpellInfo(710)]		= 10,	-- Banish
 		[GetSpellInfo(2094)]	= 10,	-- Blind
 		--[GetSpellInfo(137143)]	= 10,	-- Blood Horror
-		[GetSpellInfo(33786)]	= 10,	-- Cyclone
+		[GetSpellInfo(33786)]	= 10,	-- Cyclone resto spec
+		[GetSpellInfo(209753)]	= 10,	-- Cyclone boomy spec
 		[GetSpellInfo(605)]		= 10,	-- Dominate Mind
 		[GetSpellInfo(118699)]	= 10,	-- Fear
 		[GetSpellInfo(3355)]	= 10,	-- Freezing Trap
@@ -212,6 +213,8 @@ local function GetDefaultAuraList()
 		[GetSpellInfo(115268)]	= 10,	-- Mesmerize (Shivarra)
 		[GetSpellInfo(6789)]	= 10,	-- Mortal Coil
 		[GetSpellInfo(115078)]	= 10,	-- Paralysis
+		[GetSpellInfo(217832)]	= 10,	-- Imprison
+		[GetSpellInfo(221527)]	= 10,	-- Improve Imprison
 		[GetSpellInfo(118)]		= 10,	-- Polymorph
 		[GetSpellInfo(8122)]	= 10,	-- Psychic Scream
 		[GetSpellInfo(64044)]	= 10,	-- Psychic Horror
