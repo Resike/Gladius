@@ -259,6 +259,7 @@ local spellsAndProvidersByCategory = {
 		[207685] = true, -- Sigil of Misery
 		-- Druid
 		[ 33786] = true, -- Cyclone
+		[209753] = true, -- Cyclone (Balance)
 		-- Hunter
 		[186387] = true, -- Bursting Shot
 		-- Mage
