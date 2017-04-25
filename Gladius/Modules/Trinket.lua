@@ -44,7 +44,10 @@ local Trinket = Gladius:NewModule("Trinket", false, true, {
 })
 
 function Trinket:OnEnable()
-	self:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
+	--self:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
+	--self:RegisterEvent("ARENA_OPPONENT_UPDATE")
+	self:RegisterEvent("ARENA_COOLDOWNS_UPDATE")
+	self:RegisterEvent("ARENA_CROWD_CONTROL_SPELL_UPDATE")
 	LSM = Gladius.LSM
 	if not self.frame then
 		self.frame = { }
@@ -117,7 +120,38 @@ end
 	end
 end]]
 
-function Trinket:UNIT_SPELLCAST_SUCCEEDED(event, unit, spell, rank)
+function Trinket:ARENA_COOLDOWNS_UPDATE(event, unit)
+	if not Gladius:IsValidUnit(unit) then
+		return
+	end
+	self:UpdateTrinket(unit)
+end
+
+function Trinket:ARENA_CROWD_CONTROL_SPELL_UPDATE(event, unit, spellID)
+	if not Gladius:IsValidUnit(unit) then
+		return
+	end
+	if not self.frame[unit] then
+		return
+	end
+
+	if spellID ~= self.frame[unit].spellID then
+		local _, _, spellTexture = GetSpellInfo(spellID)
+		self.frame[unit].spellID = spellID
+		if not Gladius.db.trinketGridStyleIcon then
+			self.frame[unit].texture:SetTexture(spellTexture)
+		end
+	end
+end
+
+--[[function Trinket:ARENA_OPPONENT_UPDATE(event, unit, type)
+	if not Gladius:IsValidUnit(unit) then
+		return
+	end
+	self:UpdateTrinket(unit)
+end]]
+
+--[[function Trinket:UNIT_SPELLCAST_SUCCEEDED(event, unit, spell, rank)
 	local _, instanceType = IsInInstance()
 	if instanceType ~= "arena" or not strfind(unit, "arena") or strfind(unit, "pet") then
 		return
@@ -146,18 +180,23 @@ function Trinket:UNIT_SPELLCAST_SUCCEEDED(event, unit, spell, rank)
 	if spell == GetSpellInfo(7744) then
 		self:UpdateTrinket(unit, 30)
 	end
-end
+end]]
 
-function Trinket:UpdateTrinket(unit, duration)
+function Trinket:UpdateTrinket(unit, testduration)
+	if not self.frame[unit] then
+		return
+	end
+	C_PvP.RequestCrowdControlSpell(unit)
+	local spellID, startTime, duration = C_PvP.GetArenaCrowdControlInfo(unit)
 	-- grid style icon
 	if Gladius.db.trinketGridStyleIcon then
 		self.frame[unit].texture:SetVertexColor(Gladius.db.trinketGridStyleIconUsedColor.r, Gladius.db.trinketGridStyleIconUsedColor.g, Gladius.db.trinketGridStyleIconUsedColor.b, Gladius.db.trinketGridStyleIconUsedColor.a)
 	end
 	-- announcement
-	if Gladius.db.announcements.trinket then
+	if Gladius.db.announcements.trinket and duration then
 		Gladius:Call(Gladius.modules.Announcements, "Send", strformat(L["TRINKET USED: %s (%s)"], UnitName(unit) or "test", UnitClass(unit) or "test"), 2, unit)
 	end
-	if Gladius.db.announcements.trinket or Gladius.db.trinketGridStyleIcon then
+	if (Gladius.db.announcements.trinket or Gladius.db.trinketGridStyleIcon) and duration then
 		self.frame[unit].timeleft = duration
 		self.frame[unit]:SetScript("OnUpdate", function(f, elapsed)
 			self.frame[unit].timeleft = self.frame[unit].timeleft - elapsed
@@ -176,7 +215,37 @@ function Trinket:UpdateTrinket(unit, duration)
 		end)
 	end
 	-- cooldown
-	Gladius:Call(Gladius.modules.Timer, "SetTimer", self.frame[unit], duration)
+	if spellID then
+		local _, _, spellTexture = GetSpellInfo(spellID)
+
+		if Gladius.db.trinketGridStyleIcon then
+			self.frame[unit].texture:SetTexture(LSM:Fetch(LSM.MediaType.STATUSBAR, "Minimalist"))
+			self.frame[unit].texture:SetVertexColor(Gladius.db.trinketGridStyleIconUsedColor.r, Gladius.db.trinketGridStyleIconUsedColor.g, Gladius.db.trinketGridStyleIconUsedColor.b, Gladius.db.trinketGridStyleIconUsedColor.a)
+		else
+			if spellID ~= self.frame[unit].spellID and spellID ~= 136243 then
+				self.frame[unit].spellID = spellID
+				self.frame[unit].texture:SetTexture(spellTexture)
+			end
+		end
+
+		--[[if startTime ~= 0 and duration ~= 0 then
+			self.frame[unit].cooldown:SetCooldown(startTime / 1000.0, duration / 1000.0)
+		else
+			self.frame[unit].cooldown:Clear()
+		end]]
+		if startTime ~= 0 and duration ~= 0 then
+			Gladius:Call(Gladius.modules.Timer, "SetTimer", self.frame[unit], duration / 1000.0)
+		else
+			Gladius:Call(Gladius.modules.Timer, "SetTimer", self.frame[unit], 0)
+		end
+	end
+
+	if Gladius.test and testduration then
+		Gladius:Call(Gladius.modules.Timer, "SetTimer", self.frame[unit], testduration)
+	end
+
+	--self.frame[unit]:SetAlpha(1)
+	--Gladius:Call(Gladius.modules.Timer, "SetTimer", self.frame[unit], duration)
 end
 
 function Trinket:CreateFrame(unit)
@@ -324,23 +393,43 @@ function Trinket:Show(unit)
 		local trinketIcon
 		if not testing then
 			if Gladius.db.trinketFaction then
-				if UnitFactionGroup(unit) == "Horde" then
-					trinketIcon = "Interface\\Icons\\INV_Jewelry_Necklace_38"
+				if self.frame[unit].spellID then
+					local _, _, spellTexture = GetSpellInfo(self.frame[unit].spellID)
+					trinketIcon = spellTexture
 				else
-					trinketIcon = "Interface\\Icons\\INV_Jewelry_Necklace_37"
+					if UnitFactionGroup(unit) == "Horde" then
+						trinketIcon = "Interface\\Icons\\INV_Jewelry_Necklace_38"
+					else
+						trinketIcon = "Interface\\Icons\\INV_Jewelry_Necklace_37"
+					end
 				end
 			else
-				trinketIcon = 1322720
+				if self.frame[unit].spellID then
+					local _, _, spellTexture = GetSpellInfo(self.frame[unit].spellID)
+					trinketIcon = spellTexture
+				else
+					trinketIcon = 1322720
+				end
 			end
 		else
 			if Gladius.db.trinketFaction then
-				if UnitFactionGroup("player") == "Horde" then
-					trinketIcon = "Interface\\Icons\\INV_Jewelry_Necklace_38"
+				if self.frame[unit].spellID then
+					local _, _, spellTexture = GetSpellInfo(self.frame[unit].spellID)
+					trinketIcon = spellTexture
 				else
-					trinketIcon = "Interface\\Icons\\INV_Jewelry_Necklace_37"
+					if UnitFactionGroup("player") == "Horde" then
+						trinketIcon = "Interface\\Icons\\INV_Jewelry_Necklace_38"
+					else
+						trinketIcon = "Interface\\Icons\\INV_Jewelry_Necklace_37"
+					end
 				end
 			else
-				trinketIcon = 1322720
+				if self.frame[unit].spellID then
+					local _, _, spellTexture = GetSpellInfo(self.frame[unit].spellID)
+					trinketIcon = spellTexture
+				else
+					trinketIcon = 1322720
+				end
 			end
 		end
 		self.frame[unit].texture:SetTexture(trinketIcon)
@@ -357,10 +446,14 @@ function Trinket:Reset(unit)
 	end
 	-- reset frame
 	local trinketIcon
-	if UnitFactionGroup("player") == "Horde" and Gladius.db.trinketFaction then
-		trinketIcon = "Interface\\Icons\\INV_Jewelry_Necklace_38"
+	if Gladius.db.trinketFaction then
+		if UnitFactionGroup(unit) == "Horde" then
+			trinketIcon = "Interface\\Icons\\INV_Jewelry_Necklace_38"
+		else
+			trinketIcon = "Interface\\Icons\\INV_Jewelry_Necklace_37"
+		end
 	else
-		trinketIcon = "Interface\\Icons\\INV_Jewelry_Necklace_37"
+		trinketIcon = 1322720
 	end
 	self.frame[unit].texture:SetTexture(trinketIcon)
 	if Gladius.db.trinketIconCrop then
@@ -370,6 +463,7 @@ function Trinket:Reset(unit)
 	if Gladius.db.trinketGridStyleIcon then
 		self.frame[unit].texture:SetVertexColor(Gladius.db.trinketGridStyleIconColor.r, Gladius.db.trinketGridStyleIconColor.g, Gladius.db.trinketGridStyleIconColor.b, Gladius.db.trinketGridStyleIconColor.a)
 	end
+	self.frame[unit].spellID = nil
 	-- reset cooldown
 	self.frame[unit].timeleft = nil
 	self.frame[unit].cooldown:SetCooldown(0, 0)
