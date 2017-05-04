@@ -206,6 +206,7 @@ local function GetDefaultAuraList()
 		[GetSpellInfo(605)]		= 10,	-- Dominate Mind
 		[GetSpellInfo(118699)]	= 10,	-- Fear
 		[GetSpellInfo(3355)]	= 10,	-- Freezing Trap
+		[GetSpellInfo(209790)]	= 10,	-- Freezing Arrow
 		[GetSpellInfo(51514)]	= 10,	-- Hex
 		[GetSpellInfo(5484)]	= 10,	-- Howl of Terror
 		[GetSpellInfo(5246)]	= 10,	-- Intimidating Shout
