@@ -61,7 +61,7 @@ local function GetDefaultAuraList()
 		--[GetSpellInfo(12043)]	= 2,	-- Presence of Mind
 		[GetSpellInfo(48108)]	= 2,	-- Pyroblast!
 		-- Defensive - Damage Redution Auras (3)
-		[GetSpellInfo(108978)]	= 3,	-- Alter Time
+		--[GetSpellInfo(108978)]	= 3,	-- Alter Time
 		[GetSpellInfo(108271)]	= 3,	-- Astral Shift
 		[GetSpellInfo(22812)]	= 3,	-- Barkskin
 		[GetSpellInfo(18499)]	= 3,	-- Berserker Rage
@@ -493,7 +493,7 @@ function ClassIcon:Update(unit)
 				if (strfind(Gladius.db.classIconRelativePoint, "LEFT") and (not attachedPoint or (attachedPoint and strfind(attachedPoint, "RIGHT")))) then
 					left = left - module.frame[unit]:GetWidth()
 				elseif (strfind(Gladius.db.classIconRelativePoint, "LEFT") and (not attachedPoint or (attachedPoint and strfind(attachedPoint, "LEFT")))) then
-					right = right - module.frame[unit]:GetWidth() 
+					right = right - module.frame[unit]:GetWidth()
 				end
 			end
 		end]]
@@ -520,7 +520,7 @@ function ClassIcon:Update(unit)
 	unitFrame.cooldown.isDisabled = not Gladius.db.classIconCooldown
 	unitFrame.cooldown:SetReverse(Gladius.db.classIconCooldownReverse)
 	Gladius:Call(Gladius.modules.Timer, "RegisterTimer", unitFrame, Gladius.db.classIconCooldown)
-	
+
 	-- hide
 	unitFrame:SetAlpha(0)
 	self.frame[unit] = unitFrame
