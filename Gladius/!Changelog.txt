@@ -1,3 +1,6 @@
+**5.1.7**
+* Library updates.
+
 **5.1.6**
 * Updated for 7.2.5.
 
