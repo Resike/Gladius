@@ -200,7 +200,7 @@ function CastBar:UNIT_SPELLCAST_CHANNEL_START(event, unit)
 		else
 			self.frame[unit].castText:SetText(spell)
 		end
-	end	
+	end
 end
 
 function CastBar:UNIT_SPELLCAST_STOP(event, unit)
@@ -339,7 +339,7 @@ function CastBar:Update(unit)
 	if not self.frame[unit] then
 		self:CreateBar(unit)
 	end
-	-- set bar type 
+	-- set bar type
 	local parent = Gladius:GetParent(unit, Gladius.db.castBarAttachTo)
 	--[[if (Gladius.db.castBarAttachTo == "Frame" or Gladius:GetModule(Gladius.db.castBarAttachTo).isBar) then
 		self.isBar = true
@@ -696,7 +696,7 @@ function CastBar:GetOptions()
 					type = "group",
 					name = L["Position"],
 					desc = L["Position settings"],
-					inline = true, 
+					inline = true,
 					hidden = function()
 						return not Gladius.db.advancedOptions
 					end,
@@ -781,7 +781,7 @@ function CastBar:GetOptions()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
 							order = 20,
-						}, 
+						},
 						castBarOffsetY = {
 							type = "range",
 							name = L["Cast Bar Offset Y"],
@@ -965,7 +965,7 @@ function CastBar:GetOptions()
 							end,
 							order = 15,
 						},
-						
+
 					},
 				},
 				position = {
