@@ -1,3 +1,6 @@
+**5.2.0**
+* Update for 7.3.0.
+
 **5.1.8**
 * DRData module updates.
 
