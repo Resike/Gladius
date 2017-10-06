@@ -1,3 +1,6 @@
+**5.2.1**
+* DRData library updates.
+
 **5.2.0**
 * Update for 7.3.0.
 
