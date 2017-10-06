@@ -173,8 +173,6 @@ local spellsAndProvidersByCategory = {
 		-- Druid
 		[    99] = true, -- Incapacitating Roar (talent)
 		[203126] = true, -- Maim (with blood trauma pvp talent)
-		[236025] = true, -- Main (Honor talent)
-		[236026] = true, -- Main (Honor talent)
 		-- Hunter
 		[  3355] = 187650, -- Freezing Trap
 		[ 19386] = true, -- Wyvern Sting
@@ -260,6 +258,7 @@ local spellsAndProvidersByCategory = {
 		[209753] = true, -- Cyclone (Balance)
 		-- Hunter
 		[186387] = true, -- Bursting Shot
+		[224729] = true, -- Bursting Shot
 		-- Mage
 		[ 31661] = true, -- Dragon's Breath
 		-- Monk
@@ -300,6 +299,9 @@ local spellsAndProvidersByCategory = {
 		[211881] = true, -- Fel Eruption
 		-- Druid
 		[203123] = true, -- Maim
+		[236025] = true, -- Maim (Honor talent)
+		[236026] = true, -- Maim (Honor talent)
+		[22570] = true, -- Maim (Honor talent)
 		[  5211] = true, -- Mighty Bash
 		[163505] = 1822, -- Rake (Stun from Prowl)
 		-- Hunter
