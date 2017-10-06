@@ -327,7 +327,7 @@ local spellsAndProvidersByCategory = {
 		-- Shaman
 		[118345] = true, -- Pulverize (Primal Earth Elemental)
 		[118905] = true, -- Static Charge (Capacitor Totem)
-		[204399] = true, -- Earthfury (pvp talent)
+		--[204399] = true, -- Earthfury (pvp talent)
 		-- Warlock
 		[ 89766] = true, -- Axe Toss (Felguard)
 		[ 30283] = true, -- Shadowfury
