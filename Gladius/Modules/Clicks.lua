@@ -165,9 +165,9 @@ function Clicks:GetOptions()
 								if not Gladius.db.clickAttributes[attr] then
 									-- Add to db
 									Gladius.db.clickAttributes[attr] = {
-										button = addAttrButton, 
-										modifier = addAttrMod, 
-										action = "target", 
+										button = addAttrButton,
+										modifier = addAttrMod,
+										action = "target",
 										macro = ""
 									}
 									-- Add to options
