@@ -172,6 +172,10 @@ end]]
 	if spell == GetSpellInfo(59752) then
 		self:UpdateTrinket(unit, 30)
 	end
+	-- Escape Artist
+	if spell == GetSpellInfo(20589) then
+		self:UpdateTrinket(unit, 30)
+	end
 	-- Stoneform
 	if spell == GetSpellInfo(20594) then
 		self:UpdateTrinket(unit, 30)
@@ -234,9 +238,10 @@ function Trinket:UpdateTrinket(unit, testduration)
 			self.frame[unit].cooldown:Clear()
 		end]]
 		if startTime ~= 0 and duration ~= 0 then
-			Gladius:Call(Gladius.modules.Timer, "SetTimer", self.frame[unit], duration / 1000.0)
+			Gladius:Call(Gladius.modules.Timer, "SetTimer", self.frame[unit], duration / 1000.0, startTime / 1000.0)
 		else
-			Gladius:Call(Gladius.modules.Timer, "SetTimer", self.frame[unit], 0)
+			Gladius:Call(Gladius.modules.Timer, "HideTimer", self.frame[unit])
+			--Gladius:Call(Gladius.modules.Timer, "SetTimer", self.frame[unit], 0)
 		end
 	end
 
@@ -288,7 +293,7 @@ function Trinket:Update(unit)
 
 	-- update frame
 	unitFrame:ClearAllPoints()
-	-- anchor point 
+	-- anchor point
 	local parent = Gladius:GetParent(unit, Gladius.db.trinketAttachTo)
 	unitFrame:SetPoint(Gladius.db.trinketAnchor, parent, Gladius.db.trinketRelativePoint, Gladius.db.trinketOffsetX, Gladius.db.trinketOffsetY)
 	-- frame level
@@ -358,7 +363,7 @@ function Trinket:Update(unit)
 		unitFrame.texture:SetTexCoord(0.07, 0.93, 0.07, 0.93)
 	end
 	unitFrame.normalTexture:SetVertexColor(Gladius.db.trinketGlossColor.r, Gladius.db.trinketGlossColor.g, Gladius.db.trinketGlossColor.b, Gladius.db.trinketGloss and Gladius.db.trinketGlossColor.a or 0)
-	
+
 	-- cooldown
 	unitFrame.cooldown.isDisabled = not Gladius.db.trinketCooldown
 	unitFrame.cooldown:SetReverse(Gladius.db.trinketCooldownReverse)

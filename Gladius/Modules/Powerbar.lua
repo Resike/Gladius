@@ -27,7 +27,7 @@ local PowerBar = Gladius:NewModule("PowerBar", true, true, {
 	powerBarBackgroundColor = {r = 1, g = 1, b = 1, a = 0.3},
 	powerBarTexture = "Minimalist",
 	powerBarOffsetX = 0,
-	powerBarOffsetY = 0, 
+	powerBarOffsetY = 0,
 	powerBarAnchor = "TOPLEFT",
 	powerBarRelativePoint = "BOTTOMLEFT",
 	powerBarUseDefaultColorMana = false,
@@ -164,10 +164,10 @@ function PowerBar:Update(unit)
 		powerType = Gladius.testing[unit].powerType
 	end
 	-- create power bar
-	if not self.frame[unit] then 
+	if not self.frame[unit] then
 		self:CreateBar(unit)
 	end
-	-- set bar type 
+	-- set bar type
 	local parent = Gladius:GetParent(unit, Gladius.db.powerBarAttachTo)
 	if Gladius.db.healthBarAttachTo == "Frame" or strfind(Gladius.db.powerBarRelativePoint, "BOTTOM") then
 		self.isBar = true
@@ -342,13 +342,13 @@ function PowerBar:GetOptions()
 								return not Gladius.db.advancedOptions
 							end,
 							order = 15,
-						}, 
+						},
 						sep2 = {
 							type = "description",
 							name = "",
 							width = "full",
 							order = 17,
-						}, 
+						},
 						powerBarInverse = {
 							type = "toggle",
 							name = L["Power Bar Inverse"],
@@ -435,7 +435,7 @@ function PowerBar:GetOptions()
 							values = function()
 								return Gladius:GetModules(self.name)
 							end,
-							set = function(info, value) 
+							set = function(info, value)
 								local key = info.arg or info[#info]
 								if strfind(Gladius.db.powerBarRelativePoint, "BOTTOM") then
 									self.isBar = true

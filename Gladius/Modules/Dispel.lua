@@ -1,4 +1,4 @@
-﻿--Dispel Module for Gladius 
+﻿--Dispel Module for Gladius
 --Mavvo
 local Gladius = _G.Gladius
 if not Gladius then
@@ -211,7 +211,7 @@ function Dispel:Update(unit)
 	end
 	-- update frame
 	self.frame[unit]:ClearAllPoints()
-	-- anchor point 
+	-- anchor point
 	local parent = Gladius:GetParent(unit, Gladius.db.dispellAttachTo)
 	self.frame[unit]:SetPoint(Gladius.db.dispellAnchor, parent, Gladius.db.dispellRelativePoint, Gladius.db.dispellOffsetX, Gladius.db.dispellOffsetY)
 	-- frame level
@@ -445,7 +445,7 @@ function Dispel:GetOptions()
 								return not Gladius.dbi.profile.dispellGridStyleIcon or not Gladius.dbi.profile.modules[self.name]
 							end,
 							order = 10,
-						}, 
+						},
 						dispellGridStyleIconUsedColor = {
 							type = "color",
 							name = L["Dispel Grid Style Icon Used Color"],

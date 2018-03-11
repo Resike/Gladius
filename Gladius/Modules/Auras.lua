@@ -265,10 +265,10 @@ function Auras:Update(unit)
 	if not self.buffFrame[unit] or not self.debuffFrame[unit] then
 		self:CreateFrame(unit)
 	end
-	-- update buff frame 
+	-- update buff frame
 	if Gladius.db.aurasBuffs then
 		self.buffFrame[unit]:ClearAllPoints()
-		-- anchor point 
+		-- anchor point
 		local parent = Gladius:GetParent(unit, Gladius.db.aurasBuffsAttachTo)
 		self.buffFrame[unit]:SetPoint(Gladius.db.aurasBuffsAnchor, parent, Gladius.db.aurasBuffsRelativePoint, Gladius.db.aurasBuffsOffsetX, Gladius.db.aurasBuffsOffsetY)
 		-- size
@@ -323,7 +323,7 @@ function Auras:Update(unit)
 	-- update debuff frame
 	if Gladius.db.aurasDebuffs then
 		self.debuffFrame[unit]:ClearAllPoints()
-		-- anchor point 
+		-- anchor point
 		local parent = Gladius:GetParent(unit, Gladius.db.aurasDebuffsAttachTo)
 		self.debuffFrame[unit]:SetPoint(Gladius.db.aurasDebuffsAnchor, parent, Gladius.db.aurasDebuffsRelativePoint, Gladius.db.aurasDebuffsOffsetX, Gladius.db.aurasDebuffsOffsetY)
 		-- size
@@ -342,7 +342,7 @@ function Auras:Update(unit)
 			grow1, grow2, grow3, startRelPoint = "BOTTOMLEFT", "TOPLEFT", "BOTTOMRIGHT", "BOTTOMLEFT"
 		elseif Gladius.db.aurasDebuffsGrow == "UPLEFT" then
 			grow1, grow2, grow3, startRelPoint = "BOTTOMRIGHT", "TOPRIGHT", "BOTTOMLEFT", "BOTTOMRIGHT"
-		end	
+		end
 		for i = 1, Gladius.db.aurasDebuffsMax do
 			self.debuffFrame[unit][i]:ClearAllPoints()
 			if Gladius.db.aurasDebuffsMax >= i then

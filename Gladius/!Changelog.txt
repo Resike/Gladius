@@ -1,3 +1,7 @@
+**5.2.3**
+* Trinket timer fixes.
+* Timer fixes.
+
 **5.2.2**
 * Update for 7.3.5.
 

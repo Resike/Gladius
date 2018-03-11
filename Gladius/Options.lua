@@ -320,7 +320,7 @@ function Gladius:SetupOptions()
 								name = "",
 								width = "full",
 								order = 7,
-							}, 
+							},
 							groupButtons = {
 								type = "toggle",
 								name = L["Group Buttons"],
