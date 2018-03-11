@@ -239,7 +239,7 @@ function Tags:Update(unit)
 		local module = Gladius:GetModule(Gladius.db.tagsTexts[text].attachTo)
 		if module and module.IsEnabled and module.frame and module.frame[unit] then
 			-- create frame
-			if not self.frame[unit][text] then 
+			if not self.frame[unit][text] then
 				self:CreateFrame(unit, text)
 			end
 			-- update frame
@@ -425,7 +425,7 @@ function Tags:GetOptions()
 								if self.addTagName ~= "" and not Gladius.db.tags[self.addTagName] then
 									-- add to db
 									Gladius.db.tags[self.addTagName] = {
-										func = [[function(unit) 
+										func = [[function(unit)
 										end]],
 										events = ""
 									}
@@ -448,7 +448,7 @@ function Tags:GetOptions()
 														return false
 													end
 												end,
-												set = function(info, v) 
+												set = function(info, v)
 													local key = info[#info - 2]
 													-- add/remove tag to the text
 													if not v then
@@ -535,7 +535,7 @@ function Tags:GetOptions()
 	end
 	-- tags
 	order = 1
-	for tag, _ in pairs(Gladius.dbi.profile.tags) do 
+	for tag, _ in pairs(Gladius.dbi.profile.tags) do
 		options.tagList.args[tag] = self:GetTagOptionTable(tag, order)
 		order = order + 1
 	end

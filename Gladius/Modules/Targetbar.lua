@@ -133,7 +133,7 @@ function TargetBar:SetClassIcon(unit)
 		-- color
 		local colorx = self:GetBarColor(class)
 		if not colorx then
-			-- fallback, when targeting a pet or totem 
+			-- fallback, when targeting a pet or totem
 			colorx = Gladius.db.targetBarColor
 		end
 		self.frame[unit]:SetStatusBarColor(colorx.r, colorx.g, colorx.b, colorx.a or 1)
@@ -209,7 +209,7 @@ function TargetBar:UpdateColors(unit)
 	else
 		local color = self:GetBarColor(class)
 		if not color then
-			-- fallback, when targeting a pet or totem 
+			-- fallback, when targeting a pet or totem
 			color = Gladius.db.targetBarColor
 		end
 		self.frame[unit]:SetStatusBarColor(color.r, color.g, color.b, color.a or 1)
@@ -245,7 +245,7 @@ function TargetBar:Update(unit)
 	if not self.frame[unit] then
 		self:CreateBar(unit)
 	end
-	-- set bar type 
+	-- set bar type
 	local parent = Gladius:GetParent(unit, Gladius.db.targetBarAttachTo)
 	-- set frame type
 	if Gladius.db.targetBarAttachTo == "Frame" or strfind(Gladius.db.targetBarRelativePoint, "BOTTOM") then
@@ -305,7 +305,7 @@ function TargetBar:Update(unit)
 		self.frame[unit].background:ClearAllPoints()
 		self.frame[unit].background:SetAllPoints(self.frame[unit])
 		self.frame[unit].background:SetWidth(self.frame[unit]:GetWidth())
-		self.frame[unit].background:SetHeight(self.frame[unit]:GetHeight())	
+		self.frame[unit].background:SetHeight(self.frame[unit]:GetHeight())
 		self.frame[unit].background:SetTexture(LSM:Fetch(LSM.MediaType.STATUSBAR, Gladius.db.targetBarTexture))
 		self.frame[unit].background:SetVertexColor(Gladius.db.targetBarBackgroundColor.r, Gladius.db.targetBarBackgroundColor.g, Gladius.db.targetBarBackgroundColor.b, Gladius.db.targetBarBackgroundColor.a)
 		-- disable tileing
@@ -387,7 +387,7 @@ function TargetBar:Show(unit)
 	else
 		local color = self:GetBarColor(class)
 		if not color then
-			-- fallback, when targeting a pet or totem 
+			-- fallback, when targeting a pet or totem
 			color = Gladius.db.targetBarColor
 		end
 		self.frame[unit]:SetStatusBarColor(color.r, color.g, color.b, color.a or 1)
@@ -622,7 +622,7 @@ function TargetBar:GetOptions()
 					type = "group",
 					name = L["Position"],
 					desc = L["Position settings"],
-					inline = true, 
+					inline = true,
 					hidden = function()
 						return not Gladius.db.advancedOptions
 					end,

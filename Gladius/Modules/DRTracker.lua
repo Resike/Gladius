@@ -49,7 +49,7 @@ function DRTracker:OnEnable()
 	LSM = Gladius.LSM
 	if not self.frame then
 		self.frame = { }
-	end 
+	end
 end
 
 function DRTracker:OnDisable()
@@ -222,7 +222,7 @@ function DRTracker:Update(unit)
 	end
 	-- update frame
 	self.frame[unit]:ClearAllPoints()
-	-- anchor point 
+	-- anchor point
 	local parent = Gladius:GetParent(unit, Gladius.db.drTrackerAttachTo)
 	self.frame[unit]:SetPoint(Gladius.db.drTrackerAnchor, parent, Gladius.db.drTrackerRelativePoint, Gladius.db.drTrackerOffsetX, Gladius.db.drTrackerOffsetY)
 	-- frame level

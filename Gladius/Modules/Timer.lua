@@ -99,7 +99,7 @@ function Timer:SetTimer(frame, duration, start, callback)
 	cooldown:SetSwipeColor(0, 0, 0)
 	cooldown:SetDrawEdge(false)
 	cooldown:SetDrawBling(false)
-	cooldown.currentCooldownType = COOLDOWN_TYPE_NORMAL
+	--cooldown.currentCooldownType = COOLDOWN_TYPE_NORMAL
 
 	if not cooldown.isDisabled then
 		cooldown:SetCooldown(start, duration)
@@ -128,8 +128,9 @@ function Timer:HideTimer(frame)
 		return
 	end
 	local frameName = frame:GetName()
-	_G[frameName.."Cooldown"]:SetCooldown(0, 0)
-	
+	--_G[frameName.."Cooldown"]:SetCooldown(0, 0)
+	_G[frameName.."Cooldown"]:Clear()
+
 	if _G[frameName.."Cooldown"]:IsShown() then
 		_G[frameName.."Cooldown"]:SetAlpha(0)
 	end

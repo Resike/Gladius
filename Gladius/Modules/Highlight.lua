@@ -112,7 +112,7 @@ function Highlight:UNIT_TARGET(event, unit)
 	for arenaUnit, frame in pairs(self.frame) do
 		-- reset
 		self:Reset(arenaUnit)
-		--[[if targetGUID and UnitGUID(arenaUnit) == targetGUID and unit ~= "" then 
+		--[[if targetGUID and UnitGUID(arenaUnit) == targetGUID and unit ~= "" then
 			-- main assist
 			if Gladius.db.highlightAssist and GetPartyAssignment("MAINASSIST", unit) == 1 then
 				if frame.priority < Gladius.db.highlightTargetPriority then
@@ -162,7 +162,7 @@ function Highlight:Update(unit)
 	if not self.frame[unit] then
 		self:CreateFrame(unit)
 	end
-	-- update frame 
+	-- update frame
 	local left, right, top, bottom = Gladius.buttons[unit]:GetHitRectInsets()
 	self.frame[unit]:ClearAllPoints()
 	self.frame[unit]:SetPoint("TOPLEFT", Gladius.buttons[unit], "TOPLEFT", left - 3, top + 3)
@@ -377,7 +377,7 @@ function Highlight:GetOptions()
 								return not Gladius.dbi.profile.modules[self.name] or not Gladius.db.highlightTarget
 							end,
 							order = 10,
-						}, 
+						},
 						highlightTargetPriority = {
 							type = "range",
 							name = L["Highlight Target Priority"],
@@ -507,7 +507,7 @@ function Highlight:GetOptions()
 		options.raidTargets.args["raidTarget"..i] = {
 			type = "group",
 			name = "|TInterface\\TargetingFrame\\UI-RaidTargetingIcon_"..i..".blp:0|t"..L["Raid Icon Target "..i],
-			desc = L["Raid Icon target "..i.." settings"], 
+			desc = L["Raid Icon target "..i.." settings"],
 			inline = true,
 			order = i,
 			args = {

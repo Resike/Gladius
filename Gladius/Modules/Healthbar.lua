@@ -147,7 +147,7 @@ function HealthBar:CreateBar(unit)
 		return
 	end
 	-- create bar + text
-	self.frame[unit] = CreateFrame("STATUSBAR", "Gladius"..self.name..unit, button) 
+	self.frame[unit] = CreateFrame("STATUSBAR", "Gladius"..self.name..unit, button)
 	self.frame[unit].background = self.frame[unit]:CreateTexture("Gladius"..self.name..unit.."Background", "BACKGROUND")
 	self.frame[unit].highlight = self.frame[unit]:CreateTexture("Gladius"..self.name.."Highlight"..unit, "OVERLAY")
 end
@@ -164,7 +164,7 @@ function HealthBar:Update(unit)
 	if not self.frame[unit] then
 		self:CreateBar(unit)
 	end
-	-- set bar type 
+	-- set bar type
 	local parent = Gladius:GetParent(unit, Gladius.db.healthBarAttachTo)
 	if Gladius.db.healthBarAttachTo == "Frame" or strfind(Gladius.db.healthBarRelativePoint, "BOTTOM") then
 		self.isBar = true
@@ -182,7 +182,7 @@ function HealthBar:Update(unit)
 		width = width + Gladius:GetModule(Gladius.db.healthBarAttachTo).frame[unit]:GetWidth()
 	end
 	self.frame[unit]:SetHeight(Gladius.db.healthBarHeight)
-	self.frame[unit]:SetWidth(width) 
+	self.frame[unit]:SetWidth(width)
 	self.frame[unit]:SetPoint(Gladius.db.healthBarAnchor, parent, Gladius.db.healthBarRelativePoint, Gladius.db.healthBarOffsetX, Gladius.db.healthBarOffsetY)
 	self.frame[unit]:SetMinMaxValues(0,1)
 	self.frame[unit]:SetValue(1)
@@ -194,7 +194,7 @@ function HealthBar:Update(unit)
 	self.frame[unit].background:ClearAllPoints()
 	self.frame[unit].background:SetAllPoints(self.frame[unit])
 	self.frame[unit].background:SetWidth(self.frame[unit]:GetWidth())
-	self.frame[unit].background:SetHeight(self.frame[unit]:GetHeight())	
+	self.frame[unit].background:SetHeight(self.frame[unit]:GetHeight())
 	self.frame[unit].background:SetTexture(LSM:Fetch(LSM.MediaType.STATUSBAR, Gladius.db.healthBarTexture))
 	self.frame[unit].background:SetVertexColor(Gladius.db.healthBarBackgroundColor.r, Gladius.db.healthBarBackgroundColor.g, Gladius.db.healthBarBackgroundColor.b, Gladius.db.healthBarBackgroundColor.a)
 	-- disable tileing
@@ -440,7 +440,7 @@ function HealthBar:GetOptions()
 					type = "group",
 					name = L["Position"],
 					desc = L["Position settings"],
-					inline = true, 
+					inline = true,
 					hidden = function()
 						return not Gladius.db.advancedOptions
 					end,
