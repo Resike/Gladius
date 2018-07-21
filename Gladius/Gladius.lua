@@ -106,6 +106,9 @@ function Gladius:NewModule(key, bar, attachTo, defaults, templates)
 	end)
 	module.RegisterEvent = function(self, event, func)
 		self.eventHandler.events[event] = func or event
+		if event == "UNIT_POWER" then
+			event = "UNIT_POWER_UPDATE"
+		end
 		self.eventHandler:RegisterEvent(event)
 	end
 	module.UnregisterEvent = function(self, event)

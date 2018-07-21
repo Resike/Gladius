@@ -48,7 +48,7 @@ local function GetDefaultAuraList()
 		[GetSpellInfo(13809)]	= 1,	-- Frost Trap
 		-- Purgable Buffs (2)
 		--[GetSpellInfo(16188)]	= 2,	-- Ancestral Swiftness
-		[GetSpellInfo(31842)]	= 2,	-- Divine Favor
+		--[GetSpellInfo(31842)]	= 2,	-- Divine Favor
 		--[GetSpellInfo(6346)]	= 2,	-- Fear Ward
 		[GetSpellInfo(112965)]	= 2,	-- Fingers of Frost
 		[GetSpellInfo(1044)]	= 2,	-- Hand of Freedom
@@ -77,9 +77,9 @@ local function GetDefaultAuraList()
 		[GetSpellInfo(66)]		= 3,	-- Invisibility
 		[GetSpellInfo(102342)]	= 3,	-- Ironbark
 		[GetSpellInfo(12975)]	= 3,	-- Last Stand
-		[GetSpellInfo(49039)]	= 3,	-- Lichborne
+		--[GetSpellInfo(49039)]	= 3,	-- Lichborne
 		[GetSpellInfo(116849)]	= 3,	-- Life Cocoon
-		[GetSpellInfo(114028)]	= 3,	-- Mass Spell Reflection
+		--[GetSpellInfo(114028)]	= 3,	-- Mass Spell Reflection
 		--[GetSpellInfo(30884)]	= 3,	-- Nature's Guardian
 		[GetSpellInfo(124974)]	= 3,	-- Nature's Vigil
 		--[GetSpellInfo(137562)]	= 3,	-- Nimble Brew
@@ -111,7 +111,7 @@ local function GetDefaultAuraList()
 		[GetSpellInfo(64803)]	= 5,	-- Entrapment
 		--[GetSpellInfo(63685)]	= 5,	-- Freeze (Frozen Power)
 		--[GetSpellInfo(111340)]	= 5,	-- Ice Ward
-		[GetSpellInfo(107566)]	= 5,	-- Staggering Shout
+		--[GetSpellInfo(107566)]	= 5,	-- Staggering Shout
 		[GetSpellInfo(339)]		= 5,	-- Entangling Roots
 		--[GetSpellInfo(113770)]	= 5,	-- Entangling Roots (Force of Nature)
 		[GetSpellInfo(33395)]	= 5,	-- Freeze (Water Elemental)
@@ -134,7 +134,7 @@ local function GetDefaultAuraList()
 		[GetSpellInfo(102543)]	= 6,	-- Incarnation: King of the Jungle
 		[GetSpellInfo(102558)]	= 6,	-- Incarnation: Son of Ursoc
 		[GetSpellInfo(10060)]	= 6,	-- Power Infusion
-		[GetSpellInfo(3045)]	= 6,	-- Rapid Fire
+		--[GetSpellInfo(3045)]	= 6,	-- Rapid Fire
 		--[GetSpellInfo(48505)]	= 6,	-- Starfall
 		-- Silence and Spell Immunities Auras (7)
 		[GetSpellInfo(31821)]	= 7,	-- Devotion Aura
@@ -314,7 +314,7 @@ function ClassIcon:UpdateAura(unit)
 
 	for _, auraType in pairs({'HELPFUL', 'HARMFUL'}) do
 		for i = 1, 40 do
-			local name, _, icon, _, _, duration, expires, _, _, _, spellid = UnitAura(unit, i, auraType)
+			local name, icon, _, _, duration, expires, _, _, _, spellid = UnitAura(unit, i, auraType)
 
 			if not name then
 				break
