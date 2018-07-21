@@ -136,7 +136,7 @@ function Auras:UNIT_AURA(event, unit)
 	-- buff frame
 	if Gladius.db.aurasBuffs then
 		for i = 1, Gladius.db.aurasBuffsMax do
-			local name, rank, icon, count, dispelType, duration, expires, caster, isStealable = UnitAura(unit, i, "HELPFUL")
+			local name, icon, count, dispelType, duration, expires, caster, isStealable = UnitAura(unit, i, "HELPFUL")
 			if not self.buffFrame[unit] or not self.buffFrame[unit][i] then
 				break
 			end
@@ -152,7 +152,7 @@ function Auras:UNIT_AURA(event, unit)
 	-- debuff frame
 	if Gladius.db.aurasDebuffs then
 		for i = 1, Gladius.db.aurasDebuffsMax do
-			local name, rank, icon, count, dispelType, duration, expires, caster, isStealable = UnitAura(unit, i, "HARMFUL")
+			local name, icon, count, dispelType, duration, expires, caster, isStealable = UnitAura(unit, i, "HARMFUL")
 			if not self.debuffFrame[unit] or not self.debuffFrame[unit][i] then
 				break
 			end
