@@ -124,7 +124,7 @@ function Announcements:UNIT_AURA(event, unit)
 	if instanceType ~= "arena" or not strfind(unit, "arena") or strfind(unit, "pet") or not Gladius.db.announcements.drinks then
 		return
 	end
-	if UnitAura(unit, DRINK_SPELL) then
+	if AuraUtil.FindAuraByName(DRINK_SPELL, unit) then
 		self:Send(string.format(L["DRINKING: %s (%s)"], UnitName(unit), UnitClass(unit)), 2, unit)
 	end
 end
