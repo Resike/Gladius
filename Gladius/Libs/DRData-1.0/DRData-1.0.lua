@@ -254,6 +254,7 @@ local spellsAndProvidersByCategory = {
 		-- Demon Hunter
 		[207685] = true, -- Sigil of Misery
 		-- Druid
+		[ 2637] = true, -- Hibernate
 		[ 33786] = true, -- Cyclone
 		[209753] = true, -- Cyclone (Balance)
 		-- Hunter
