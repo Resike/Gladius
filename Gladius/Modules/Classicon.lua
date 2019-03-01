@@ -198,7 +198,6 @@ local function GetDefaultAuraList()
 		[GetSpellInfo(16979)]	= 9,	-- Wild Charge
 		[GetSpellInfo(117526)]  = 9,    -- Binding Shot
 		["163505"]              = 9,    -- Rake
-		[GetSpellInfo(286348)]  = 9,    -- Gladiators Maledict
 		-- Crowd Controls Auras (10)
 		[GetSpellInfo(710)]		= 10,	-- Banish
 		[GetSpellInfo(2094)]	= 10,	-- Blind
