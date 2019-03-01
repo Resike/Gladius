@@ -1,4 +1,4 @@
-﻿--Dispel Module for Gladius
+--Dispel Module for Gladius
 --Mavvo
 local Gladius = _G.Gladius
 if not Gladius then

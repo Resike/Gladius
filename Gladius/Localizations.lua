@@ -1,4 +1,4 @@
-﻿local rawset = rawset
+local rawset = rawset
 local tostring = tostring
 
 local L = setmetatable({ }, {__index = function(t, k)

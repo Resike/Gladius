@@ -1,4 +1,4 @@
-﻿local pairs = pairs
+local pairs = pairs
 local print = print
 local table = table
 local tonumber = tonumber

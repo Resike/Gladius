@@ -1,4 +1,4 @@
-﻿<Ui>
+<Ui>
 	<Script file = "Libs\LibStub\LibStub.lua"/>
 	<Include file = "Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml"/>
 	<Include file = "Libs\AceDB-3.0\AceDB-3.0.xml"/>
