@@ -1,0 +1,3 @@
+package-as: Gladius
+
+enable-nolib-creation: no
