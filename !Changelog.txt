@@ -1,3 +1,7 @@
+**7.0.7**
+* BCC class fixes.
+* Fixed error in Dispel module while in rated BG.
+
 **7.0.6**
 * Initial update for BCC.
 

@@ -35,7 +35,7 @@ Gladius.eventHandler = CreateFrame("Frame")
 Gladius.eventHandler.events = { }
 
 Gladius.eventHandler:RegisterEvent("PLAYER_LOGIN")
-Gladius.eventHandler:RegisterEvent("ADDON_LOADED")
+--Gladius.eventHandler:RegisterEvent("ADDON_LOADED")
 if not IsClassic then
 	Gladius.eventHandler:RegisterEvent("ARENA_PREP_OPPONENT_SPECIALIZATIONS")
 end
@@ -277,6 +277,30 @@ function Gladius:OnInitialize()
 			return t["arena1"]
 		end
 	})
+
+	if IsClassic then
+		if ArenaEnemyFrame_UpdatePlayer then
+			hooksecurefunc("ArenaEnemyFrame_UpdatePlayer", function(self)
+				local unit = self.unit
+				local _, unitClass = UnitClass(unit)
+				if unitClass then
+					self.buttons[unit].class = unitClass
+					self.buttons[unit].specIcon = unitClass
+					self:UpdateUnit(unit)
+					self:ShowUnit(unit)
+				end
+			end)
+		end
+
+		--[[if ArenaEnemyFrame_SetMysteryPlayer then
+			hooksecurefunc("ArenaEnemyFrame_SetMysteryPlayer", function(self)
+				local unit = self.unit
+				self.buttons[unit].class = "UNKNOWN"
+				self:UpdateUnit(unit)
+				self:ShowUnit(unit)
+			end)
+		end--]]
+	end
 
 	-- buttons
 	self.buttons = { }

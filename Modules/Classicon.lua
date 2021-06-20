@@ -19,7 +19,6 @@ local GetSpecializationInfoByID = GetSpecializationInfoByID
 local GetSpellInfo = GetSpellInfo
 local GetTime = GetTime
 local UnitAura = UnitAura
-local UnitClass = UnitClass
 
 local CLASS_BUTTONS = CLASS_ICON_TCOORDS
 
@@ -509,7 +508,7 @@ function ClassIcon:SetClassIcon(unit)
 			specIcon = icon
 		end
 	end
-	if Gladius.db.classIconShowSpec then
+	if Gladius.db.classIconShowSpec and not IsClassic then
 		if specIcon then
 			self.frame[unit].texture:SetTexture(specIcon)
 			local left, right, top, bottom = 0, 1, 0, 1
