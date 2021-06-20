@@ -125,6 +125,9 @@ end
 end]]
 
 function Dispel:COMBAT_LOG_EVENT_UNFILTERED(event)
+	if not IsActiveBattlefieldArena() then
+		return
+	end
 	self:CombatLogEvent(event, CombatLogGetCurrentEventInfo())
 end
 
@@ -154,7 +157,7 @@ function Dispel:CombatLogEvent(event, timestamp, eventType, hideCaster, sourceGU
 end
 
 function Dispel:UpdateDispel(unit, duration)
-	if not unit or not duration then
+	if not unit or not self.frame[unit] or not duration then
 		return
 	end
 	-- grid style icon
