@@ -290,6 +290,26 @@ function Gladius:OnInitialize()
 					self:ShowUnit(unit)
 				end
 			end)
+
+			hooksecurefunc("UnitFrameHealthBar_Update", function(self, unit)
+				local _, unitClass = UnitClass(unit)
+				if unitClass then
+					self.buttons[unit].class = unitClass
+					self.buttons[unit].specIcon = unitClass
+					self:UpdateUnit(unit)
+					self:ShowUnit(unit)
+				end
+			end)
+			hooksecurefunc("HealthBar_OnValueChanged", function(self)
+				local unit = self.unit
+				local _, unitClass = UnitClass(unit)
+				if unitClass then
+					self.buttons[unit].class = unitClass
+					self.buttons[unit].specIcon = unitClass
+					self:UpdateUnit(unit)
+					self:ShowUnit(unit)
+				end
+			end)
 		end
 
 		--[[if ArenaEnemyFrame_SetMysteryPlayer then

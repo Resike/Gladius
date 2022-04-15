@@ -1,3 +1,7 @@
+**7.0.8**
+* Update for 9.2.0.
+* BCC fixes.
+
 **7.0.7**
 * BCC class fixes.
 * Fixed error in Dispel module while in rated BG.
