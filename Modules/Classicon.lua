@@ -22,7 +22,7 @@ local UnitAura = UnitAura
 
 local CLASS_BUTTONS = CLASS_ICON_TCOORDS
 
-local IsClassic = WOW_PROJECT_ID >= WOW_PROJECT_CLASSIC
+local IsWrathClassic = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC
 
 local function GetDefaultAuraList()
 	local auraTable = {
@@ -503,12 +503,12 @@ function ClassIcon:SetClassIcon(unit)
 		specIcon = frame.specIcon
 	else
 		class = Gladius.testing[unit].unitClass
-		if not IsClassic then
+		if not IsWrathClassic then
 			local _, _, _, icon = GetSpecializationInfoByID(Gladius.testing[unit].unitSpecId)
 			specIcon = icon
 		end
 	end
-	if Gladius.db.classIconShowSpec and not IsClassic then
+	if Gladius.db.classIconShowSpec and not IsWrathClassic then
 		if specIcon then
 			self.frame[unit].texture:SetTexture(specIcon)
 			local left, right, top, bottom = 0, 1, 0, 1

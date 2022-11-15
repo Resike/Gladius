@@ -30,7 +30,7 @@ local UnitName = UnitName
 local UNKNOWN = UNKNOWN
 local RAID_CLASS_COLORS = RAID_CLASS_COLORS
 
-local IsClassic = WOW_PROJECT_ID >= WOW_PROJECT_CLASSIC
+local IsWrathClassic = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC
 
 local Announcements = Gladius:NewModule("Announcements", false, false, {
 	announcements = {
@@ -50,7 +50,7 @@ function Announcements:OnEnable()
 	self:RegisterEvent("UNIT_AURA")
 	self:RegisterEvent("UNIT_SPELLCAST_START")
 	self:RegisterEvent("UNIT_NAME_UPDATE")
-	if not IsClassic then
+	if not IsWrathClassic then
 		self:RegisterEvent("ARENA_PREP_OPPONENT_SPECIALIZATIONS")
 	end
 	-- register custom events
