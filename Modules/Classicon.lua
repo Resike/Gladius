@@ -94,6 +94,7 @@ local function GetDefaultAuraList()
 		[GetSpellInfo(261589) or ""]    = 9,    -- Seduction (Player)
 		[GetSpellInfo(1776) or ""]      = 9,    -- Gouge
 		[GetSpellInfo(31661) or ""]     = 9,    -- Dragon's Breath
+		[GetSpellInfo(360806) or ""] 	= 9,	-- Sleep Walk
 
 		[GetSpellInfo(207685) or ""]    = 8,    -- Sigil of Misery Disorient
 		[GetSpellInfo(198909) or ""]    = 8,    -- Song of Chi-Ji
@@ -117,6 +118,7 @@ local function GetDefaultAuraList()
 		[GetSpellInfo(853) or ""]       = 8,    -- Hammer of Justice
 		[GetSpellInfo(200196) or ""]    = 8,    -- Holy Word: Chastise
 		[GetSpellInfo(408) or ""]       = 8,    -- Kidney Shot
+		[GetSpellInfo(372245) or ""]	= 8,	-- Terror of the Skies (Deep Breath)
 		[GetSpellInfo(202346) or ""]    = 8,    -- Keg Stun
 		[GetSpellInfo(200200) or ""]    = 8,    -- Holy Word: Chastise
 		[GetSpellInfo(119381) or ""]    = 8.2,  -- Leg Sweep
@@ -194,6 +196,7 @@ local function GetDefaultAuraList()
 		[GetSpellInfo(45334) or ""]     = 6,    -- Immobilized (Wild Charge - Bear)
 		[GetSpellInfo(33395) or ""]     = 6,    -- Freeze (Water Elemental)
 		[GetSpellInfo(122) or ""]       = 6,    -- Frost Nova
+		[GetSpellInfo("358385") or ""] 	= 6, 	-- Landslide
 		[GetSpellInfo(102359) or ""]    = 6,    -- Mass Entanglement
 		[GetSpellInfo(190927) or ""]    = 6,    -- Harpoon
 		["212638"]                = 6,    -- Tracker's Net (miss atks)
@@ -202,6 +205,7 @@ local function GetDefaultAuraList()
 
 		["198222"]                = 5.9,  -- System Shock 90% slow
 		[GetSpellInfo(48707) or ""]     = 5.2,  -- Anti-Magic Shell
+		[GetSpellInfo(370984) or ""]	= 5.2, 	-- Emerald Communion
 		[GetSpellInfo(204018) or ""]    = 5.3,  -- Magic Bop
 		[GetSpellInfo(212295) or ""]    = 5.2,  -- Nether Ward
 		[GetSpellInfo(221705) or ""]    = 5.1,  -- Casting Circle
@@ -234,6 +238,7 @@ local function GetDefaultAuraList()
 		[GetSpellInfo(202748) or ""]    = 5,    -- survival tactics
 		[GetSpellInfo(210256) or ""]    = 5,    -- Blessing of Sanctuary
 		[GetSpellInfo(213610) or ""]    = 5,    -- Holy Ward
+		[GetSpellInfo(378464) or ""]	= 5, 	-- Nullification Shroud
 		[GetSpellInfo(122783) or ""]    = 5.1,  -- Diffuse Magic
 		[GetSpellInfo(33206) or ""]     = 5,    -- Pain Suppression
 		[GetSpellInfo(53480) or ""]     = 5,    -- Roar of Sacrifice
@@ -252,6 +257,10 @@ local function GetDefaultAuraList()
 		[GetSpellInfo(202248) or ""]    = 5.1,  -- zen meditation
 		[GetSpellInfo(248519) or ""]    = 5.1,  -- Interlope (bm pet redirect)
 		[GetSpellInfo(61336) or ""]     = 5,    -- Survival Instincts
+		[GetSpellInfo(363916) or ""]	= 5, 	-- Obsidian Scales
+		[GetSpellInfo(357170) or ""]	= 5, 	-- Time Dilation
+		[GetSpellInfo(374348) or ""] 	= 5, 	-- Renewing Blaze
+		[GetSpellInfo(378441) or ""]	= 5, 	-- Time Stop
 
 		[GetSpellInfo(206803) or ""]    = 4.1,  -- Rain from Above
 		[GetSpellInfo(206804) or ""]    = 4,    -- Rain from Above
@@ -313,7 +322,9 @@ local function GetDefaultAuraList()
 		[GetSpellInfo(31884) or ""]     = 2.1,  -- Avenging Wrath
 		[GetSpellInfo(207289) or ""]    = 2.1,  -- unholy frenzy
 		[GetSpellInfo(216331) or ""]    = 2.1,  -- Avenging Crusader
+		[GetSpellInfo(370553) or ""]	= 2.1, 	-- Tip the Scales
 		[GetSpellInfo(116014) or ""]    = 2,    -- Rune of Power
+		[GetSpellInfo(375087) or ""]	= 2, 	-- Dragonrage
 		[GetSpellInfo(1966) or ""]      = 2.1,  -- Feint
 		[GetSpellInfo(288977) or ""]    = 2.1,  -- Transfusion
 		[GetSpellInfo(213871) or ""]    = 2.1,  -- Bodyguard

@@ -256,6 +256,8 @@ local spellsAndProvidersByCategory = {
 		-- Druid
 		[ 33786] = true, -- Cyclone
 		[209753] = true, -- Cyclone (Balance Honor Talent)
+		-- Evoker
+		[360806] = true, -- Sleep Walk
 		-- Mage
 		[ 31661] = true, -- Dragon's Breath
 		-- Monk
@@ -296,6 +298,8 @@ local spellsAndProvidersByCategory = {
 		[203123] = true, -- Maim
 		[163505] = 1822, -- Rake (Prowl)
 		[202244] = 202246, -- Overrun
+		-- Evoker
+		[372245] = true, -- Terror of the Skies 
 		-- Hunter
 		[ 24394] = 19577, -- Intimidation
 		-- Monk
@@ -341,6 +345,8 @@ local spellsAndProvidersByCategory = {
 		[170855] = 102342, -- Entangling Roots (Nature's Grasp)
 		[102359] = true, -- Mass Entanglement
 		[ 45334] = 16979, -- Immobilized (wild charge, bear form)
+		-- Evoker
+		[358385] = true, -- Landslide
 		-- Hunter
 		[ 53148] = 61685, -- Charge (Tenacity Pet)
 		[162480] = 162488, -- Steel Trap
