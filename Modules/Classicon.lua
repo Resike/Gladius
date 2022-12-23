@@ -41,6 +41,7 @@ local function GetDefaultAuraList()
 		[GetSpellInfo(227847) or ""]   = 10,    -- Bladestorm arms
 		[GetSpellInfo(47585) or ""]    = 10,    -- Dispersion
 		[GetSpellInfo(642) or ""]      = 10,    -- Divine Shield
+		[GetSpellInfo(378441) or ""]	= 10.2, 	-- Time Stop
 		[GetSpellInfo(228050) or ""]   = 10.1,  -- Prot pala Party Bubble
 		[GetSpellInfo(210918) or ""]   = 10,    -- Ethereal Form
 		[GetSpellInfo(27827) or ""]    = 10,    -- Spirit of Redemption
@@ -260,7 +261,6 @@ local function GetDefaultAuraList()
 		[GetSpellInfo(363916) or ""]	= 5, 	-- Obsidian Scales
 		[GetSpellInfo(357170) or ""]	= 5, 	-- Time Dilation
 		[GetSpellInfo(374348) or ""] 	= 5, 	-- Renewing Blaze
-		[GetSpellInfo(378441) or ""]	= 5, 	-- Time Stop
 
 		[GetSpellInfo(206803) or ""]    = 4.1,  -- Rain from Above
 		[GetSpellInfo(206804) or ""]    = 4,    -- Rain from Above
