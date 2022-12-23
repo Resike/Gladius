@@ -216,7 +216,9 @@ function DRTracker:CreateFrame(unit)
 		return
 	end
 	-- create frame
-	self.frame[unit] = CreateFrame("Frame", "Gladius"..self.name.."Frame"..unit, button, "ActionButtonTemplate")
+	self.frame[unit] = CreateFrame("CheckButton", "Gladius"..self.name.."Frame"..unit, button, "ActionButtonTemplate")
+	self.frame[unit]:EnableMouse(false)
+	self.frame[unit]:SetNormalTexture("Interface\\COMMON\\spacer")
 end
 
 function DRTracker:Update(unit)
