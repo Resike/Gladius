@@ -1,3 +1,8 @@
+**8.0.1**
+* Updated for 10.0.2.
+* Updated for 3.4.1.
+* Other smaller fixes.
+
 **8.0.0**
 * Updated for 10.0.0.
 * Wrath Classic support.
