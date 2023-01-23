@@ -58,7 +58,8 @@ local unitRaceCDs = {
 	["VOIDELF"] = { cooldown = 180, spellID = 256948, sharesCD = false },
 	["KULTIRAN"] = { cooldown = 160, spellID = 287712, sharesCD = false },
 	["MECHAGNOME"] = { cooldown = 180, spellID = 312924, sharesCD = false },
-	["VULPERA"] = { cooldown = 90, spellID = 312411, sharesCD = false }
+	["VULPERA"] = { cooldown = 90, spellID = 312411, sharesCD = false },
+	["DRACTHYR"] = { cooldown = 90, spellID = 357214, sharesCD = false }
 }
 
 local Racial = Gladius:NewModule("Racial", false, true, {
