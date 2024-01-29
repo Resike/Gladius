@@ -56,6 +56,8 @@ local HealthBar = Gladius:NewModule("HealthBar", true, true, {
 	healthBarColorMonk = RAID_CLASS_COLORS["MONK"],
 	healthBarUseDefaultColorDemonHunter = true,
 	healthBarColorDemonHunter = RAID_CLASS_COLORS["DEMONHUNTER"],
+	healthBarUseDefaultColorEvoker = true,
+	healthBarColorEvoker = RAID_CLASS_COLORS["EVOKER"],
 })
 
 function HealthBar:OnEnable()
@@ -235,6 +237,8 @@ function HealthBar:GetBarColor(class)
 		return Gladius.db.healthBarColorMonk
 	elseif class == "DEMONHUNTER" and not Gladius.db.healthBarUseDefaultColorDemonHunter then
 		return Gladius.db.healthBarColorDemonHunter
+	elseif class == "EVOKER" and not Gladius.db.healthBarUseDefaultColorEvoker then
+		return Gladius.db.healthBarColorEvoker
 	end
 	return RAID_CLASS_COLORS[class]
 end
@@ -882,6 +886,35 @@ function HealthBar:GetOptions()
 						return not Gladius.dbi.profile.modules[self.name]
 					end,
 					order = 115,
+				},
+				sep12 = {
+					type = "description",
+					name = "",
+					width = "full",
+					order = 117,
+				},
+				healthBarUseDefaultColorEvoker = {
+					type = "toggle",
+					name = L["Default evoker color"],
+					desc = L["Toggle evoker color"],
+					disabled = function()
+						return not Gladius.dbi.profile.modules[self.name]
+					end,
+					order = 120,
+				},
+				healthBarColorEvoker = {
+					type = "color",
+					name = L["Evoker color"],
+					get = function(info)
+						return Gladius:GetColorOption(info)
+					end,
+					set = function(info, r, g, b, a)
+						return Gladius:SetColorOption(info, r, g, b, 1)
+					end,
+					disabled = function()
+						return not Gladius.dbi.profile.modules[self.name]
+					end,
+					order = 125,
 				},
 			},
 		},

@@ -129,7 +129,7 @@ function Racial:AutoFixAll()
 	if instanceType ~= "arena" then return end
 	for i = 1, 3 do
 		local unit = 'arena'..i
-		local _,race =  UnitRace(unit)
+		local _, race =  UnitRace(unit)
 		race = string.upper(race or 'HUMAN')
 		local _, _, spellTexture = GetSpellInfo(unitRaceCDs[race].spellID)
 		if (self.frame[unit]) then

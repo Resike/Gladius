@@ -235,7 +235,7 @@ function PowerBar:Show(unit)
 		local color = Gladius.db.powerBarColor
 		self.frame[unit]:SetStatusBarColor(color.r, color.g, color.b, color.a)
 	else
-		local powerType = UnitPowerType(unit)
+		local powerType = (Gladius.test and Gladius.testing[unit].powerType) or UnitPowerType(unit) or 0
 		local color = self:GetBarColor(powerType)
 		self.frame[unit]:SetStatusBarColor(color.r, color.g, color.b)
 	end
@@ -251,7 +251,7 @@ function PowerBar:Reset(unit)
 		local color = Gladius.db.powerBarColor
 		self.frame[unit]:SetStatusBarColor(color.r, color.g, color.b, color.a)
 	else
-		local powerType = UnitPowerType(unit)
+		local powerType = UnitPowerType(unit) or 0
 		local color = self:GetBarColor(powerType)
 		self.frame[unit]:SetStatusBarColor(color.r, color.g, color.b)
 	end

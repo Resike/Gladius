@@ -299,7 +299,7 @@ local spellsAndProvidersByCategory = {
 		[163505] = 1822, -- Rake (Prowl)
 		[202244] = 202246, -- Overrun
 		-- Evoker
-		[372245] = true, -- Terror of the Skies 
+		[372245] = true, -- Terror of the Skies
 		-- Hunter
 		[ 24394] = 19577, -- Intimidation
 		-- Monk

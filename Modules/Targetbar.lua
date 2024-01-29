@@ -361,6 +361,10 @@ function TargetBar:GetBarColor(class)
 		return Gladius.db.healthBarColorDeathknight
 	elseif class == "MONK" and not Gladius.db.healthBarUseDefaultColorMonk then
 		return Gladius.db.healthBarColorMonk
+	elseif class == "DEMONHUNTER" and not Gladius.db.healthBarUseDefaultColorDemonHunter then
+		return Gladius.db.healthBarColorDemonHunter
+	elseif class == "EVOKER" and not Gladius.db.healthBarUseDefaultColorEvoker then
+		return Gladius.db.healthBarColorEvoker
 	end
 	return RAID_CLASS_COLORS[class]
 end
