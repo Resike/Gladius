@@ -4,15 +4,15 @@ local table = table
 local tonumber = tonumber
 local type = type
 
-local GetAddOnMetadata = GetAddOnMetadata
+local GetAddOnMetadata = C_AddOns.GetAddOnMetadata
 local InCombatLockdown = InCombatLockdown
 
 local L = Gladius.L
 
 Gladius.defaults = {
 	profile = {
-		x = { },
-		y = { },
+		x = {},
+		y = {},
 		modules = {
 			["*"] = true,
 			["Auras"] = false,
@@ -24,7 +24,7 @@ Gladius.defaults = {
 		growLeft = false,
 		groupButtons = true,
 		advancedOptions = true,
-		backgroundColor = {r = 0, g = 0, b = 0, a = 0.4},
+		backgroundColor = { r = 0, g = 0, b = 0, a = 0.4 },
 		backgroundPadding = 5,
 		bottomMargin = 20,
 		useGlobalFontSize = true,
@@ -36,11 +36,11 @@ Gladius.defaults = {
 }
 
 local function pairsByKeys(t, f)
-	local a = { }
+	local a = {}
 	for n in pairs(t) do table.insert(a, n) end
 	table.sort(a, f)
-	local i = 0 -- iterator variable
-	local iter = function () -- iterator function
+	local i = 0            -- iterator variable
+	local iter = function() -- iterator function
 		i = i + 1
 		if a[i] == nil then
 			return nil
@@ -89,12 +89,12 @@ SlashCmdList["GLADIUS"] = function(msg)
 			Gladius:HideFrame()
 			-- create and update buttons on first launch
 			for i = 1, test do
-				if not Gladius.buttons["arena"..i] then
-					Gladius:UpdateUnit("arena"..i)
+				if not Gladius.buttons["arena" .. i] then
+					Gladius:UpdateUnit("arena" .. i)
 				end
-				if Gladius.buttons["arena"..i] then
-					Gladius.buttons["arena"..i]:RegisterForDrag("LeftButton")
-					Gladius.buttons["arena"..i]:Show()
+				if Gladius.buttons["arena" .. i] then
+					Gladius.buttons["arena" .. i]:RegisterForDrag("LeftButton")
+					Gladius.buttons["arena" .. i]:Show()
 				end
 			end
 			-- update buttons, so every module should be fine
@@ -110,9 +110,9 @@ SlashCmdList["GLADIUS"] = function(msg)
 		Gladius.testCount = 0
 		Gladius.test = false
 		for i = 1, 5 do
-			if Gladius.buttons["arena"..i] then
-				Gladius.buttons["arena"..i]:RegisterForDrag()
-				Gladius.buttons["arena"..i]:Hide()
+			if Gladius.buttons["arena" .. i] then
+				Gladius.buttons["arena" .. i]:RegisterForDrag()
+				Gladius.buttons["arena" .. i]:Hide()
 			end
 		end
 		-- hide buttons
@@ -200,10 +200,10 @@ function Gladius:SetupModule(key, module, order)
 	self.options.args[key] = {
 		type = "group",
 		name = L[key],
-		desc = L[key.." settings"],
+		desc = L[key .. " settings"],
 		childGroups = "tab",
 		order = order,
-		args = { },
+		args = {},
 	}
 	-- set additional module options
 	local options = module:GetOptions()
@@ -252,8 +252,8 @@ end
 function Gladius:SetupOptions()
 	self.options = {
 		type = "group",
-		name = "Gladius "..GetAddOnMetadata("Gladius", "Version"),
-		plugins = { },
+		name = "Gladius " .. GetAddOnMetadata("Gladius", "Version"),
+		plugins = {},
 		get = getOption,
 		set = setOption,
 		args = {
@@ -471,7 +471,7 @@ function Gladius:SetupOptions()
 	for _, module in pairs(self.modules) do
 		self:Call(module, "OptionsLoad")
 	end
-	self.options.plugins.profiles = {profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.dbi)}
+	self.options.plugins.profiles = { profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.dbi) }
 	LibStub("AceConfig-3.0"):RegisterOptionsTable("Gladius", self.options)
 	LibStub("AceConfigDialog-3.0"):AddToBlizOptions("Gladius", "Gladius")
 end

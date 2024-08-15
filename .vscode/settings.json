@@ -1,0 +1,51 @@
+{
+  "Lua.runtime.version": "Lua 5.1",
+  "Lua.runtime.builtin": {
+    "basic": "disable",
+    "debug": "disable",
+    "io": "disable",
+    "math": "disable",
+    "os": "disable",
+    "package": "disable",
+    "string": "disable",
+    "table": "disable",
+    "utf8": "disable"
+  },
+  "Lua.workspace.library": [
+    "~/.vscode/extensions/ketho.wow-api-0.16.8/Annotations"
+  ],
+  "Lua.diagnostics.globals": [
+    "_G",
+    "pairs",
+    "unpack",
+    "CreateFrame",
+    "GetTime",
+    "UnitGUID",
+    "string",
+    "C_Spell",
+    "DEFAULT_CHAT_FRAME",
+    "format",
+    "CombatLogGetCurrentEventInfo",
+    "UnitFrameHealthBar_OnUpdate",
+    "UnitFrameHealthBar_OnValueChanged",
+    "SlashCmdList",
+    "SELECTED_CHAT_FRAME",
+    "ACCEPT",
+    "CANCEL",
+    "Settings",
+    "NORMAL_FONT_COLOR_CODE",
+    "FONT_COLOR_CODE_CLOSE",
+    "CLOSE",
+    "SetDesaturation",
+    "ColorPickerFrame",
+    "NOT_BOUND",
+    "UNKNOWN",
+    "CombatText_AddMessage",
+    "COMBAT_TEXT_SCROLL_FUNCTION",
+    "CLASS_ICON_TCOORDS",
+    "FOCUS",
+    "MACRO",
+    "TARGET",
+    "COOLDOWN_TYPE_NORMAL"
+  ]
+}
