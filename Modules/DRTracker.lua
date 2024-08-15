@@ -15,7 +15,7 @@ local unpack = unpack
 
 local CreateFontString = CreateFontString
 local CreateFrame = CreateFrame
-local GetSpellTexture = GetSpellTexture
+local GetSpellTexture = C_Spell.GetSpellTexture
 local GetTime = GetTime
 local UnitGUID = UnitGUID
 
@@ -30,25 +30,24 @@ local DRTracker = Gladius:NewModule("DRTracker", false, true, {
 	drTrackerOffsetY = -5,
 	drTrackerFrameLevel = 1,
 	drTrackerGloss = false,
-	drTrackerGlossColor = {r = 1, g = 1, b = 1, a = 0.4},
+	drTrackerGlossColor = { r = 1, g = 1, b = 1, a = 0.4 },
 	drTrackerCooldown = false,
 	drTrackerCooldownReverse = false,
 	drFontSize = 18,
-	drFontColor = {r = 0, g = 1, b = 0, a = 1},
-	drCategories = { },
+	drFontColor = { r = 0, g = 1, b = 0, a = 1 },
+	drCategories = {},
 })
 
 function DRTracker:OnInitialize()
 	-- init frames
-	self.frame = { }
+	self.frame = {}
 end
-
 
 function DRTracker:OnEnable()
 	self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 	LSM = Gladius.LSM
 	if not self.frame then
-		self.frame = { }
+		self.frame = {}
 	end
 end
 
@@ -81,8 +80,10 @@ end
 function DRTracker:UpdateColors(unit)
 	for cat, frame in pairs(self.frame[unit].tracker) do
 		local tracked = self.frame[unit].tracker[cat]
-		tracked.normalTexture:SetVertexColor(Gladius.db.drTrackerGlossColor.r, Gladius.db.drTrackerGlossColor.g, Gladius.db.drTrackerGlossColor.b, Gladius.db.drTrackerGloss and Gladius.db.drTrackerGlossColor.a or 0)
-		tracked.text:SetTextColor(Gladius.db.drFontColor.r, Gladius.db.drFontColor.g, Gladius.db.drFontColor.b, Gladius.db.drFontColor.a)
+		tracked.normalTexture:SetVertexColor(Gladius.db.drTrackerGlossColor.r, Gladius.db.drTrackerGlossColor.g,
+			Gladius.db.drTrackerGlossColor.b, Gladius.db.drTrackerGloss and Gladius.db.drTrackerGlossColor.a or 0)
+		tracked.text:SetTextColor(Gladius.db.drFontColor.r, Gladius.db.drFontColor.g, Gladius.db.drFontColor.b,
+			Gladius.db.drFontColor.a)
 	end
 end
 
@@ -93,10 +94,10 @@ function DRTracker:UpdateIcon(unit, drCat)
 	tracked:SetWidth(self.frame[unit]:GetHeight())
 	tracked:SetHeight(self.frame[unit]:GetHeight())
 	tracked:SetNormalTexture("Interface\\AddOns\\Gladius\\Images\\Gloss")
-	tracked.texture = _G[tracked:GetName().."Icon"]
-	tracked.normalTexture = _G[tracked:GetName().."NormalTexture"]
+	tracked.texture = _G[tracked:GetName() .. "Icon"]
+	tracked.normalTexture = _G[tracked:GetName() .. "NormalTexture"]
 
-	tracked.cooldown = _G[tracked:GetName().."Cooldown"]
+	tracked.cooldown = _G[tracked:GetName() .. "Cooldown"]
 	tracked.cooldown.isDisabled = not Gladius.db.drTrackerCooldown
 	tracked.cooldown:SetReverse(Gladius.db.drTrackerCooldownReverse)
 	Gladius:Call(Gladius.modules.Timer, "RegisterTimer", tracked, Gladius.db.drTrackerCooldown)
@@ -109,7 +110,8 @@ function DRTracker:UpdateIcon(unit, drCat)
 	tracked.text:SetJustifyH("RIGHT")
 	tracked.text:SetPoint("BOTTOMRIGHT", tracked, -2, 0)
 	tracked.text:SetFont(LSM:Fetch(LSM.MediaType.FONT, Gladius.db.globalFont), Gladius.db.drFontSize, "OUTLINE")
-	tracked.text:SetTextColor(Gladius.db.drFontColor.r, Gladius.db.drFontColor.g, Gladius.db.drFontColor.b, Gladius.db.drFontColor.a)
+	tracked.text:SetTextColor(Gladius.db.drFontColor.r, Gladius.db.drFontColor.g, Gladius.db.drFontColor.b,
+		Gladius.db.drFontColor.a)
 	-- style action button
 	tracked.normalTexture:SetHeight(self.frame[unit]:GetHeight() + self.frame[unit]:GetHeight() * 0.4)
 	tracked.normalTexture:SetWidth(self.frame[unit]:GetWidth() + self.frame[unit]:GetWidth() * 0.4)
@@ -120,7 +122,8 @@ function DRTracker:UpdateIcon(unit, drCat)
 	tracked.texture:SetPoint("TOPLEFT", tracked, "TOPLEFT")
 	tracked.texture:SetPoint("BOTTOMRIGHT", tracked, "BOTTOMRIGHT")
 	tracked.texture:SetTexCoord(0.07, 0.93, 0.07, 0.93)
-	tracked.normalTexture:SetVertexColor(Gladius.db.drTrackerGlossColor.r, Gladius.db.drTrackerGlossColor.g, Gladius.db.drTrackerGlossColor.b, Gladius.db.drTrackerGloss and Gladius.db.drTrackerGlossColor.a or 0)
+	tracked.normalTexture:SetVertexColor(Gladius.db.drTrackerGlossColor.r, Gladius.db.drTrackerGlossColor.g,
+		Gladius.db.drTrackerGlossColor.b, Gladius.db.drTrackerGloss and Gladius.db.drTrackerGlossColor.a or 0)
 end
 
 function DRTracker:DRFaded(unit, spellID, force)
@@ -129,13 +132,14 @@ function DRTracker:DRFaded(unit, spellID, force)
 		return
 	end
 	local drTexts = {
-		[1] = {"\194\189", 0, 1, 0},
-		[0.5] = {"\194\188", 1, 0.65, 0},
-		[0.25] = {"%", 1, 0, 0},
-		[0] = {"%", 1, 0, 0},
+		[1] = { "\194\189", 0, 1, 0 },
+		[0.5] = { "\194\188", 1, 0.65, 0 },
+		[0.25] = { "%", 1, 0, 0 },
+		[0] = { "%", 1, 0, 0 },
 	}
 	if not self.frame[unit].tracker[drCat] then
-		self.frame[unit].tracker[drCat] = CreateFrame("CheckButton", "Gladius"..self.name.."FrameCat"..drCat..unit, self.frame[unit], "ActionButtonTemplate")
+		self.frame[unit].tracker[drCat] = CreateFrame("CheckButton", "Gladius" .. self.name .. "FrameCat" .. drCat .. unit,
+			self.frame[unit], "ActionButtonTemplate")
 		self:UpdateIcon(unit, drCat)
 	end
 	local tracked = self.frame[unit].tracker[drCat]
@@ -152,7 +156,7 @@ function DRTracker:DRFaded(unit, spellID, force)
 	tracked.reset = tracked.timeLeft + GetTime()
 	local text, r, g, b = unpack(drTexts[tracked.diminished])
 	tracked.text:SetText(text)
-	tracked.text:SetTextColor(r,g,b)
+	tracked.text:SetTextColor(r, g, b)
 	tracked.texture:SetTexture(GetSpellTexture(spellID))
 	Gladius:Call(Gladius.modules.Timer, "SetTimer", tracked, tracked.timeLeft)
 	tracked:SetScript("OnUpdate", function(f, elapsed)
@@ -176,7 +180,9 @@ function DRTracker:SortIcons(unit)
 		frame:ClearAllPoints()
 		frame:SetAlpha(0)
 		if frame.active then
-			frame:SetPoint(Gladius.db.drTrackerAnchor, lastFrame, lastFrame == self.frame[unit] and Gladius.db.drTrackerAnchor or Gladius.db.drTrackerRelativePoint, strfind(Gladius.db.drTrackerAnchor,"LEFT") and Gladius.db.drTrackerMargin or - Gladius.db.drTrackerMargin, 0)
+			frame:SetPoint(Gladius.db.drTrackerAnchor, lastFrame,
+				lastFrame == self.frame[unit] and Gladius.db.drTrackerAnchor or Gladius.db.drTrackerRelativePoint,
+				strfind(Gladius.db.drTrackerAnchor, "LEFT") and Gladius.db.drTrackerMargin or -Gladius.db.drTrackerMargin, 0)
 			lastFrame = frame
 			frame:SetAlpha(1)
 		end
@@ -187,7 +193,9 @@ function DRTracker:COMBAT_LOG_EVENT_UNFILTERED(event)
 	self:CombatLogEvent(event, CombatLogGetCurrentEventInfo())
 end
 
-function DRTracker:CombatLogEvent(event, timestamp, eventType, hideCaster, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags, spellID, spellName, spellSchool, auraType)
+function DRTracker:CombatLogEvent(event, timestamp, eventType, hideCaster, sourceGUID, sourceName, sourceFlags,
+																	sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags, spellID, spellName,
+																	spellSchool, auraType)
 	local unit
 	for u, _ in pairs(Gladius.buttons) do
 		if UnitGUID(u) == destGUID then
@@ -202,7 +210,7 @@ function DRTracker:CombatLogEvent(event, timestamp, eventType, hideCaster, sourc
 		if auraType == "DEBUFF" and DRData:GetSpellCategory(spellID) then
 			self:DRFaded(unit, spellID)
 		end
-	-- Buff or debuff faded from an enemy
+		-- Buff or debuff faded from an enemy
 	elseif eventType == "SPELL_AURA_REMOVED" then
 		if auraType == "DEBUFF" and DRData:GetSpellCategory(spellID) then
 			self:DRFaded(unit, spellID)
@@ -216,7 +224,7 @@ function DRTracker:CreateFrame(unit)
 		return
 	end
 	-- create frame
-	self.frame[unit] = CreateFrame("CheckButton", "Gladius"..self.name.."Frame"..unit, button, "ActionButtonTemplate")
+	self.frame[unit] = CreateFrame("CheckButton", "Gladius" .. self.name .. "Frame" .. unit, button, "ActionButtonTemplate")
 	self.frame[unit]:EnableMouse(false)
 	self.frame[unit]:SetNormalTexture("Interface\\COMMON\\spacer")
 end
@@ -230,7 +238,8 @@ function DRTracker:Update(unit)
 	self.frame[unit]:ClearAllPoints()
 	-- anchor point
 	local parent = Gladius:GetParent(unit, Gladius.db.drTrackerAttachTo)
-	self.frame[unit]:SetPoint(Gladius.db.drTrackerAnchor, parent, Gladius.db.drTrackerRelativePoint, Gladius.db.drTrackerOffsetX, Gladius.db.drTrackerOffsetY)
+	self.frame[unit]:SetPoint(Gladius.db.drTrackerAnchor, parent, Gladius.db.drTrackerRelativePoint,
+		Gladius.db.drTrackerOffsetX, Gladius.db.drTrackerOffsetY)
 	-- frame level
 	self.frame[unit]:SetFrameLevel(Gladius.db.drTrackerFrameLevel)
 	-- when the attached module is disabled
@@ -263,7 +272,7 @@ function DRTracker:Update(unit)
 	end
 	-- update icons
 	if not self.frame[unit].tracker then
-		self.frame[unit].tracker = { }
+		self.frame[unit].tracker = {}
 	else
 		for cat, frame in pairs(self.frame[unit].tracker) do
 			frame:SetWidth(self.frame[unit]:GetHeight())
@@ -518,7 +527,7 @@ function DRTracker:GetOptions()
 							type = "select",
 							name = L["DRTracker Position"],
 							desc = L["Position of the class icon"],
-							values={["LEFT"] = L["Left"], ["RIGHT"] = L["Right"]},
+							values = { ["LEFT"] = L["Left"], ["RIGHT"] = L["Right"] },
 							get = function()
 								return strfind(Gladius.db.drTrackerAnchor, "RIGHT") and "LEFT" or "RIGHT"
 							end,
@@ -586,7 +595,7 @@ function DRTracker:GetOptions()
 							type = "range",
 							name = L["DRTracker Offset X"],
 							desc = L["X offset of the drTracker"],
-							min = - 100,
+							min = -100,
 							max = 100,
 							step = 1,
 							disabled = function()
@@ -601,7 +610,7 @@ function DRTracker:GetOptions()
 							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							min = - 50,
+							min = -50,
 							max = 50,
 							step = 1,
 							order = 25,
@@ -622,7 +631,7 @@ function DRTracker:GetOptions()
 				desc = L["Category settings"],
 				inline = true,
 				order = 1,
-				args = { },
+				args = {},
 			},
 		},
 	}

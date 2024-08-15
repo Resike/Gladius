@@ -15,57 +15,57 @@ local strfind = string.find
 
 local CreateFrame = CreateFrame
 local GameTooltip = GameTooltip
-local GetSpellInfo = GetSpellInfo
-local GetSpellTexture = GetSpellTexture
-local UnitAura = UnitAura
+local GetSpellInfo = C_Spell.GetSpellInfo
+local GetSpellTexture = C_Spell.GetSpellTexture
+local UnitAura = C_UnitAuras.GetAuraDataByIndex
 
 local Auras = Gladius:NewModule("Auras", false, true, {
-	aurasBuffsAttachTo = "CastBar",
-	aurasBuffsAnchor = "TOPLEFT",
-	aurasBuffsRelativePoint = "BOTTOMLEFT",
-	aurasBuffs = false,
-	aurasBuffsGrow = "DOWNRIGHT",
-	aurasBuffsSpacingX = 0,
-	aurasBuffsSpacingY = 0,
-	aurasBuffsPerColumn = 10,
-	aurasBuffsMax = 10,
-	aurasBuffsHeight = 16,
-	aurasBuffsWidth = 16,
-	aurasBuffsOffsetX = 0,
-	aurasBuffsOffsetY = 0,
-	aurasBuffsGloss = false,
-	aurasBuffsGlossColor = {r = 1, g = 1, b = 1, a = 0.4},
-	aurasBuffsTrackerCooldown = true,
-	aurasBuffsTrackerCooldownReverse = true,
-	aurasBuffsHideTimer = true,
-	aurasDebuffsAttachTo = "ClassIcon",
-	aurasDebuffsAnchor = "BOTTOMLEFT",
-	aurasDebuffsRelativePoint = "TOPLEFT",
-	aurasDebuffs = false,
-	aurasDebuffsGrow = "UPRIGHT",
-	aurasDebuffsSpacingX = 0,
-	aurasDebuffsSpacingY = 0,
-	aurasDebuffsPerColumn = 10,
-	aurasDebuffsMax = 10,
-	aurasDebuffsHeight = 16,
-	aurasDebuffsWidth = 16,
-	aurasDebuffsOffsetX = 0,
-	aurasDebuffsOffsetY = 0,
-	aurasDebuffsGloss = false,
-	aurasDebuffsGlossColor = {r = 1, g = 1, b = 1, a = 0.4},
-	aurasDebuffsTrackerCooldown = true,
-	aurasDebuffsTrackerCooldownReverse = true,
-	aurasDebuffsHideTimer = true,
-},
-{
-	"Bottom Single Row"
-})
+		aurasBuffsAttachTo = "CastBar",
+		aurasBuffsAnchor = "TOPLEFT",
+		aurasBuffsRelativePoint = "BOTTOMLEFT",
+		aurasBuffs = false,
+		aurasBuffsGrow = "DOWNRIGHT",
+		aurasBuffsSpacingX = 0,
+		aurasBuffsSpacingY = 0,
+		aurasBuffsPerColumn = 10,
+		aurasBuffsMax = 10,
+		aurasBuffsHeight = 16,
+		aurasBuffsWidth = 16,
+		aurasBuffsOffsetX = 0,
+		aurasBuffsOffsetY = 0,
+		aurasBuffsGloss = false,
+		aurasBuffsGlossColor = { r = 1, g = 1, b = 1, a = 0.4 },
+		aurasBuffsTrackerCooldown = true,
+		aurasBuffsTrackerCooldownReverse = true,
+		aurasBuffsHideTimer = true,
+		aurasDebuffsAttachTo = "ClassIcon",
+		aurasDebuffsAnchor = "BOTTOMLEFT",
+		aurasDebuffsRelativePoint = "TOPLEFT",
+		aurasDebuffs = false,
+		aurasDebuffsGrow = "UPRIGHT",
+		aurasDebuffsSpacingX = 0,
+		aurasDebuffsSpacingY = 0,
+		aurasDebuffsPerColumn = 10,
+		aurasDebuffsMax = 10,
+		aurasDebuffsHeight = 16,
+		aurasDebuffsWidth = 16,
+		aurasDebuffsOffsetX = 0,
+		aurasDebuffsOffsetY = 0,
+		aurasDebuffsGloss = false,
+		aurasDebuffsGlossColor = { r = 1, g = 1, b = 1, a = 0.4 },
+		aurasDebuffsTrackerCooldown = true,
+		aurasDebuffsTrackerCooldownReverse = true,
+		aurasDebuffsHideTimer = true,
+	},
+	{
+		"Bottom Single Row"
+	})
 
 function Auras:OnEnable()
 	self:RegisterEvent("UNIT_AURA")
 	LSM = Gladius.LSM
-	self.buffFrame = self.buffFrame or { }
-	self.debuffFrame = self.debuffFrame or { }
+	self.buffFrame = self.buffFrame or {}
+	self.debuffFrame = self.debuffFrame or {}
 end
 
 function Auras:OnDisable()
@@ -176,12 +176,16 @@ end
 function Auras:UpdateColors(unit)
 	if Gladius.db.aurasBuffs then
 		for i = 1, Gladius.db.aurasBuffsMax do
-			self.buffFrame[unit][i].normalTexture:SetVertexColor(Gladius.db.aurasBuffsGlossColor.r, Gladius.db.aurasBuffsGlossColor.g, Gladius.db.aurasBuffsGlossColor.b, Gladius.db.aurasBuffsGloss and Gladius.db.aurasBuffsGlossColor.a or 0)
+			self.buffFrame[unit][i].normalTexture:SetVertexColor(Gladius.db.aurasBuffsGlossColor.r,
+				Gladius.db.aurasBuffsGlossColor.g, Gladius.db.aurasBuffsGlossColor.b,
+				Gladius.db.aurasBuffsGloss and Gladius.db.aurasBuffsGlossColor.a or 0)
 		end
 	end
 	if Gladius.db.aurasDebuffs then
 		for i = 1, Gladius.db.aurasDebuffsMax do
-			self.debuffFrame[unit][i].normalTexture:SetVertexColor(Gladius.db.aurasDebuffsGlossColor.r, Gladius.db.aurasDebuffsGlossColor.g, Gladius.db.aurasDebuffsGlossColor.b, Gladius.db.aurasDebuffsGloss and Gladius.db.aurasDebuffsGlossColor.a or 0)
+			self.debuffFrame[unit][i].normalTexture:SetVertexColor(Gladius.db.aurasDebuffsGlossColor.r,
+				Gladius.db.aurasDebuffsGlossColor.g, Gladius.db.aurasDebuffsGlossColor.b,
+				Gladius.db.aurasDebuffsGloss and Gladius.db.aurasDebuffsGlossColor.a or 0)
 		end
 	end
 end
@@ -193,10 +197,11 @@ function Auras:CreateFrame(unit)
 	end
 	-- create buff frame
 	if not self.buffFrame[unit] and Gladius.db.aurasBuffs then
-		self.buffFrame[unit] = CreateFrame("Frame", "Gladius"..self.name.."BuffFrame"..unit, button)
+		self.buffFrame[unit] = CreateFrame("Frame", "Gladius" .. self.name .. "BuffFrame" .. unit, button)
 		self.buffFrame[unit]:EnableMouse(false)
 		for i = 1, 40 do
-			self.buffFrame[unit][i] = CreateFrame("Button", "Gladius"..self.name.."BuffFrameIcon"..i..unit, button, "ActionButtonTemplate")
+			self.buffFrame[unit][i] = CreateFrame("Button", "Gladius" .. self.name .. "BuffFrameIcon" .. i .. unit, button,
+				"ActionButtonTemplate")
 			self.buffFrame[unit][i].tooltip = CreateFrame("Frame", nil, self.buffFrame[unit][i])
 			self.buffFrame[unit][i].tooltip:SetAllPoints(self.buffFrame[unit][i])
 			self.buffFrame[unit][i].tooltip:SetScript("OnEnter", function(f)
@@ -216,19 +221,21 @@ function Auras:CreateFrame(unit)
 			end)
 			self.buffFrame[unit][i]:EnableMouse(false)
 			self.buffFrame[unit][i]:SetNormalTexture("Interface\\AddOns\\Gladius\\Images\\Gloss")
-			self.buffFrame[unit][i].texture = _G[self.buffFrame[unit][i]:GetName().."Icon"]
-			self.buffFrame[unit][i].normalTexture = _G[self.buffFrame[unit][i]:GetName().."NormalTexture"]
-			self.buffFrame[unit][i].cooldown = _G[self.buffFrame[unit][i]:GetName().."Cooldown"]
+			self.buffFrame[unit][i].texture = _G[self.buffFrame[unit][i]:GetName() .. "Icon"]
+			self.buffFrame[unit][i].normalTexture = _G[self.buffFrame[unit][i]:GetName() .. "NormalTexture"]
+			self.buffFrame[unit][i].cooldown = _G[self.buffFrame[unit][i]:GetName() .. "Cooldown"]
 			self.buffFrame[unit][i].cooldown:SetReverse(Gladius.db.aurasBuffsTrackerCooldownReverse)
-			Gladius:Call(Gladius.modules.Timer, "RegisterTimer", self.buffFrame[unit][i], Gladius.db.aurasBuffsTrackerCooldown, Gladius.db.aurasBuffsHideTimer)
+			Gladius:Call(Gladius.modules.Timer, "RegisterTimer", self.buffFrame[unit][i], Gladius.db.aurasBuffsTrackerCooldown,
+				Gladius.db.aurasBuffsHideTimer)
 		end
 	end
 	-- create debuff frame
 	if not self.debuffFrame[unit] and Gladius.db.aurasDebuffs then
-		self.debuffFrame[unit] = CreateFrame("Frame", "Gladius"..self.name.."DebuffFrame"..unit, button)
+		self.debuffFrame[unit] = CreateFrame("Frame", "Gladius" .. self.name .. "DebuffFrame" .. unit, button)
 		self.debuffFrame[unit]:EnableMouse(false)
 		for i = 1, 40 do
-			self.debuffFrame[unit][i] = CreateFrame("Button", "Gladius"..self.name.."DebuffFrameIcon"..i..unit, button, "ActionButtonTemplate")
+			self.debuffFrame[unit][i] = CreateFrame("Button", "Gladius" .. self.name .. "DebuffFrameIcon" .. i .. unit, button,
+				"ActionButtonTemplate")
 			self.debuffFrame[unit][i].tooltip = CreateFrame("Frame", nil, self.debuffFrame[unit][i])
 			self.debuffFrame[unit][i].tooltip:SetAllPoints(self.debuffFrame[unit][i])
 			self.debuffFrame[unit][i].tooltip:SetScript("OnEnter", function(f)
@@ -248,11 +255,12 @@ function Auras:CreateFrame(unit)
 			end)
 			self.debuffFrame[unit][i]:EnableMouse(false)
 			self.debuffFrame[unit][i]:SetNormalTexture("Interface\\AddOns\\Gladius\\Images\\Gloss")
-			self.debuffFrame[unit][i].texture = _G[self.debuffFrame[unit][i]:GetName().."Icon"]
-			self.debuffFrame[unit][i].normalTexture = _G[self.debuffFrame[unit][i]:GetName().."NormalTexture"]
-			self.debuffFrame[unit][i].cooldown = _G[self.debuffFrame[unit][i]:GetName().."Cooldown"]
+			self.debuffFrame[unit][i].texture = _G[self.debuffFrame[unit][i]:GetName() .. "Icon"]
+			self.debuffFrame[unit][i].normalTexture = _G[self.debuffFrame[unit][i]:GetName() .. "NormalTexture"]
+			self.debuffFrame[unit][i].cooldown = _G[self.debuffFrame[unit][i]:GetName() .. "Cooldown"]
 			self.debuffFrame[unit][i].cooldown:SetReverse(Gladius.db.aurasDebuffsTrackerCooldownReverse)
-			Gladius:Call(Gladius.modules.Timer, "RegisterTimer", self.debuffFrame[unit][i], Gladius.db.aurasDebuffsTrackerCooldown, Gladius.db.aurasDebuffsHideTimer)
+			Gladius:Call(Gladius.modules.Timer, "RegisterTimer", self.debuffFrame[unit][i],
+				Gladius.db.aurasDebuffsTrackerCooldown, Gladius.db.aurasDebuffsHideTimer)
 		end
 	end
 	if not Gladius.test then
@@ -270,10 +278,14 @@ function Auras:Update(unit)
 		self.buffFrame[unit]:ClearAllPoints()
 		-- anchor point
 		local parent = Gladius:GetParent(unit, Gladius.db.aurasBuffsAttachTo)
-		self.buffFrame[unit]:SetPoint(Gladius.db.aurasBuffsAnchor, parent, Gladius.db.aurasBuffsRelativePoint, Gladius.db.aurasBuffsOffsetX, Gladius.db.aurasBuffsOffsetY)
+		self.buffFrame[unit]:SetPoint(Gladius.db.aurasBuffsAnchor, parent, Gladius.db.aurasBuffsRelativePoint,
+			Gladius.db.aurasBuffsOffsetX, Gladius.db.aurasBuffsOffsetY)
 		-- size
-		self.buffFrame[unit]:SetWidth(Gladius.db.aurasBuffsWidth * Gladius.db.aurasBuffsPerColumn + Gladius.db.aurasBuffsSpacingX * Gladius.db.aurasBuffsPerColumn)
-		self.buffFrame[unit]:SetHeight(Gladius.db.aurasBuffsHeight * ceil(Gladius.db.aurasBuffsMax / Gladius.db.aurasBuffsPerColumn) + (Gladius.db.aurasBuffsSpacingY * (ceil(Gladius.db.aurasBuffsMax / Gladius.db.aurasBuffsPerColumn) + 1)))
+		self.buffFrame[unit]:SetWidth(Gladius.db.aurasBuffsWidth * Gladius.db.aurasBuffsPerColumn +
+		Gladius.db.aurasBuffsSpacingX * Gladius.db.aurasBuffsPerColumn)
+		self.buffFrame[unit]:SetHeight(Gladius.db.aurasBuffsHeight *
+		ceil(Gladius.db.aurasBuffsMax / Gladius.db.aurasBuffsPerColumn) +
+		(Gladius.db.aurasBuffsSpacingY * (ceil(Gladius.db.aurasBuffsMax / Gladius.db.aurasBuffsPerColumn) + 1)))
 		-- icon points
 		local anchor, parent, relativePoint, offsetX, offsetY
 		local start, startAnchor = 1, self.buffFrame[unit]
@@ -292,9 +304,13 @@ function Auras:Update(unit)
 			self.buffFrame[unit][i]:ClearAllPoints()
 			if Gladius.db.aurasBuffsMax >= i then
 				if start == 1 then
-					anchor, parent, relativePoint, offsetX, offsetY = grow1, startAnchor, startRelPoint, 0, strfind(Gladius.db.aurasBuffsGrow, "DOWN") and - Gladius.db.aurasBuffsSpacingY or Gladius.db.aurasBuffsSpacingY
+					anchor, parent, relativePoint, offsetX, offsetY = grow1, startAnchor, startRelPoint, 0,
+							strfind(Gladius.db.aurasBuffsGrow, "DOWN") and -Gladius.db.aurasBuffsSpacingY or
+							Gladius.db.aurasBuffsSpacingY
 				else
-					anchor, parent, relativePoint, offsetX, offsetY = grow1, self.buffFrame[unit][i - 1], grow3, strfind(Gladius.db.aurasBuffsGrow, "LEFT") and - Gladius.db.aurasBuffsSpacingX or Gladius.db.aurasBuffsSpacingX, 0
+					anchor, parent, relativePoint, offsetX, offsetY = grow1, self.buffFrame[unit][i - 1], grow3,
+							strfind(Gladius.db.aurasBuffsGrow, "LEFT") and -Gladius.db.aurasBuffsSpacingX or
+							Gladius.db.aurasBuffsSpacingX, 0
 					if start == Gladius.db.aurasBuffsPerColumn then
 						start = 0
 						startAnchor = self.buffFrame[unit][i - Gladius.db.aurasBuffsPerColumn + 1]
@@ -307,15 +323,19 @@ function Auras:Update(unit)
 			self.buffFrame[unit][i]:SetWidth(Gladius.db.aurasBuffsWidth)
 			self.buffFrame[unit][i]:SetHeight(Gladius.db.aurasBuffsHeight)
 			-- style action button
-			self.buffFrame[unit][i].normalTexture:SetHeight(self.buffFrame[unit][i]:GetHeight() + self.buffFrame[unit][i]:GetHeight() * 0.4)
-			self.buffFrame[unit][i].normalTexture:SetWidth(self.buffFrame[unit][i]:GetWidth() + self.buffFrame[unit][i]:GetWidth() * 0.4)
+			self.buffFrame[unit][i].normalTexture:SetHeight(self.buffFrame[unit][i]:GetHeight() +
+			self.buffFrame[unit][i]:GetHeight() * 0.4)
+			self.buffFrame[unit][i].normalTexture:SetWidth(self.buffFrame[unit][i]:GetWidth() +
+			self.buffFrame[unit][i]:GetWidth() * 0.4)
 			self.buffFrame[unit][i].normalTexture:ClearAllPoints()
 			self.buffFrame[unit][i].normalTexture:SetPoint("CENTER", 0, 0)
 			self.buffFrame[unit][i]:SetNormalTexture("Interface\\AddOns\\Gladius\\Images\\Gloss")
 			self.buffFrame[unit][i].texture:ClearAllPoints()
 			self.buffFrame[unit][i].texture:SetPoint("TOPLEFT", self.buffFrame[unit][i], "TOPLEFT")
 			self.buffFrame[unit][i].texture:SetPoint("BOTTOMRIGHT", self.buffFrame[unit][i], "BOTTOMRIGHT")
-			self.buffFrame[unit][i].normalTexture:SetVertexColor(Gladius.db.aurasBuffsGlossColor.r, Gladius.db.aurasBuffsGlossColor.g, Gladius.db.aurasBuffsGlossColor.b, Gladius.db.aurasBuffsGloss and Gladius.db.aurasBuffsGlossColor.a or 0)
+			self.buffFrame[unit][i].normalTexture:SetVertexColor(Gladius.db.aurasBuffsGlossColor.r,
+				Gladius.db.aurasBuffsGlossColor.g, Gladius.db.aurasBuffsGlossColor.b,
+				Gladius.db.aurasBuffsGloss and Gladius.db.aurasBuffsGlossColor.a or 0)
 		end
 		-- hide
 		self.buffFrame[unit]:Hide()
@@ -325,10 +345,14 @@ function Auras:Update(unit)
 		self.debuffFrame[unit]:ClearAllPoints()
 		-- anchor point
 		local parent = Gladius:GetParent(unit, Gladius.db.aurasDebuffsAttachTo)
-		self.debuffFrame[unit]:SetPoint(Gladius.db.aurasDebuffsAnchor, parent, Gladius.db.aurasDebuffsRelativePoint, Gladius.db.aurasDebuffsOffsetX, Gladius.db.aurasDebuffsOffsetY)
+		self.debuffFrame[unit]:SetPoint(Gladius.db.aurasDebuffsAnchor, parent, Gladius.db.aurasDebuffsRelativePoint,
+			Gladius.db.aurasDebuffsOffsetX, Gladius.db.aurasDebuffsOffsetY)
 		-- size
-		self.debuffFrame[unit]:SetWidth(Gladius.db.aurasDebuffsWidth * Gladius.db.aurasDebuffsPerColumn + Gladius.db.aurasDebuffsSpacingX * Gladius.db.aurasDebuffsPerColumn)
-		self.debuffFrame[unit]:SetHeight(Gladius.db.aurasDebuffsHeight * ceil(Gladius.db.aurasDebuffsMax / Gladius.db.aurasDebuffsPerColumn) + (Gladius.db.aurasDebuffsSpacingY * (ceil(Gladius.db.aurasDebuffsMax / Gladius.db.aurasDebuffsPerColumn) + 1)))
+		self.debuffFrame[unit]:SetWidth(Gladius.db.aurasDebuffsWidth * Gladius.db.aurasDebuffsPerColumn +
+		Gladius.db.aurasDebuffsSpacingX * Gladius.db.aurasDebuffsPerColumn)
+		self.debuffFrame[unit]:SetHeight(Gladius.db.aurasDebuffsHeight *
+		ceil(Gladius.db.aurasDebuffsMax / Gladius.db.aurasDebuffsPerColumn) +
+		(Gladius.db.aurasDebuffsSpacingY * (ceil(Gladius.db.aurasDebuffsMax / Gladius.db.aurasDebuffsPerColumn) + 1)))
 		-- icon points
 		local anchor, parent, relativePoint, offsetX, offsetY
 		local start, startAnchor = 1, self.debuffFrame[unit]
@@ -347,9 +371,13 @@ function Auras:Update(unit)
 			self.debuffFrame[unit][i]:ClearAllPoints()
 			if Gladius.db.aurasDebuffsMax >= i then
 				if start == 1 then
-					anchor, parent, relativePoint, offsetX, offsetY = grow1, startAnchor, startRelPoint, 0, strfind(Gladius.db.aurasDebuffsGrow, "DOWN") and - Gladius.db.aurasDebuffsSpacingY or Gladius.db.aurasDebuffsSpacingY
+					anchor, parent, relativePoint, offsetX, offsetY = grow1, startAnchor, startRelPoint, 0,
+							strfind(Gladius.db.aurasDebuffsGrow, "DOWN") and -Gladius.db.aurasDebuffsSpacingY or
+							Gladius.db.aurasDebuffsSpacingY
 				else
-					anchor, parent, relativePoint, offsetX, offsetY = grow1, self.debuffFrame[unit][i - 1], grow3, strfind(Gladius.db.aurasDebuffsGrow, "LEFT") and - Gladius.db.aurasDebuffsSpacingX or Gladius.db.aurasDebuffsSpacingX, 0
+					anchor, parent, relativePoint, offsetX, offsetY = grow1, self.debuffFrame[unit][i - 1], grow3,
+							strfind(Gladius.db.aurasDebuffsGrow, "LEFT") and -Gladius.db.aurasDebuffsSpacingX or
+							Gladius.db.aurasDebuffsSpacingX, 0
 					if start == Gladius.db.aurasDebuffsPerColumn then
 						start = 0
 						startAnchor = self.debuffFrame[unit][i - Gladius.db.aurasDebuffsPerColumn + 1]
@@ -362,15 +390,19 @@ function Auras:Update(unit)
 			self.debuffFrame[unit][i]:SetWidth(Gladius.db.aurasDebuffsWidth)
 			self.debuffFrame[unit][i]:SetHeight(Gladius.db.aurasDebuffsHeight)
 			-- style action button
-			self.debuffFrame[unit][i].normalTexture:SetHeight(self.debuffFrame[unit][i]:GetHeight() + self.debuffFrame[unit][i]:GetHeight() * 0.4)
-			self.debuffFrame[unit][i].normalTexture:SetWidth(self.debuffFrame[unit][i]:GetWidth() + self.debuffFrame[unit][i]:GetWidth() * 0.4)
+			self.debuffFrame[unit][i].normalTexture:SetHeight(self.debuffFrame[unit][i]:GetHeight() +
+			self.debuffFrame[unit][i]:GetHeight() * 0.4)
+			self.debuffFrame[unit][i].normalTexture:SetWidth(self.debuffFrame[unit][i]:GetWidth() +
+			self.debuffFrame[unit][i]:GetWidth() * 0.4)
 			self.debuffFrame[unit][i].normalTexture:ClearAllPoints()
 			self.debuffFrame[unit][i].normalTexture:SetPoint("CENTER", 0, 0)
 			self.debuffFrame[unit][i]:SetNormalTexture("Interface\\AddOns\\Gladius\\Images\\Gloss")
 			self.debuffFrame[unit][i].texture:ClearAllPoints()
 			self.debuffFrame[unit][i].texture:SetPoint("TOPLEFT", self.debuffFrame[unit][i], "TOPLEFT")
 			self.debuffFrame[unit][i].texture:SetPoint("BOTTOMRIGHT", self.debuffFrame[unit][i], "BOTTOMRIGHT")
-			self.debuffFrame[unit][i].normalTexture:SetVertexColor(Gladius.db.aurasDebuffsGlossColor.r, Gladius.db.aurasDebuffsGlossColor.g, Gladius.db.aurasDebuffsGlossColor.b, Gladius.db.aurasDebuffsGloss and Gladius.db.aurasDebuffsGlossColor.a or 0)
+			self.debuffFrame[unit][i].normalTexture:SetVertexColor(Gladius.db.aurasDebuffsGlossColor.r,
+				Gladius.db.aurasDebuffsGlossColor.g, Gladius.db.aurasDebuffsGlossColor.b,
+				Gladius.db.aurasDebuffsGloss and Gladius.db.aurasDebuffsGlossColor.a or 0)
 		end
 		-- hide
 		self.debuffFrame[unit]:Hide()
@@ -450,7 +482,8 @@ function Auras:Test(unit)
 		for i = 1, Gladius.db.aurasBuffsMax do
 			self.buffFrame[unit][i].texture:SetTexture(testBuff)
 			self.buffFrame[unit][i].cooldown:SetReverse(Gladius.db.aurasBuffsTrackerCooldownReverse)
-			Gladius:Call(Gladius.modules.Timer, "RegisterTimer", self.buffFrame[unit][i], Gladius.db.aurasBuffsTrackerCooldown, Gladius.db.aurasBuffsHideTimer)
+			Gladius:Call(Gladius.modules.Timer, "RegisterTimer", self.buffFrame[unit][i], Gladius.db.aurasBuffsTrackerCooldown,
+				Gladius.db.aurasBuffsHideTimer)
 			Gladius:Call(Gladius.modules.Timer, "SetTimer", self.buffFrame[unit][i], 10)
 		end
 	end
@@ -460,7 +493,8 @@ function Auras:Test(unit)
 		for i = 1, Gladius.db.aurasDebuffsMax do
 			self.debuffFrame[unit][i].texture:SetTexture(testDebuff)
 			self.debuffFrame[unit][i].cooldown:SetReverse(Gladius.db.aurasDebuffsTrackerCooldownReverse)
-			Gladius:Call(Gladius.modules.Timer, "RegisterTimer", self.debuffFrame[unit][i], Gladius.db.aurasDebuffsTrackerCooldown, Gladius.db.aurasDebuffsHideTimer)
+			Gladius:Call(Gladius.modules.Timer, "RegisterTimer", self.debuffFrame[unit][i],
+				Gladius.db.aurasDebuffsTrackerCooldown, Gladius.db.aurasDebuffsHideTimer)
 			Gladius:Call(Gladius.modules.Timer, "SetTimer", self.debuffFrame[unit][i], 10)
 		end
 	end
@@ -749,7 +783,7 @@ function Auras:GetOptions()
 									type = "range",
 									name = L["Auras Offset X"],
 									desc = L["X offset of the auras"],
-									min = - 100,
+									min = -100,
 									max = 100,
 									step = 1,
 									disabled = function()
@@ -764,7 +798,7 @@ function Auras:GetOptions()
 									disabled = function()
 										return not Gladius.dbi.profile.modules[self.name]
 									end,
-									min = - 50,
+									min = -50,
 									max = 50,
 									step = 1,
 									order = 25,

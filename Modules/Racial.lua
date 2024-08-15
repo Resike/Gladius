@@ -15,12 +15,12 @@ local strfind = strfind
 local string = string
 
 local CreateFrame = CreateFrame
-local GetSpellInfo = GetSpellInfo
-local GetSpellTexture = GetSpellTexture
+local GetSpellInfo = C_Spell.GetSpellInfo
+local GetSpellTexture = C_Spell.GetSpellTexture
 local GetTime = GetTime
 local IsInInstance = IsInInstance
 local UnitClass = UnitClass
-local UnitDebuff = UnitDebuff
+local UnitDebuff = C_UnitAuras.GetDebuffDataByIndex
 local UnitLevel = UnitLevel
 local UnitName = UnitName
 local UnitRace = UnitRace
@@ -63,24 +63,24 @@ local unitRaceCDs = {
 }
 
 local Racial = Gladius:NewModule("Racial", false, true, {
-	RacialAttachTo = "Frame",
-	RacialAnchor = "TOPLEFT",
-	RacialRelativePoint = "TOPRIGHT",
-	RacialAdjustSize = true,
-	RacialSize = 52,
-	RacialOffsetX = 60,
-	RacialOffsetY = 0,
-	RacialFrameLevel = 1,
-	RacialIconCrop = false,
-	RacialGloss = true,
-	RacialGlossColor = {r = 1, g = 1, b = 1, a = 0.4},
-	RacialCooldown = true,
-	RacialCooldownReverse = false,
-	RacialDetached = false
-},
-{
-	"Racial icon", "Grid style health bar", "Grid style power bar"
-})
+		RacialAttachTo = "Frame",
+		RacialAnchor = "TOPLEFT",
+		RacialRelativePoint = "TOPRIGHT",
+		RacialAdjustSize = true,
+		RacialSize = 52,
+		RacialOffsetX = 60,
+		RacialOffsetY = 0,
+		RacialFrameLevel = 1,
+		RacialIconCrop = false,
+		RacialGloss = true,
+		RacialGlossColor = { r = 1, g = 1, b = 1, a = 0.4 },
+		RacialCooldown = true,
+		RacialCooldownReverse = false,
+		RacialDetached = false
+	},
+	{
+		"Racial icon", "Grid style health bar", "Grid style power bar"
+	})
 
 function Racial:OnEnable()
 	self:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
@@ -88,7 +88,7 @@ function Racial:OnEnable()
 	self:RegisterEvent("UNIT_NAME_UPDATE")
 	LSM = Gladius.LSM
 	if not self.frame then
-		self.frame = { }
+		self.frame = {}
 	end
 end
 
@@ -117,7 +117,7 @@ function Racial:UNIT_NAME_UPDATE(event, unit)
 	if instanceType ~= "arena" or not strfind(unit, "arena") or strfind(unit, "pet") then
 		return
 	end
-	local _, race =  UnitRace(unit)
+	local _, race = UnitRace(unit)
 	race = string.upper(race)
 	local _, _, spellTexture = GetSpellInfo(unitRaceCDs[race].spellID)
 	self.frame[unit].race = race
@@ -128,8 +128,8 @@ function Racial:AutoFixAll()
 	local _, instanceType = IsInInstance()
 	if instanceType ~= "arena" then return end
 	for i = 1, 3 do
-		local unit = 'arena'..i
-		local _, race =  UnitRace(unit)
+		local unit = 'arena' .. i
+		local _, race = UnitRace(unit)
 		race = string.upper(race or 'HUMAN')
 		local _, _, spellTexture = GetSpellInfo(unitRaceCDs[race].spellID)
 		if (self.frame[unit]) then
@@ -198,7 +198,8 @@ end
 function Racial:UpdateRacial(unit, duration)
 	-- announcement
 	if Gladius.db.announcements.Racial then
-		Gladius:Call(Gladius.modules.Announcements, "Send", format(L["Racial USED: %s (%s)"], UnitName(unit) or "test", UnitClass(unit) or "test"), 2, unit)
+		Gladius:Call(Gladius.modules.Announcements, "Send",
+			format(L["Racial USED: %s (%s)"], UnitName(unit) or "test", UnitClass(unit) or "test"), 2, unit)
 	end
 	if Gladius.db.announcements.Racial then
 		self.frame[unit].timeleft = duration
@@ -208,7 +209,8 @@ function Racial:UpdateRacial(unit, duration)
 				self.frame[unit].timeleft = nil
 				-- announcement
 				if Gladius.db.announcements.Racial then
-					Gladius:Call(Gladius.modules.Announcements, "Send", format(L["Racial READY: %s (%s)"], UnitName(unit) or "", UnitClass(unit) or ""), 2, unit)
+					Gladius:Call(Gladius.modules.Announcements, "Send",
+						format(L["Racial READY: %s (%s)"], UnitName(unit) or "", UnitClass(unit) or ""), 2, unit)
 				end
 				self.frame[unit]:SetScript("OnUpdate", nil)
 			end
@@ -224,21 +226,23 @@ function Racial:CreateFrame(unit)
 		return
 	end
 	-- create frame
-	self.frame[unit] = CreateFrame("CheckButton", "Gladius"..self.name.."Frame"..unit, button, "ActionButtonTemplate")
+	self.frame[unit] = CreateFrame("CheckButton", "Gladius" .. self.name .. "Frame" .. unit, button, "ActionButtonTemplate")
 	self.frame[unit]:EnableMouse(false)
 	self.frame[unit]:SetNormalTexture("Interface\\AddOns\\Gladius\\Images\\Gloss")
-	self.frame[unit].texture = _G[self.frame[unit]:GetName().."Icon"]
-	self.frame[unit].normalTexture = _G[self.frame[unit]:GetName().."NormalTexture"]
-	self.frame[unit].cooldown = _G[self.frame[unit]:GetName().."Cooldown"]
+	self.frame[unit].texture = _G[self.frame[unit]:GetName() .. "Icon"]
+	self.frame[unit].normalTexture = _G[self.frame[unit]:GetName() .. "NormalTexture"]
+	self.frame[unit].cooldown = _G[self.frame[unit]:GetName() .. "Cooldown"]
 
 	-- secure
-	local secure = CreateFrame("Button", "Gladius"..self.name.."SecureButton"..unit, button, "SecureActionButtonTemplate")
+	local secure = CreateFrame("Button", "Gladius" .. self.name .. "SecureButton" .. unit, button,
+		"SecureActionButtonTemplate")
 	secure:RegisterForClicks("AnyUp")
 	self.frame[unit].secure = secure
 end
 
 function Racial:UpdateColors(unit)
-	self.frame[unit].normalTexture:SetVertexColor(Gladius.db.RacialGlossColor.r, Gladius.db.RacialGlossColor.g, Gladius.db.RacialGlossColor.b, Gladius.db.RacialGloss and Gladius.db.RacialGlossColor.a or 0)
+	self.frame[unit].normalTexture:SetVertexColor(Gladius.db.RacialGlossColor.r, Gladius.db.RacialGlossColor.g,
+		Gladius.db.RacialGlossColor.b, Gladius.db.RacialGloss and Gladius.db.RacialGlossColor.a or 0)
 end
 
 function Racial:Update(unit)
@@ -253,7 +257,8 @@ function Racial:Update(unit)
 	unitFrame:ClearAllPoints()
 	-- anchor point
 	local parent = Gladius:GetParent(unit, Gladius.db.RacialAttachTo)
-	unitFrame:SetPoint(Gladius.db.RacialAnchor, parent, Gladius.db.RacialRelativePoint, Gladius.db.RacialOffsetX, Gladius.db.RacialOffsetY)
+	unitFrame:SetPoint(Gladius.db.RacialAnchor, parent, Gladius.db.RacialRelativePoint, Gladius.db.RacialOffsetX,
+		Gladius.db.RacialOffsetY)
 	-- frame level
 	unitFrame:SetFrameLevel(Gladius.db.RacialFrameLevel)
 	if Gladius.db.RacialAdjustSize then
@@ -284,9 +289,9 @@ function Racial:Update(unit)
 	if self:GetAttachTo() == "Frame" and not self.IsDetached() then
 		local left, right, top, bottom = Gladius.buttons[unit]:GetHitRectInsets()
 		if strfind(Gladius.db.RacialRelativePoint, "LEFT") then
-			left = - unitFrame:GetWidth() + Gladius.db.RacialOffsetX
+			left = -unitFrame:GetWidth() + Gladius.db.RacialOffsetX
 		else
-			right = - unitFrame:GetWidth() + - Gladius.db.RacialOffsetX
+			right = -unitFrame:GetWidth() + -Gladius.db.RacialOffsetX
 		end
 		-- search for an attached frame
 		--[[for _, module in pairs(Gladius.modules) do
@@ -320,7 +325,8 @@ function Racial:Update(unit)
 	else
 		unitFrame.texture:SetTexCoord(0.07, 0.93, 0.07, 0.93)
 	end
-	unitFrame.normalTexture:SetVertexColor(Gladius.db.RacialGlossColor.r, Gladius.db.RacialGlossColor.g, Gladius.db.RacialGlossColor.b, Gladius.db.RacialGloss and Gladius.db.RacialGlossColor.a or 0)
+	unitFrame.normalTexture:SetVertexColor(Gladius.db.RacialGlossColor.r, Gladius.db.RacialGlossColor.g,
+		Gladius.db.RacialGlossColor.b, Gladius.db.RacialGloss and Gladius.db.RacialGlossColor.a or 0)
 
 	-- cooldown
 	unitFrame.cooldown.isDisabled = not Gladius.db.RacialCooldown
@@ -586,7 +592,7 @@ function Racial:GetOptions()
 							type = "select",
 							name = L["Racial Position"],
 							desc = L["Position of the Racial"],
-							values = {["LEFT"] = L["Left"], ["RIGHT"] = L["Right"]},
+							values = { ["LEFT"] = L["Left"], ["RIGHT"] = L["Right"] },
 							get = function()
 								return strfind(Gladius.db.RacialAnchor, "RIGHT") and "LEFT" or "RIGHT"
 							end,
@@ -654,7 +660,7 @@ function Racial:GetOptions()
 							type = "range",
 							name = L["Racial Offset X"],
 							desc = L["X offset of the Racial"],
-							min = - 350,
+							min = -350,
 							max = 350,
 							step = 1,
 							disabled = function()
@@ -669,7 +675,7 @@ function Racial:GetOptions()
 							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							min = - 50,
+							min = -50,
 							max = 50,
 							step = 1,
 							order = 25,

@@ -13,10 +13,10 @@ local GetArenaOpponentSpec = GetArenaOpponentSpec
 local GetNumArenaOpponentSpecs = GetNumArenaOpponentSpecs
 local GetNumGroupMembers = GetNumGroupMembers
 local GetSpecializationInfoByID = GetSpecializationInfoByID
-local GetSpellInfo = GetSpellInfo
+local GetSpellInfo = C_Spell.GetSpellInfo
 local GetTime = GetTime
 local IsActiveBattlefieldArena = IsActiveBattlefieldArena
-local IsAddOnLoaded = IsAddOnLoaded
+local IsAddOnLoaded = C_AddOns.IsAddOnLoaded
 local IsArenaSkirmish = IsArenaSkirmish
 local IsInInstance = IsInInstance
 local SendChatMessage = SendChatMessage
@@ -56,9 +56,9 @@ function Announcements:OnEnable()
 	-- register custom events
 	--self:RegisterMessage("GLADIUS_SPEC_UPDATE")
 	-- Table holding messages to throttle
-	self.throttled = { }
+	self.throttled = {}
 	-- enemy detected
-	self.enemy = { }
+	self.enemy = {}
 end
 
 function Announcements:OnDisable()
@@ -72,8 +72,8 @@ end
 
 -- Reset throttled messages
 function Announcements:Reset(unit)
-	self.throttled = { }
-	self.enemy = { }
+	self.throttled = {}
+	self.enemy = {}
 end
 
 -- New enemy announcement
@@ -158,7 +158,7 @@ function Announcements:ARENA_PREP_OPPONENT_SPECIALIZATIONS(event, ...)
 				prepFrame:Show()
 			else
 				prepFrame:Hide()]]
-			self:Send("Enemy Spec: "..name.." "..class)
+			self:Send("Enemy Spec: " .. name .. " " .. class)
 		end
 		--else
 		--prepFrame:Hide()
@@ -186,7 +186,7 @@ end
 -- Sends an announcement
 -- Param unit is only used for class coloring of messages
 function Announcements:Send(msg, throttle, unit)
-	local color = unit and RAID_CLASS_COLORS[UnitClass(unit)] or {r = 0, g = 1, b = 0}
+	local color = unit and RAID_CLASS_COLORS[UnitClass(unit)] or { r = 0, g = 1, b = 0 }
 	local dest = Gladius.db.announcements.dest
 	local skirmish = IsArenaSkirmish()
 	local isArena, isRegistered = IsActiveBattlefieldArena()
@@ -194,7 +194,7 @@ function Announcements:Send(msg, throttle, unit)
 		dest = "instance"
 	end
 	if not self.throttled then
-		self.throttled = { }
+		self.throttled = {}
 	end
 	-- Throttling of messages
 	if throttle and throttle > 0 then
@@ -207,7 +207,7 @@ function Announcements:Send(msg, throttle, unit)
 		end
 	end
 	if dest == "self" then
-		DEFAULT_CHAT_FRAME:AddMessage("|cff33ff99Gladius|r: "..msg)
+		DEFAULT_CHAT_FRAME:AddMessage("|cff33ff99Gladius|r: " .. msg)
 	end
 	-- change destination to party if not raid leader/officer.
 	if dest == "rw" and not UnitIsGroupLeader() and not UnitIsGroupAssistant() and GetNumGroupMembers() > 0 then
@@ -216,34 +216,34 @@ function Announcements:Send(msg, throttle, unit)
 	-- party chat
 	if dest == "party" and (GetNumGroupMembers() > 0) then
 		SendChatMessage(msg, "PARTY")
-	-- instance chat
+		-- instance chat
 	elseif dest == "instance" and (GetNumGroupMembers() > 0) then
 		SendChatMessage(msg, "INSTANCE_CHAT")
-	-- raid chat
+		-- raid chat
 	elseif dest == "raid" and (GetNumGroupMembers() > 0) then
 		SendChatMessage(msg, "RAID")
-	-- say
+		-- say
 	elseif dest == "say" then
 		SendChatMessage(msg, "SAY")
-	-- raid warning
+		-- raid warning
 	elseif dest == "rw" then
 		SendChatMessage(msg, "RAID_WARNING")
-	-- floating combat text
+		-- floating combat text
 	elseif dest == "fct" and IsAddOnLoaded("Blizzard_CombatText") then
 		CombatText_AddMessage(msg, COMBAT_TEXT_SCROLL_FUNCTION, color.r, color.g, color.b)
-	-- MikScrollingBattleText
+		-- MikScrollingBattleText
 	elseif dest == "msbt" and IsAddOnLoaded("MikScrollingBattleText") then
 		MikSBT.DisplayMessage(msg, MikSBT.DISPLAYTYPE_NOTIFICATION, false, color.r * 255, color.g * 255, color.b * 255)
-	-- xCT
+		-- xCT
 	elseif dest == "xct" and IsAddOnLoaded("xCT") then
 		ct.frames[3]:AddMessage(msg, color.r * 255, color.g * 255, color.b * 255)
-	-- xCT+
+		-- xCT+
 	elseif dest == "xctplus" and IsAddOnLoaded("xCT+") then
-		xCT_Plus:AddMessage("general", msg, {color.r, color.g, color.b})
-	-- Scrolling Combat Text
+		xCT_Plus:AddMessage("general", msg, { color.r, color.g, color.b })
+		-- Scrolling Combat Text
 	elseif dest == "sct" and IsAddOnLoaded("sct") then
 		SCT:DisplayText(msg, color, nil, "event", 1)
-	-- Parrot
+		-- Parrot
 	elseif dest == "parrot" and IsAddOnLoaded("parrot") then
 		Parrot:ShowMessage(msg, "Notification", false, color.r, color.g, color.b)
 	end

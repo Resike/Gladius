@@ -16,9 +16,10 @@ local unpack = unpack
 
 local CreateFrame = CreateFrame
 local GetSpecializationInfoByID = GetSpecializationInfoByID
-local GetSpellInfo = GetSpellInfo
+local GetSpellInfo = C_Spell.GetSpellInfo
+local GetSpellName = C_Spell.GetSpellName
 local GetTime = GetTime
-local UnitAura = UnitAura
+local UnitAura = C_UnitAuras.GetAuraDataByIndex
 
 local CLASS_BUTTONS = CLASS_ICON_TCOORDS
 
@@ -27,347 +28,347 @@ local IsWrathClassic = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC
 local function GetDefaultAuraList()
 	local auraTable = {
 		-- Higher Number is More Priority
-		[GetSpellInfo(167152) or ""]   = 10,    -- Refreshment
-		[GetSpellInfo(118358) or ""]   = 10,    -- Drink
-		[GetSpellInfo(1784) or ""]     = 10,    -- Stealth
-		[GetSpellInfo(5215) or ""]     = 10,    -- Prowl
-		["198158"]               = 10.3,  -- Mass Invisibility
-		[GetSpellInfo(215769) or ""]   = 10,    -- Spirit of the Redeemer
-		[GetSpellInfo(45438) or ""]    = 10,    -- Ice Block
-		["45182"]                = 10,    -- Cheating Death
-		["116888"]               = 10,    -- Purgatory
-		[GetSpellInfo(269513) or ""]   = 10,    -- Death from Above
-		[GetSpellInfo(46924) or ""]    = 10,    -- Bladestorm fury
-		[GetSpellInfo(227847) or ""]   = 10,    -- Bladestorm arms
-		[GetSpellInfo(47585) or ""]    = 10,    -- Dispersion
-		[GetSpellInfo(642) or ""]      = 10,    -- Divine Shield
-		[GetSpellInfo(378441) or ""]	= 10.2,	-- Time Stop
-		[GetSpellInfo(228050) or ""]   = 10.1,  -- Prot pala Party Bubble
-		[GetSpellInfo(210918) or ""]   = 10,    -- Ethereal Form
-		[GetSpellInfo(27827) or ""]    = 10,    -- Spirit of Redemption
-		[GetSpellInfo(186265) or ""]   = 10,    -- Aspect of the Turtle
-		[GetSpellInfo(196555) or ""]   = 10,    -- Netherwalk
-		[GetSpellInfo(58984) or ""]    = 10,    -- Shadowmeld
+		[GetSpellName(167152) or ""]   = 10, -- Refreshment
+		[GetSpellName(118358) or ""]   = 10, -- Drink
+		[GetSpellName(1784) or ""]     = 10, -- Stealth
+		[GetSpellName(5215) or ""]     = 10, -- Prowl
+		[GetSpellName(198158) or ""]                     = 10.3, -- Mass Invisibility
+		[GetSpellName(215769) or ""]   = 10, -- Spirit of the Redeemer
+		[GetSpellName(45438) or ""]    = 10, -- Ice Block
+		[GetSpellName(45182) or ""]                      = 10, -- Cheating Death
+		[GetSpellName(116888) or ""]                     = 10, -- Purgatory
+		[GetSpellName(269513) or ""]   = 10, -- Death from Above
+		[GetSpellName(46924) or ""]    = 10, -- Bladestorm fury
+		[GetSpellName(227847) or ""]   = 10, -- Bladestorm arms
+		[GetSpellName(47585) or ""]    = 10, -- Dispersion
+		[GetSpellName(642) or ""]      = 10, -- Divine Shield
+		[GetSpellName(378441) or ""]   = 10.2, -- Time Stop
+		[GetSpellName(228050) or ""]   = 10.1, -- Prot pala Party Bubble
+		[GetSpellName(210918) or ""]   = 10, -- Ethereal Form
+		[GetSpellName(27827) or ""]    = 10, -- Spirit of Redemption
+		[GetSpellName(186265) or ""]   = 10, -- Aspect of the Turtle
+		[GetSpellName(196555) or ""]   = 10, -- Netherwalk
+		[GetSpellName(58984) or ""]    = 10, -- Shadowmeld
 
-		[GetSpellInfo(2094) or ""]      = 9.1,  -- Blind
-		[GetSpellInfo(202274) or ""]    = 9.1,  -- Brew Breath
-		[GetSpellInfo(207167) or ""]    = 9,    -- Blinding Sleet
-		[GetSpellInfo(33786) or ""]     = 9.1,  -- Cyclone
-		["221527"]                = 9.1,  -- Imprison talented
-		[GetSpellInfo(605) or ""]       = 9,    -- Mind Control
-		[GetSpellInfo(118699) or ""]    = 9,    -- Fear
-		["226943"]                = 9,    -- Mind Bomb disorient
-		[GetSpellInfo(236748) or ""]    = 9,    -- disorienting roar
-		[GetSpellInfo(2637) or ""]      = 9,    -- Hibernate
-		[GetSpellInfo(3355) or ""]      = 9.1,  -- Freezing Trap
-		[GetSpellInfo(203337) or ""]    = 9.1,  -- Freezing Trap (talented)
-		[GetSpellInfo(51514) or ""]     = 9,    -- Hex
-		[GetSpellInfo(211004) or ""]    = 9,    -- Hex
-		[GetSpellInfo(210873) or ""]    = 9,    -- Hex
-		[GetSpellInfo(211015) or ""]    = 9,    -- Hex
-		[GetSpellInfo(211010) or ""]    = 9,    -- Hex
-		[GetSpellInfo(277784) or ""]    = 9,    -- Hex
-		[GetSpellInfo(277778) or ""]    = 9,    -- Hex
-		[GetSpellInfo(269352) or ""]    = 9,    -- Hex
-		[GetSpellInfo(5246) or ""]      = 9,    -- Intimidating Shout
-		[GetSpellInfo(6789) or ""]      = 9,    -- Mortal Coil
-		[GetSpellInfo(118) or ""]       = 9,    -- Polymorph
-		[GetSpellInfo(277787) or ""]    = 9,    -- Polymorph direhorn
-		[GetSpellInfo(277792) or ""]    = 9,    -- Polymorph bumblebee
-		[GetSpellInfo(28272) or ""]     = 9,    -- Polymorph pig
-		[GetSpellInfo(61305) or ""]     = 9,    -- Polymorph black cat
-		[GetSpellInfo(61721) or ""]     = 9,    -- Polymorph rabbit
-		[GetSpellInfo(161372) or ""]    = 9,    -- Polymorph peacock
-		[GetSpellInfo(28271) or ""]     = 9,    -- Polymorph turtle
-		[GetSpellInfo(161355) or ""]    = 9,    -- Polymorph penguin
-		[GetSpellInfo(61780) or ""]     = 9,    -- Polymorph turkey
-		[GetSpellInfo(126819) or ""]    = 9,    -- Polymorph porcupine
-		[GetSpellInfo(161353) or ""]    = 9,    -- Polymorph bear cup
-		[GetSpellInfo(161354) or ""]    = 9,    -- Polymorph monkey
-		[GetSpellInfo(105421) or ""]    = 9,    -- Blinding Light
-		[GetSpellInfo(213691) or ""]    = 9,    -- Scatter Shot
-		[GetSpellInfo(8122) or ""]      = 9,    -- Psychic Scream
-		[GetSpellInfo(20066) or ""]     = 9,    -- Repentance
-		[GetSpellInfo(82691) or ""]     = 9,    -- Ring of Frost
-		[GetSpellInfo(6770) or ""]      = 9.1,  -- Sap
-		[GetSpellInfo(107079) or ""]    = 9,    -- Quaking Palm
-		[GetSpellInfo(6358) or ""]      = 9,    -- Seduction (Succubus)
-		[GetSpellInfo(261589) or ""]    = 9,    -- Seduction (Player)
-		[GetSpellInfo(1776) or ""]      = 9,    -- Gouge
-		[GetSpellInfo(31661) or ""]     = 9,    -- Dragon's Breath
-		[GetSpellInfo(360806) or ""] 	= 9,	-- Sleep Walk
+		[GetSpellName(2094) or ""]     = 9.1, -- Blind
+		[GetSpellName(202274) or ""]   = 9.1, -- Brew Breath
+		[GetSpellName(207167) or ""]   = 9,  -- Blinding Sleet
+		[GetSpellName(33786) or ""]    = 9.1, -- Cyclone
+		[GetSpellName(221527) or ""]                     = 9.1, -- Imprison talented
+		[GetSpellName(605) or ""]      = 9,  -- Mind Control
+		[GetSpellName(118699) or ""]   = 9,  -- Fear
+		[GetSpellName(226943) or ""]                     = 9,  -- Mind Bomb disorient
+		[GetSpellName(236748) or ""]   = 9,  -- disorienting roar
+		[GetSpellName(2637) or ""]     = 9,  -- Hibernate
+		[GetSpellName(3355) or ""]     = 9.1, -- Freezing Trap
+		[GetSpellName(203337) or ""]   = 9.1, -- Freezing Trap (talented)
+		[GetSpellName(51514) or ""]    = 9,  -- Hex
+		[GetSpellName(211004) or ""]   = 9,  -- Hex
+		[GetSpellName(210873) or ""]   = 9,  -- Hex
+		[GetSpellName(211015) or ""]   = 9,  -- Hex
+		[GetSpellName(211010) or ""]   = 9,  -- Hex
+		[GetSpellName(277784) or ""]   = 9,  -- Hex
+		[GetSpellName(277778) or ""]   = 9,  -- Hex
+		[GetSpellName(269352) or ""]   = 9,  -- Hex
+		[GetSpellName(5246) or ""]     = 9,  -- Intimidating Shout
+		[GetSpellName(6789) or ""]     = 9,  -- Mortal Coil
+		[GetSpellName(118) or ""]      = 9,  -- Polymorph
+		[GetSpellName(277787) or ""]   = 9,  -- Polymorph direhorn
+		[GetSpellName(277792) or ""]   = 9,  -- Polymorph bumblebee
+		[GetSpellName(28272) or ""]    = 9,  -- Polymorph pig
+		[GetSpellName(61305) or ""]    = 9,  -- Polymorph black cat
+		[GetSpellName(61721) or ""]    = 9,  -- Polymorph rabbit
+		[GetSpellName(161372) or ""]   = 9,  -- Polymorph peacock
+		[GetSpellName(28271) or ""]    = 9,  -- Polymorph turtle
+		[GetSpellName(161355) or ""]   = 9,  -- Polymorph penguin
+		[GetSpellName(61780) or ""]    = 9,  -- Polymorph turkey
+		[GetSpellName(126819) or ""]   = 9,  -- Polymorph porcupine
+		[GetSpellName(161353) or ""]   = 9,  -- Polymorph bear cup
+		[GetSpellName(161354) or ""]   = 9,  -- Polymorph monkey
+		[GetSpellName(105421) or ""]   = 9,  -- Blinding Light
+		[GetSpellName(213691) or ""]   = 9,  -- Scatter Shot
+		[GetSpellName(8122) or ""]     = 9,  -- Psychic Scream
+		[GetSpellName(20066) or ""]    = 9,  -- Repentance
+		[GetSpellName(82691) or ""]    = 9,  -- Ring of Frost
+		[GetSpellName(6770) or ""]     = 9.1, -- Sap
+		[GetSpellName(107079) or ""]   = 9,  -- Quaking Palm
+		[GetSpellName(6358) or ""]     = 9,  -- Seduction (Succubus)
+		[GetSpellName(261589) or ""]   = 9,  -- Seduction (Player)
+		[GetSpellName(1776) or ""]     = 9,  -- Gouge
+		[GetSpellName(31661) or ""]    = 9,  -- Dragon's Breath
+		[GetSpellName(360806) or ""]   = 9,  -- Sleep Walk
 
-		[GetSpellInfo(207685) or ""]    = 8,    -- Sigil of Misery Disorient
-		[GetSpellInfo(198909) or ""]    = 8,    -- Song of Chi-Ji
-		[GetSpellInfo(221562) or ""]    = 8,    -- Asphyxiate blood
-		[GetSpellInfo(108194) or ""]    = 8,    -- Asphyxiate frost/unholy
-		[GetSpellInfo(210141) or ""]    = 8,    -- Zombie Explosion
-		[GetSpellInfo(91797) or ""]     = 8,    -- transformed Gnaw
-		[GetSpellInfo(91800) or ""]     = 8,    -- untransformed Gnaw
-		[GetSpellInfo(89766) or ""]     = 8,    -- Axe Toss (Felguard)
-		[GetSpellInfo(24394) or ""]     = 8,    -- Intimidation
-		[GetSpellInfo(202244) or ""]    = 8,    -- Overrun bear stun
-		[GetSpellInfo(1833) or ""]      = 8,    -- Cheap Shot
-		[GetSpellInfo(205630) or ""]    = 8,    -- Illidan's Grasp 1
-		[GetSpellInfo(208618) or ""]    = 8,    -- Illidan's Grasp 2
-		[GetSpellInfo(213491) or ""]    = 8,    -- Demonic Trample knockdown
-		[GetSpellInfo(199804) or ""]    = 8,    -- Between the Eyes
-		[GetSpellInfo(235612) or ""]    = 8,    -- Frost DK stun
-		[GetSpellInfo(287254) or ""]    = 8,    -- Remorseless Winter stun
-		["77505"]                 = 8,    -- Earthquake
-		[GetSpellInfo(213688) or ""]    = 8,    -- Fel Cleave
-		[GetSpellInfo(853) or ""]       = 8,    -- Hammer of Justice
-		[GetSpellInfo(200196) or ""]    = 8,    -- Holy Word: Chastise
-		[GetSpellInfo(408) or ""]       = 8,    -- Kidney Shot
-		[GetSpellInfo(372245) or ""]	= 8,	-- Terror of the Skies (Deep Breath)
-		[GetSpellInfo(202346) or ""]    = 8,    -- Keg Stun
-		[GetSpellInfo(200200) or ""]    = 8,    -- Holy Word: Chastise
-		[GetSpellInfo(119381) or ""]    = 8.2,  -- Leg Sweep
-		[GetSpellInfo(179057) or ""]    = 8.1,  -- Chaos Nova
-		[GetSpellInfo(211881) or ""]    = 8,    -- Fel Eruption
-		[GetSpellInfo(204399) or ""]    = 8,    -- Earthfury
-		[GetSpellInfo(255723) or ""]    = 8,    -- Bull Rush
-		[GetSpellInfo(204437) or ""]    = 8,    -- Lightning Lasso
-		[GetSpellInfo(197214) or ""]    = 8,    -- Sundering
-		[GetSpellInfo(203123) or ""]    = 8,    -- Maim stun
-		[GetSpellInfo(64044) or ""]     = 8,    -- Psychic Horror
-		[GetSpellInfo(199085) or ""]    = 8,    -- Heroic Leap Stun
-		[GetSpellInfo(5211) or ""]      = 8,    -- Mighty Bash
-		[GetSpellInfo(118345) or ""]    = 8,    -- Pulverize (Primal Earth Elemental)
-		[GetSpellInfo(30283) or ""]     = 8,    -- Shadowfury
-		[GetSpellInfo(22703) or ""]     = 8,    -- Summon Infernal stun
-		[GetSpellInfo(132168) or ""]    = 8,    -- Shockwave
-		[GetSpellInfo(118905) or ""]    = 8,    -- Lightning Surge Totem
-		[GetSpellInfo(132169) or ""]    = 8,    -- Storm Bolt
-		[GetSpellInfo(20549) or ""]     = 8,    -- War Stomp
-		[GetSpellInfo(87204) or ""]     = 8,    -- Sin and Punishment
-		["117526"]                = 8,    -- Binding Shot
-		["163505"]                = 8,    -- Rake stun
-		[GetSpellInfo(48792) or ""]     = 8,    -- Icebound Fortitude
-		[GetSpellInfo(287081) or ""]    = 8,    -- Lichborne
-		[GetSpellInfo(115078) or ""]    = 8.1,  -- Paralysis
-		["217832"]                = 8,    -- Imprison
-		[GetSpellInfo(236025) or ""]    = 8,    -- Enraged Maim incap
+		[GetSpellName(207685) or ""]   = 8,  -- Sigil of Misery Disorient
+		[GetSpellName(198909) or ""]   = 8,  -- Song of Chi-Ji
+		[GetSpellName(221562) or ""]   = 8,  -- Asphyxiate blood
+		[GetSpellName(108194) or ""]   = 8,  -- Asphyxiate frost/unholy
+		[GetSpellName(210141) or ""]   = 8,  -- Zombie Explosion
+		[GetSpellName(91797) or ""]    = 8,  -- transformed Gnaw
+		[GetSpellName(91800) or ""]    = 8,  -- untransformed Gnaw
+		[GetSpellName(89766) or ""]    = 8,  -- Axe Toss (Felguard)
+		[GetSpellName(24394) or ""]    = 8,  -- Intimidation
+		[GetSpellName(202244) or ""]   = 8,  -- Overrun bear stun
+		[GetSpellName(1833) or ""]     = 8,  -- Cheap Shot
+		[GetSpellName(205630) or ""]   = 8,  -- Illidan's Grasp 1
+		[GetSpellName(208618) or ""]   = 8,  -- Illidan's Grasp 2
+		[GetSpellName(213491) or ""]   = 8,  -- Demonic Trample knockdown
+		[GetSpellName(199804) or ""]   = 8,  -- Between the Eyes
+		[GetSpellName(235612) or ""]   = 8,  -- Frost DK stun
+		[GetSpellName(287254) or ""]   = 8,  -- Remorseless Winter stun
+		[GetSpellName(77505) or ""]                      = 8,  -- Earthquake
+		[GetSpellName(213688) or ""]   = 8,  -- Fel Cleave
+		[GetSpellName(853) or ""]      = 8,  -- Hammer of Justice
+		[GetSpellName(200196) or ""]   = 8,  -- Holy Word: Chastise
+		[GetSpellName(408) or ""]      = 8,  -- Kidney Shot
+		[GetSpellName(372245) or ""]   = 8,  -- Terror of the Skies (Deep Breath)
+		[GetSpellName(202346) or ""]   = 8,  -- Keg Stun
+		[GetSpellName(200200) or ""]   = 8,  -- Holy Word: Chastise
+		[GetSpellName(119381) or ""]   = 8.2, -- Leg Sweep
+		[GetSpellName(179057) or ""]   = 8.1, -- Chaos Nova
+		[GetSpellName(211881) or ""]   = 8,  -- Fel Eruption
+		[GetSpellName(204399) or ""]   = 8,  -- Earthfury
+		[GetSpellName(255723) or ""]   = 8,  -- Bull Rush
+		[GetSpellName(204437) or ""]   = 8,  -- Lightning Lasso
+		[GetSpellName(197214) or ""]   = 8,  -- Sundering
+		[GetSpellName(203123) or ""]   = 8,  -- Maim stun
+		[GetSpellName(64044) or ""]    = 8,  -- Psychic Horror
+		[GetSpellName(199085) or ""]   = 8,  -- Heroic Leap Stun
+		[GetSpellName(5211) or ""]     = 8,  -- Mighty Bash
+		[GetSpellName(118345) or ""]   = 8,  -- Pulverize (Primal Earth Elemental)
+		[GetSpellName(30283) or ""]    = 8,  -- Shadowfury
+		[GetSpellName(22703) or ""]    = 8,  -- Summon Infernal stun
+		[GetSpellName(132168) or ""]   = 8,  -- Shockwave
+		[GetSpellName(118905) or ""]   = 8,  -- Lightning Surge Totem
+		[GetSpellName(132169) or ""]   = 8,  -- Storm Bolt
+		[GetSpellName(20549) or ""]    = 8,  -- War Stomp
+		[GetSpellName(87204) or ""]    = 8,  -- Sin and Punishment
+		[GetSpellName(117526) or ""]                     = 8,  -- Binding Shot
+		[GetSpellName(163505) or ""]                     = 8,  -- Rake stun
+		[GetSpellName(48792) or ""]    = 8, -- Icebound Fortitude
+		[GetSpellName(287081) or ""]   = 8, -- Lichborne
+		[GetSpellName(115078) or ""]   = 8.1, -- Paralysis
+		[GetSpellName(217832) or ""]                     = 8,  -- Imprison
+		[GetSpellName(236025) or ""]   = 8, -- Enraged Maim incap
 
-		[GetSpellInfo(104773) or ""]    = 7.5,  -- Unending Resolve affli/demo/destro
-		["77606"]                 = 7.4,  -- Dark Simulacrum
-		["122470"]                = 7,    -- Touch of Karma debuff
-		["125174"]                = 7,    -- Touch of Karma buff
-		[GetSpellInfo(5277) or ""]      = 7.4,  -- Evasion
-		[GetSpellInfo(213602) or ""]    = 7.4,  -- Greater Fade
-		[GetSpellInfo(199027) or ""]    = 7.2,  -- Evasion2 post stealth
-		[GetSpellInfo(199754) or ""]    = 7.3,  -- Riposte
-		[GetSpellInfo(198144) or ""]    = 7.3,  -- Ice Form
-		[GetSpellInfo(188499) or ""]    = 7.3,  -- Blade Dance
-		[GetSpellInfo(210152) or ""]    = 7.3,  -- Death Sweep
-		[GetSpellInfo(212800) or ""]    = 7.2,  -- Blur
-		[GetSpellInfo(209426) or ""]    = 7.1,  -- Darkness
-		["6940"]                  = 7.2,  -- Blessing of Sacrifice
-		["199448"]                = 7.2,  -- Blessing of Sacrifice
-		[GetSpellInfo(1022) or ""]      = 7.4,  -- Hand of Protection
-		[GetSpellInfo(18499) or ""]     = 7.3,  -- Berserker Rage
-		[GetSpellInfo(212704) or ""]    = 7.3,  -- The Beast Within
-		["196364"]                = 7,    -- Unstable Affliction silence
-		[GetSpellInfo(1330) or ""]      = 7,    -- Garrote (Silence)
-		[GetSpellInfo(15487) or ""]     = 7,    -- Silence
-		[GetSpellInfo(204490) or ""]    = 7,    -- Sigil of Silence
-		[GetSpellInfo(217824) or ""]    = 7,    -- Prot Pala Silence
-		[GetSpellInfo(236077) or ""]    = 7,    -- War Disarm
-		[GetSpellInfo(207777) or ""]    = 7,    -- Dismantle
-		[GetSpellInfo(233759) or ""]    = 7,    -- Grapple Weapon
-		[GetSpellInfo(209749) or ""]    = 7,    -- Faerie Swarm disarm
-		["202933"]                = 7,    -- Spider Sting
-		[GetSpellInfo(47476) or ""]     = 7.5,  -- Strangulate
-		[GetSpellInfo(81261) or ""]     = 7,    -- Solar Beam
+		[GetSpellName(104773) or ""]   = 7.5, -- Unending Resolve affli/demo/destro
+		[GetSpellName(77606) or ""]                      = 7.4, -- Dark Simulacrum
+		[GetSpellName(122470) or ""]                     = 7,  -- Touch of Karma debuff
+		[GetSpellName(125174) or ""]                     = 7,  -- Touch of Karma buff
+		[GetSpellName(5277) or ""]     = 7.4, -- Evasion
+		[GetSpellName(213602) or ""]   = 7.4, -- Greater Fade
+		[GetSpellName(199027) or ""]   = 7.2, -- Evasion2 post stealth
+		[GetSpellName(199754) or ""]   = 7.3, -- Riposte
+		[GetSpellName(198144) or ""]   = 7.3, -- Ice Form
+		[GetSpellName(188499) or ""]   = 7.3, -- Blade Dance
+		[GetSpellName(210152) or ""]   = 7.3, -- Death Sweep
+		[GetSpellName(212800) or ""]   = 7.2, -- Blur
+		[GetSpellName(209426) or ""]   = 7.1, -- Darkness
+		[GetSpellName(6940) or ""]                       = 7.2, -- Blessing of Sacrifice
+		[GetSpellName(199448) or ""]                     = 7.2, -- Blessing of Sacrifice
+		[GetSpellName(1022) or ""]     = 7.4, -- Hand of Protection
+		[GetSpellName(18499) or ""]    = 7.3, -- Berserker Rage
+		[GetSpellName(212704) or ""]   = 7.3, -- The Beast Within
+		[GetSpellName(196364) or ""]                     = 7, -- Unstable Affliction silence
+		[GetSpellName(1330) or ""]     = 7, -- Garrote (Silence)
+		[GetSpellName(15487) or ""]    = 7, -- Silence
+		[GetSpellName(204490) or ""]   = 7, -- Sigil of Silence
+		[GetSpellName(217824) or ""]   = 7, -- Prot Pala Silence
+		[GetSpellName(236077) or ""]   = 7, -- War Disarm
+		[GetSpellName(207777) or ""]   = 7, -- Dismantle
+		[GetSpellName(233759) or ""]   = 7, -- Grapple Weapon
+		[GetSpellName(209749) or ""]   = 7, -- Faerie Swarm disarm
+		[GetSpellName(202933) or ""]                     = 7,  -- Spider Sting
+		[GetSpellName(47476) or ""]    = 7.5, -- Strangulate
+		[GetSpellName(81261) or ""]    = 7, -- Solar Beam
 
-		[GetSpellInfo(8178) or ""]      = 6.3,  -- Grounding Totem Effect
-		[GetSpellInfo(91807) or ""]     = 6,    -- Shambling Rush (Ghoul)
-		["116706"]                = 6,    -- Disable
-		[GetSpellInfo(157997) or ""]    = 6,    -- Ice Nova
-		[GetSpellInfo(228600) or ""]    = 6,    -- Glacial Spike
-		[GetSpellInfo(198121) or ""]    = 6,    -- Frostbite
-		[GetSpellInfo(233395) or ""]    = 6,    -- Frozen Center
-		[GetSpellInfo(64695) or ""]     = 6,    -- Earthgrab Totem
-		[GetSpellInfo(233582) or ""]    = 6,    -- Destro root
-		[GetSpellInfo(285515) or ""]    = 6,    -- Frost Shock root (talent)
-		[GetSpellInfo(339) or ""]       = 6,    -- Entangling Roots
-		["162480"]                = 6,    -- Steel Trap root
-		[GetSpellInfo(235963) or ""]    = 6,    -- Entangling Roots undispellable
-		[GetSpellInfo(170855) or ""]    = 6,    -- Ironbark Entangling Roots
-		[GetSpellInfo(45334) or ""]     = 6,    -- Immobilized (Wild Charge - Bear)
-		[GetSpellInfo(33395) or ""]     = 6,    -- Freeze (Water Elemental)
-		[GetSpellInfo(122) or ""]       = 6,    -- Frost Nova
-		[GetSpellInfo("358385") or ""] 	= 6, 	-- Landslide
-		[GetSpellInfo(102359) or ""]    = 6,    -- Mass Entanglement
-		[GetSpellInfo(190927) or ""]    = 6,    -- Harpoon
-		["212638"]                = 6,    -- Tracker's Net (miss atks)
-		[GetSpellInfo(105771) or ""]    = 6,    -- Charge root
-		["204085"]                = 6,    -- Deathchill root
+		[GetSpellName(8178) or ""]     = 6.3, -- Grounding Totem Effect
+		[GetSpellName(91807) or ""]    = 6, -- Shambling Rush (Ghoul)
+		[GetSpellName(116706) or ""]                     = 6,  -- Disable
+		[GetSpellName(157997) or ""]   = 6, -- Ice Nova
+		[GetSpellName(228600) or ""]   = 6, -- Glacial Spike
+		[GetSpellName(198121) or ""]   = 6, -- Frostbite
+		[GetSpellName(233395) or ""]   = 6, -- Frozen Center
+		[GetSpellName(64695) or ""]    = 6, -- Earthgrab Totem
+		[GetSpellName(233582) or ""]   = 6, -- Destro root
+		[GetSpellName(285515) or ""]   = 6, -- Frost Shock root (talent)
+		[GetSpellName(339) or ""]      = 6, -- Entangling Roots
+		[GetSpellName(162480) or ""]                     = 6,  -- Steel Trap root
+		[GetSpellName(235963) or ""]   = 6, -- Entangling Roots undispellable
+		[GetSpellName(170855) or ""]   = 6, -- Ironbark Entangling Roots
+		[GetSpellName(45334) or ""]    = 6, -- Immobilized (Wild Charge - Bear)
+		[GetSpellName(33395) or ""]    = 6, -- Freeze (Water Elemental)
+		[GetSpellName(122) or ""]      = 6, -- Frost Nova
+		[GetSpellName("358385") or ""] = 6, -- Landslide
+		[GetSpellName(102359) or ""]   = 6, -- Mass Entanglement
+		[GetSpellName(190927) or ""]   = 6, -- Harpoon
+		[GetSpellName(212638) or ""]                     = 6,  -- Tracker's Net (miss atks)
+		[GetSpellName(105771) or ""]   = 6, -- Charge root
+		[GetSpellName(204085) or ""]                     = 6,  -- Deathchill root
 
-		["198222"]                = 5.9,  -- System Shock 90% slow
-		[GetSpellInfo(48707) or ""]     = 5.2,  -- Anti-Magic Shell
-		[GetSpellInfo(370984) or ""]	= 5.2, 	-- Emerald Communion
-		[GetSpellInfo(204018) or ""]    = 5.3,  -- Magic Bop
-		[GetSpellInfo(212295) or ""]    = 5.2,  -- Nether Ward
-		[GetSpellInfo(221705) or ""]    = 5.1,  -- Casting Circle
-		[GetSpellInfo(234084) or ""]    = 5.1,  -- Boomy 70% kick reduc
-		[GetSpellInfo(196773) or ""]    = 5.1,  -- inner focus
-		[GetSpellInfo(290641) or ""]    = 5.1,  -- Ancestral Gift
-		[GetSpellInfo(289655) or ""]    = 5.1,  -- Holy Word: Concentration
-		[GetSpellInfo(209584) or ""]    = 5.1,  -- Zen Focus Tea
-		[GetSpellInfo(116849) or ""]    = 5,    -- Life Cocoon
-		[GetSpellInfo(110960) or ""]    = 5.1,  -- Greater Invisibility
-		[GetSpellInfo(113862) or ""]    = 5,    -- Greater Invisibility
-		[GetSpellInfo(108271) or ""]    = 5,    -- Astral Shift
-		[GetSpellInfo(22812) or ""]     = 5,    -- Barkskin
-		[GetSpellInfo(871) or ""]       = 5,    -- Shield Wall
-		[GetSpellInfo(232707) or ""]    = 5.4,  -- Ray of Hope
-		[GetSpellInfo(31224) or ""]     = 5.3,  -- Cloak of Shadows
-		[GetSpellInfo(118038) or ""]    = 5.1,  -- Die by the Sword
-		[GetSpellInfo(227744) or ""]    = 5,    -- Ravager parry
-		[GetSpellInfo(81256) or ""]     = 5,    -- Dancing Rune weapon
-		[GetSpellInfo(498) or ""]       = 5,    -- Divine Protection
-		[GetSpellInfo(236321) or ""]    = 5,    -- War Banner
-		[GetSpellInfo(199507) or ""]    = 5,    -- Spreading The Word: Protection
-		[GetSpellInfo(205191) or ""]    = 5.1,  -- Eye for an Eye
-		[GetSpellInfo(47788) or ""]     = 5,    -- Guardian Spirit
-		[GetSpellInfo(207498) or ""]    = 5,    -- Ancestral Protection Totem
-		[GetSpellInfo(66) or ""]        = 5,    -- Invisibility
-		[GetSpellInfo(32612) or ""]     = 5,    -- Invisibility
-		[GetSpellInfo(102342) or ""]    = 5,    -- Ironbark
-		[GetSpellInfo(199038) or ""]    = 5,    -- Intercept 90% dmg reduc
-		[GetSpellInfo(202748) or ""]    = 5,    -- survival tactics
-		[GetSpellInfo(210256) or ""]    = 5,    -- Blessing of Sanctuary
-		[GetSpellInfo(213610) or ""]    = 5,    -- Holy Ward
-		[GetSpellInfo(378464) or ""]	= 5, 	-- Nullification Shroud
-		[GetSpellInfo(122783) or ""]    = 5.1,  -- Diffuse Magic
-		[GetSpellInfo(33206) or ""]     = 5,    -- Pain Suppression
-		[GetSpellInfo(53480) or ""]     = 5,    -- Roar of Sacrifice
-		[GetSpellInfo(192081) or ""]    = 5,    -- Ironfur
-		[GetSpellInfo(31850) or ""]     = 5,    -- Ardent Defender
-		[GetSpellInfo(86659) or ""]     = 5.3,  -- Prot Pala Wall
-		[GetSpellInfo(184364) or ""]    = 5,    -- Enraged Regeneration
-		[GetSpellInfo(207736) or ""]    = 5,    -- Shadowy Duel
-		[GetSpellInfo(236273) or ""]    = 5,    -- Duel
-		[GetSpellInfo(207756) or ""]    = 5,    -- Shadowy Duel
-		[GetSpellInfo(210294) or ""]    = 5,    -- Divine Favor
-		[GetSpellInfo(198111) or ""]    = 5,    -- Temporal Shield
-		[GetSpellInfo(23920) or ""]     = 5.1,  -- Spell Reflection
-		[GetSpellInfo(213915) or ""]    = 5.1,  -- Mass Spell Reflection
-		[GetSpellInfo(147833) or ""]    = 5.2,  -- Intercepted Spell Redirect
-		[GetSpellInfo(202248) or ""]    = 5.1,  -- zen meditation
-		[GetSpellInfo(248519) or ""]    = 5.1,  -- Interlope (bm pet redirect)
-		[GetSpellInfo(61336) or ""]     = 5,    -- Survival Instincts
-		[GetSpellInfo(363916) or ""]	= 5, 	-- Obsidian Scales
-		[GetSpellInfo(357170) or ""]	= 5, 	-- Time Dilation
-		[GetSpellInfo(374348) or ""] 	= 5, 	-- Renewing Blaze
+		[GetSpellName(198222) or ""]                     = 5.9, -- System Shock 90% slow
+		[GetSpellName(48707) or ""]    = 5.2, -- Anti-Magic Shell
+		[GetSpellName(370984) or ""]   = 5.2, -- Emerald Communion
+		[GetSpellName(204018) or ""]   = 5.3, -- Magic Bop
+		[GetSpellName(212295) or ""]   = 5.2, -- Nether Ward
+		[GetSpellName(221705) or ""]   = 5.1, -- Casting Circle
+		[GetSpellName(234084) or ""]   = 5.1, -- Boomy 70% kick reduc
+		[GetSpellName(196773) or ""]   = 5.1, -- inner focus
+		[GetSpellName(290641) or ""]   = 5.1, -- Ancestral Gift
+		[GetSpellName(289655) or ""]   = 5.1, -- Holy Word: Concentration
+		[GetSpellName(209584) or ""]   = 5.1, -- Zen Focus Tea
+		[GetSpellName(116849) or ""]   = 5, -- Life Cocoon
+		[GetSpellName(110960) or ""]   = 5.1, -- Greater Invisibility
+		[GetSpellName(113862) or ""]   = 5, -- Greater Invisibility
+		[GetSpellName(108271) or ""]   = 5, -- Astral Shift
+		[GetSpellName(22812) or ""]    = 5, -- Barkskin
+		[GetSpellName(871) or ""]      = 5, -- Shield Wall
+		[GetSpellName(232707) or ""]   = 5.4, -- Ray of Hope
+		[GetSpellName(31224) or ""]    = 5.3, -- Cloak of Shadows
+		[GetSpellName(118038) or ""]   = 5.1, -- Die by the Sword
+		[GetSpellName(227744) or ""]   = 5, -- Ravager parry
+		[GetSpellName(81256) or ""]    = 5, -- Dancing Rune weapon
+		[GetSpellName(498) or ""]      = 5, -- Divine Protection
+		[GetSpellName(236321) or ""]   = 5, -- War Banner
+		[GetSpellName(199507) or ""]   = 5, -- Spreading The Word: Protection
+		[GetSpellName(205191) or ""]   = 5.1, -- Eye for an Eye
+		[GetSpellName(47788) or ""]    = 5, -- Guardian Spirit
+		[GetSpellName(207498) or ""]   = 5, -- Ancestral Protection Totem
+		[GetSpellName(66) or ""]       = 5, -- Invisibility
+		[GetSpellName(32612) or ""]    = 5, -- Invisibility
+		[GetSpellName(102342) or ""]   = 5, -- Ironbark
+		[GetSpellName(199038) or ""]   = 5, -- Intercept 90% dmg reduc
+		[GetSpellName(202748) or ""]   = 5, -- survival tactics
+		[GetSpellName(210256) or ""]   = 5, -- Blessing of Sanctuary
+		[GetSpellName(213610) or ""]   = 5, -- Holy Ward
+		[GetSpellName(378464) or ""]   = 5, -- Nullification Shroud
+		[GetSpellName(122783) or ""]   = 5.1, -- Diffuse Magic
+		[GetSpellName(33206) or ""]    = 5, -- Pain Suppression
+		[GetSpellName(53480) or ""]    = 5, -- Roar of Sacrifice
+		[GetSpellName(192081) or ""]   = 5, -- Ironfur
+		[GetSpellName(31850) or ""]    = 5, -- Ardent Defender
+		[GetSpellName(86659) or ""]    = 5.3, -- Prot Pala Wall
+		[GetSpellName(184364) or ""]   = 5, -- Enraged Regeneration
+		[GetSpellName(207736) or ""]   = 5, -- Shadowy Duel
+		[GetSpellName(236273) or ""]   = 5, -- Duel
+		[GetSpellName(207756) or ""]   = 5, -- Shadowy Duel
+		[GetSpellName(210294) or ""]   = 5, -- Divine Favor
+		[GetSpellName(198111) or ""]   = 5, -- Temporal Shield
+		[GetSpellName(23920) or ""]    = 5.1, -- Spell Reflection
+		[GetSpellName(213915) or ""]   = 5.1, -- Mass Spell Reflection
+		[GetSpellName(147833) or ""]   = 5.2, -- Intercepted Spell Redirect
+		[GetSpellName(202248) or ""]   = 5.1, -- zen meditation
+		[GetSpellName(248519) or ""]   = 5.1, -- Interlope (bm pet redirect)
+		[GetSpellName(61336) or ""]    = 5, -- Survival Instincts
+		[GetSpellName(363916) or ""]   = 5, -- Obsidian Scales
+		[GetSpellName(357170) or ""]   = 5, -- Time Dilation
+		[GetSpellName(374348) or ""]   = 5, -- Renewing Blaze
 
-		[GetSpellInfo(206803) or ""]    = 4.1,  -- Rain from Above
-		[GetSpellInfo(206804) or ""]    = 4,    -- Rain from Above
-		[GetSpellInfo(1044) or ""]      = 4,    -- Blessing of Freedom
-		[GetSpellInfo(290500) or ""]    = 4,    -- Wind Waker
-		[GetSpellInfo(199545) or ""]    = 4,    -- Steed of Glory
-		[GetSpellInfo(48265) or ""]     = 4,    -- Death's Advance
-		[GetSpellInfo(201447) or ""]    = 4,    -- Ride the Wind
-		[GetSpellInfo(256948) or ""]    = 4,    -- Spatial Rift
-		[GetSpellInfo(213664) or ""]    = 4,    -- Nimble Brew
-		[GetSpellInfo(197003) or ""]    = 4,    -- Maneuverability
-		[GetSpellInfo(198065) or ""]    = 4,    -- Prismatic Cloak
-		[GetSpellInfo(54216) or ""]     = 4,    -- Master's Call
-		[GetSpellInfo(115192) or ""]    = 4.1,  -- Subterfuge
-		[GetSpellInfo(11327) or ""]     = 4,    -- Vanish
+		[GetSpellName(206803) or ""]   = 4.1, -- Rain from Above
+		[GetSpellName(206804) or ""]   = 4, -- Rain from Above
+		[GetSpellName(1044) or ""]     = 4, -- Blessing of Freedom
+		[GetSpellName(290500) or ""]   = 4, -- Wind Waker
+		[GetSpellName(199545) or ""]   = 4, -- Steed of Glory
+		[GetSpellName(48265) or ""]    = 4, -- Death's Advance
+		[GetSpellName(201447) or ""]   = 4, -- Ride the Wind
+		[GetSpellName(256948) or ""]   = 4, -- Spatial Rift
+		[GetSpellName(213664) or ""]   = 4, -- Nimble Brew
+		[GetSpellName(197003) or ""]   = 4, -- Maneuverability
+		[GetSpellName(198065) or ""]   = 4, -- Prismatic Cloak
+		[GetSpellName(54216) or ""]    = 4, -- Master's Call
+		[GetSpellName(115192) or ""]   = 4.1, -- Subterfuge
+		[GetSpellName(11327) or ""]    = 4, -- Vanish
 
-		[GetSpellInfo(12042) or ""]     = 3,    -- Arcane Power
-		[GetSpellInfo(29166) or ""]     = 3,    -- Innervate
-		[GetSpellInfo(114050) or ""]    = 3,    -- Ascendance ele
-		[GetSpellInfo(208997) or ""]    = 3.1,  -- Counterstrike Totem
-		["236696"]                = 3.1,  -- Thorns boomy/feral
-		[GetSpellInfo(114051) or ""]    = 3,    -- Ascendance enha
-		[GetSpellInfo(114052) or ""]    = 3,    -- Ascendance resto
-		[GetSpellInfo(47536) or ""]     = 3.1,  -- Rapture
-		[GetSpellInfo(198760) or ""]    = 3,    -- Intercept 30% dmg reduc
-		[GetSpellInfo(231895) or ""]    = 3,    -- Crusade
-		[GetSpellInfo(194249) or ""]    = 3,    -- Voidform
-		[GetSpellInfo(204362) or ""]    = 3.3,  -- Heroism
-		[GetSpellInfo(204361) or ""]    = 3.3,  -- Bloodlust
-		[GetSpellInfo(12472) or ""]     = 3,    -- Icy Veins
-		[GetSpellInfo(51690) or ""]     = 3.1,  -- Killing Spree
-		[GetSpellInfo(33891) or ""]     = 3.1,  -- Incarnation: Treeform
-		[GetSpellInfo(117679) or ""]    = 3,    -- Incarnation: Tree of Life
-		[GetSpellInfo(102560) or ""]    = 3,    -- Incarnation: Chosen of Elune
-		[GetSpellInfo(102543) or ""]    = 3,    -- Incarnation: King of the Jungle
-		[GetSpellInfo(102558) or ""]    = 3,    -- Incarnation: Son of Ursoc
-		[GetSpellInfo(19574) or ""]     = 3,    -- Bestial Wrath
-		[GetSpellInfo(190319) or ""]    = 3,    -- Combustion
-		[GetSpellInfo(266779) or ""]    = 3,    -- Coordinated Assault
-		[GetSpellInfo(1719) or ""]      = 3,    -- Recklessness
-		[GetSpellInfo(194223) or ""]    = 3,    -- Celestial Alignment
-		["191427"]                = 3,    -- Metamorphosis talented
-		["162264"]                = 3,    -- Metamorphosis
-		["187827"]                = 3,    -- Metamorphosis (tank)
-		[GetSpellInfo(152173) or ""]    = 3,    -- Serenity
+		[GetSpellName(12042) or ""]    = 3, -- Arcane Power
+		[GetSpellName(29166) or ""]    = 3, -- Innervate
+		[GetSpellName(114050) or ""]   = 3, -- Ascendance ele
+		[GetSpellName(208997) or ""]   = 3.1, -- Counterstrike Totem
+		[GetSpellName(236696) or ""]                     = 3.1, -- Thorns boomy/feral
+		[GetSpellName(114051) or ""]   = 3, -- Ascendance enha
+		[GetSpellName(114052) or ""]   = 3, -- Ascendance resto
+		[GetSpellName(47536) or ""]    = 3.1, -- Rapture
+		[GetSpellName(198760) or ""]   = 3, -- Intercept 30% dmg reduc
+		[GetSpellName(231895) or ""]   = 3, -- Crusade
+		[GetSpellName(194249) or ""]   = 3, -- Voidform
+		[GetSpellName(204362) or ""]   = 3.3, -- Heroism
+		[GetSpellName(204361) or ""]   = 3.3, -- Bloodlust
+		[GetSpellName(12472) or ""]    = 3, -- Icy Veins
+		[GetSpellName(51690) or ""]    = 3.1, -- Killing Spree
+		[GetSpellName(33891) or ""]    = 3.1, -- Incarnation: Treeform
+		[GetSpellName(117679) or ""]   = 3, -- Incarnation: Tree of Life
+		[GetSpellName(102560) or ""]   = 3, -- Incarnation: Chosen of Elune
+		[GetSpellName(102543) or ""]   = 3, -- Incarnation: King of the Jungle
+		[GetSpellName(102558) or ""]   = 3, -- Incarnation: Son of Ursoc
+		[GetSpellName(19574) or ""]    = 3, -- Bestial Wrath
+		[GetSpellName(190319) or ""]   = 3, -- Combustion
+		[GetSpellName(266779) or ""]   = 3, -- Coordinated Assault
+		[GetSpellName(1719) or ""]     = 3, -- Recklessness
+		[GetSpellName(194223) or ""]   = 3, -- Celestial Alignment
+		[GetSpellName(191427) or ""]                     = 3,  -- Metamorphosis talented
+		[GetSpellName(162264) or ""]                     = 3,  -- Metamorphosis
+		[GetSpellName(187827) or ""]                     = 3,  -- Metamorphosis (tank)
+		[GetSpellName(152173) or ""]   = 3, -- Serenity
 
-		[GetSpellInfo(185422) or ""]    = 2.3,  -- Shadow Dance
-		[GetSpellInfo(121471) or ""]    = 2.2,  -- Shadow Blades
-		[GetSpellInfo(197871) or ""]    = 2.5,  -- Dark Archangel
-		[GetSpellInfo(79140) or ""]     = 2.3,  -- Vendetta
-		["198529"]                = 2.3,  -- Plunder Armor
-		[GetSpellInfo(51271) or ""]     = 2.1,  -- Pillar of Frost
-		[GetSpellInfo(107574) or ""]    = 2.1,  -- Avatar
-		[GetSpellInfo(13750) or ""]     = 2.1,  -- Adrenaline Rush
-		[GetSpellInfo(201318) or ""]    = 2.1,  -- Fortifying Brew (WW)
-		[GetSpellInfo(243435) or ""]    = 2.1,  -- Fortifying Brew (MW)
-		[GetSpellInfo(120954) or ""]    = 2.1,  -- Fortifying Brew (BM)
-		[GetSpellInfo(55233) or ""]     = 2.2,  -- Vampiric Blood
-		[GetSpellInfo(31884) or ""]     = 2.1,  -- Avenging Wrath
-		[GetSpellInfo(207289) or ""]    = 2.1,  -- unholy frenzy
-		[GetSpellInfo(216331) or ""]    = 2.1,  -- Avenging Crusader
-		[GetSpellInfo(370553) or ""]	= 2.1, 	-- Tip the Scales
-		[GetSpellInfo(116014) or ""]    = 2,    -- Rune of Power
-		[GetSpellInfo(375087) or ""]	= 2, 	-- Dragonrage
-		[GetSpellInfo(1966) or ""]      = 2.1,  -- Feint
-		[GetSpellInfo(288977) or ""]    = 2.1,  -- Transfusion
-		[GetSpellInfo(213871) or ""]    = 2.1,  -- Bodyguard
-		[GetSpellInfo(223658) or ""]    = 2.2,  -- Safeguard dmg reduc
-		[GetSpellInfo(202162) or ""]    = 2.2,  -- Guard
-		[GetSpellInfo(201633) or ""]    = 2.2,  -- Earthen Totem
-		[GetSpellInfo(122278) or ""]    = 2.2,  -- Dampen Harm
-		[GetSpellInfo(207498) or ""]    = 2.1,  -- Ancestral Protection
-		[GetSpellInfo(206649) or ""]    = 2,    -- Eye of Leotheras
+		[GetSpellName(185422) or ""]   = 2.3, -- Shadow Dance
+		[GetSpellName(121471) or ""]   = 2.2, -- Shadow Blades
+		[GetSpellName(197871) or ""]   = 2.5, -- Dark Archangel
+		[GetSpellName(79140) or ""]    = 2.3, -- Vendetta
+		[GetSpellName(198529) or ""]                     = 2.3, -- Plunder Armor
+		[GetSpellName(51271) or ""]    = 2.1, -- Pillar of Frost
+		[GetSpellName(107574) or ""]   = 2.1, -- Avatar
+		[GetSpellName(13750) or ""]    = 2.1, -- Adrenaline Rush
+		[GetSpellName(201318) or ""]   = 2.1, -- Fortifying Brew (WW)
+		[GetSpellName(243435) or ""]   = 2.1, -- Fortifying Brew (MW)
+		[GetSpellName(120954) or ""]   = 2.1, -- Fortifying Brew (BM)
+		[GetSpellName(55233) or ""]    = 2.2, -- Vampiric Blood
+		[GetSpellName(31884) or ""]    = 2.1, -- Avenging Wrath
+		[GetSpellName(207289) or ""]   = 2.1, -- unholy frenzy
+		[GetSpellName(216331) or ""]   = 2.1, -- Avenging Crusader
+		[GetSpellName(370553) or ""]   = 2.1, -- Tip the Scales
+		[GetSpellName(116014) or ""]   = 2, -- Rune of Power
+		[GetSpellName(375087) or ""]   = 2, -- Dragonrage
+		[GetSpellName(1966) or ""]     = 2.1, -- Feint
+		[GetSpellName(288977) or ""]   = 2.1, -- Transfusion
+		[GetSpellName(213871) or ""]   = 2.1, -- Bodyguard
+		[GetSpellName(223658) or ""]   = 2.2, -- Safeguard dmg reduc
+		[GetSpellName(202162) or ""]   = 2.2, -- Guard
+		[GetSpellName(201633) or ""]   = 2.2, -- Earthen Totem
+		[GetSpellName(122278) or ""]   = 2.2, -- Dampen Harm
+		[GetSpellName(207498) or ""]   = 2.1, -- Ancestral Protection
+		[GetSpellName(206649) or ""]   = 2, -- Eye of Leotheras
 
-		[GetSpellInfo(116095) or ""]    = 1.1,  -- Disable
-		[GetSpellInfo(221886) or ""]    = 1.1,  -- Divine Steed
-		[GetSpellInfo(116841) or ""]    = 1,    -- Tiger's Lust
-		[GetSpellInfo(286349) or ""]    = 1,    -- Gladiator's Maledict
-		["286342"]                = 1,    -- Gladiator's Safeguard
-		[GetSpellInfo(277187) or ""]    = 1,    -- Gladiator's Emblem
-		[GetSpellInfo(97463) or ""]     = 1,    -- Rallying Cry
-		[GetSpellInfo(12975) or ""]     = 1.3,  -- Last Stand
-		[GetSpellInfo(202900) or ""]    = 1.3,  -- scorpid sting
-		[GetSpellInfo(212552) or ""]    = 1.1,  -- Wraith Walk
-		[GetSpellInfo(188501) or ""]    = 1,    -- Spectral Sight
-		[GetSpellInfo(5384) or ""]      = 1,    -- Feign Death
-		[GetSpellInfo(145629) or ""]    = 1,    -- Anti-Magic Zone
-		[GetSpellInfo(81782) or ""]     = 1,    -- Disc Barrier
-		[GetSpellInfo(204293) or ""]    = 1,    -- Spirit Link
-		[GetSpellInfo(98007) or ""]     = 1,    -- Spirit Link Totem
-		[GetSpellInfo(212183) or ""]    = 1,    -- Smoke Bomb
-		[GetSpellInfo(202797) or ""]    = 1,    -- Viper Sting
-		[GetSpellInfo(197690) or ""]    = 1,    -- Defensive Stance
-		[GetSpellInfo(783) or ""]       = 1.1,  -- Travel form
-		[GetSpellInfo(5487) or ""]      = 1.1,  -- Bear form
-		[GetSpellInfo(768) or ""]       = 1.1,  -- Cat form
-		[GetSpellInfo(197625) or ""]    = 1.1,  -- Moonkin form 1
-		[GetSpellInfo(24858) or ""]     = 1.1,  -- Moonkin form 2
-		[GetSpellInfo(199890) or ""]    = 1,    -- Curse of Tongues
-		[GetSpellInfo(199892) or ""]    = 1,    -- Curse of Weakness
-		[GetSpellInfo(199954) or ""]    = 1,    -- Curse of Fragility
-		[GetSpellInfo(290786) or ""]    = 1,    -- Ultimate Retribution
-		["205369"]                = 1,    -- Mind Bomb pre disorient
-		[GetSpellInfo(200587) or ""]    = 1.2,  -- Fel Fissure
-		["198819"]                = 1.2,  -- Sharpen Blade
-		["199845"]                = 1.2,  -- Psyfiend
-		["199483"]                = 1.2,  -- Camouflage
+		[GetSpellName(116095) or ""]   = 1.1, -- Disable
+		[GetSpellName(221886) or ""]   = 1.1, -- Divine Steed
+		[GetSpellName(116841) or ""]   = 1, -- Tiger's Lust
+		[GetSpellName(286349) or ""]   = 1, -- Gladiator's Maledict
+		[GetSpellName(286342) or ""]                     = 1,  -- Gladiator's Safeguard
+		[GetSpellName(277187) or ""]   = 1, -- Gladiator's Emblem
+		[GetSpellName(97463) or ""]    = 1, -- Rallying Cry
+		[GetSpellName(12975) or ""]    = 1.3, -- Last Stand
+		[GetSpellName(202900) or ""]   = 1.3, -- scorpid sting
+		[GetSpellName(212552) or ""]   = 1.1, -- Wraith Walk
+		[GetSpellName(188501) or ""]   = 1, -- Spectral Sight
+		[GetSpellName(5384) or ""]     = 1, -- Feign Death
+		[GetSpellName(145629) or ""]   = 1, -- Anti-Magic Zone
+		[GetSpellName(81782) or ""]    = 1, -- Disc Barrier
+		[GetSpellName(204293) or ""]   = 1, -- Spirit Link
+		[GetSpellName(98007) or ""]    = 1, -- Spirit Link Totem
+		[GetSpellName(212183) or ""]   = 1, -- Smoke Bomb
+		[GetSpellName(202797) or ""]   = 1, -- Viper Sting
+		[GetSpellName(197690) or ""]   = 1, -- Defensive Stance
+		[GetSpellName(783) or ""]      = 1.1, -- Travel form
+		[GetSpellName(5487) or ""]     = 1.1, -- Bear form
+		[GetSpellName(768) or ""]      = 1.1, -- Cat form
+		[GetSpellName(197625) or ""]   = 1.1, -- Moonkin form 1
+		[GetSpellName(24858) or ""]    = 1.1, -- Moonkin form 2
+		[GetSpellName(199890) or ""]   = 1, -- Curse of Tongues
+		[GetSpellName(199892) or ""]   = 1, -- Curse of Weakness
+		[GetSpellName(199954) or ""]   = 1, -- Curse of Fragility
+		[GetSpellName(290786) or ""]   = 1, -- Ultimate Retribution
+		[GetSpellName(205369) or ""]                     = 1,  -- Mind Bomb pre disorient
+		[GetSpellName(200587) or ""]   = 1.2, -- Fel Fissure
+		[GetSpellName(198819) or ""]                     = 1.2, -- Sharpen Blade
+		[GetSpellName(199845) or ""]                     = 1.2, -- Psyfiend
+		[GetSpellName(199483) or ""]                     = 1.2, -- Camouflage
 	}
 	return auraTable
 end
@@ -382,7 +383,7 @@ local ClassIcon = Gladius:NewModule("ClassIcon", false, true, {
 	classIconOffsetY = 0,
 	classIconFrameLevel = 1,
 	classIconGloss = true,
-	classIconGlossColor = {r = 1, g = 1, b = 1, a = 0.4},
+	classIconGlossColor = { r = 1, g = 1, b = 1, a = 0.4 },
 	classIconImportantAuras = true,
 	classIconCrop = false,
 	classIconCooldown = false,
@@ -397,7 +398,7 @@ function ClassIcon:OnEnable()
 	self.version = 1
 	LSM = Gladius.LSM
 	if not self.frame then
-		self.frame = { }
+		self.frame = {}
 	end
 	Gladius.db.auraVersion = self.version
 end
@@ -431,7 +432,8 @@ function ClassIcon:UNIT_AURA(event, unit)
 end
 
 function ClassIcon:UpdateColors(unit)
-	self.frame[unit].normalTexture:SetVertexColor(Gladius.db.classIconGlossColor.r, Gladius.db.classIconGlossColor.g, Gladius.db.classIconGlossColor.b, Gladius.db.classIconGloss and Gladius.db.classIconGlossColor.a or 0)
+	self.frame[unit].normalTexture:SetVertexColor(Gladius.db.classIconGlossColor.r, Gladius.db.classIconGlossColor.g,
+		Gladius.db.classIconGlossColor.b, Gladius.db.classIconGloss and Gladius.db.classIconGlossColor.a or 0)
 end
 
 function ClassIcon:UpdateAura(unit)
@@ -447,7 +449,7 @@ function ClassIcon:UpdateAura(unit)
 
 	local aura
 
-	for _, auraType in pairs({'HELPFUL', 'HARMFUL'}) do
+	for _, auraType in pairs({ 'HELPFUL', 'HARMFUL' }) do
 		for i = 1, 40 do
 			local name, icon, _, _, duration, expires, _, _, _, spellid = UnitAura(unit, i, auraType)
 
@@ -457,7 +459,7 @@ function ClassIcon:UpdateAura(unit)
 			local auraList = Gladius.db.classIconAuras
 			local priority = auraList[name] or auraList[tostring(spellid)]
 
-			if priority and (not aura or aura.priority < priority)  then
+			if priority and (not aura or aura.priority < priority) then
 				aura = {
 					name = name,
 					icon = icon,
@@ -554,22 +556,23 @@ function ClassIcon:CreateFrame(unit)
 		return
 	end
 	-- create frame
-	self.frame[unit] = CreateFrame("CheckButton", "Gladius"..self.name.."Frame"..unit, button, "ActionButtonTemplate")
+	self.frame[unit] = CreateFrame("CheckButton", "Gladius" .. self.name .. "Frame" .. unit, button, "ActionButtonTemplate")
 	self.frame[unit]:EnableMouse(false)
 	self.frame[unit]:SetNormalTexture("Interface\\AddOns\\Gladius\\Images\\Gloss")
-	self.frame[unit].texture = _G[self.frame[unit]:GetName().."Icon"]
-	self.frame[unit].normalTexture = _G[self.frame[unit]:GetName().."NormalTexture"]
-	self.frame[unit].cooldown = _G[self.frame[unit]:GetName().."Cooldown"]
+	self.frame[unit].texture = _G[self.frame[unit]:GetName() .. "Icon"]
+	self.frame[unit].normalTexture = _G[self.frame[unit]:GetName() .. "NormalTexture"]
+	self.frame[unit].cooldown = _G[self.frame[unit]:GetName() .. "Cooldown"]
 
 	-- secure
-	local secure = CreateFrame("Button", "Gladius"..self.name.."SecureButton"..unit, button, "SecureActionButtonTemplate")
+	local secure = CreateFrame("Button", "Gladius" .. self.name .. "SecureButton" .. unit, button,
+		"SecureActionButtonTemplate")
 	secure:RegisterForClicks("AnyUp")
 	self.frame[unit].secure = secure
 end
 
 function ClassIcon:Update(unit)
 	-- TODO: check why we need this >_<
-	self.frame = self.frame or { }
+	self.frame = self.frame or {}
 
 	-- create frame
 	if not self.frame[unit] then
@@ -581,7 +584,8 @@ function ClassIcon:Update(unit)
 	-- update frame
 	unitFrame:ClearAllPoints()
 	local parent = Gladius:GetParent(unit, Gladius.db.classIconAttachTo)
-	unitFrame:SetPoint(Gladius.db.classIconAnchor, parent, Gladius.db.classIconRelativePoint, Gladius.db.classIconOffsetX, Gladius.db.classIconOffsetY)
+	unitFrame:SetPoint(Gladius.db.classIconAnchor, parent, Gladius.db.classIconRelativePoint, Gladius.db.classIconOffsetX,
+		Gladius.db.classIconOffsetY)
 	-- frame level
 	unitFrame:SetFrameLevel(Gladius.db.classIconFrameLevel)
 	if Gladius.db.classIconAdjustSize then
@@ -619,9 +623,9 @@ function ClassIcon:Update(unit)
 	local left, right, top, bottom = Gladius.buttons[unit]:GetHitRectInsets()
 	if self:GetAttachTo() == "Frame" and not self:IsDetached() then
 		if strfind(Gladius.db.classIconRelativePoint, "LEFT") then
-			left = - unitFrame:GetWidth() + Gladius.db.classIconOffsetX
+			left = -unitFrame:GetWidth() + Gladius.db.classIconOffsetX
 		else
-			right = - unitFrame:GetWidth() + - Gladius.db.classIconOffsetX
+			right = -unitFrame:GetWidth() + -Gladius.db.classIconOffsetX
 		end
 		-- search for an attached frame
 		--[[for _, module in pairs(Gladius.modules) do
@@ -650,7 +654,8 @@ function ClassIcon:Update(unit)
 	unitFrame.texture:ClearAllPoints()
 	unitFrame.texture:SetPoint("TOPLEFT", unitFrame, "TOPLEFT")
 	unitFrame.texture:SetPoint("BOTTOMRIGHT", unitFrame, "BOTTOMRIGHT")
-	unitFrame.normalTexture:SetVertexColor(Gladius.db.classIconGlossColor.r, Gladius.db.classIconGlossColor.g, Gladius.db.classIconGlossColor.b, Gladius.db.classIconGloss and Gladius.db.classIconGlossColor.a or 0)
+	unitFrame.normalTexture:SetVertexColor(Gladius.db.classIconGlossColor.r, Gladius.db.classIconGlossColor.g,
+		Gladius.db.classIconGlossColor.b, Gladius.db.classIconGloss and Gladius.db.classIconGlossColor.a or 0)
 	unitFrame.texture:SetTexCoord(left, right, top, bottom)
 
 	-- cooldown
@@ -684,7 +689,7 @@ function ClassIcon:Reset(unit)
 end
 
 function ClassIcon:ResetModule()
-	Gladius.db.classIconAuras = { }
+	Gladius.db.classIconAuras = {}
 	Gladius.db.classIconAuras = GetDefaultAuraList()
 	local newAura = Gladius.options.args[self.name].args.auraList.args.newAura
 	Gladius.options.args[self.name].args.auraList.args = {
@@ -919,7 +924,7 @@ function ClassIcon:GetOptions()
 							type = "select",
 							name = L["Class Icon Position"],
 							desc = L["Position of the class icon"],
-							values={ ["LEFT"] = L["Left"], ["RIGHT"] = L["Right"] },
+							values = { ["LEFT"] = L["Left"], ["RIGHT"] = L["Right"] },
 							get = function()
 								return strfind(Gladius.db.classIconAnchor, "RIGHT") and "LEFT" or "RIGHT"
 							end,
@@ -931,7 +936,7 @@ function ClassIcon:GetOptions()
 									Gladius.db.classIconAnchor = "TOPLEFT"
 									Gladius.db.classIconRelativePoint = "TOPRIGHT"
 								end
-								Gladius:UpdateFrame(info[1])
+								Gladius:UpdateFrame()
 							end,
 							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
@@ -975,9 +980,9 @@ function ClassIcon:GetOptions()
 							hidden = function()
 								return not Gladius.db.advancedOptions
 							end,
-						order = 15,
+							order = 15,
 						},
-							sep2 = {
+						sep2 = {
 							type = "description",
 							name = "",
 							width = "full",
@@ -987,7 +992,9 @@ function ClassIcon:GetOptions()
 							type = "range",
 							name = L["Class Icon Offset X"],
 							desc = L["X offset of the class icon"],
-							min = - 100, max = 100, step = 1,
+							min = -100,
+							max = 100,
+							step = 1,
 							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
@@ -1000,7 +1007,7 @@ function ClassIcon:GetOptions()
 							disabled = function()
 								return not Gladius.dbi.profile.modules[self.name]
 							end,
-							min = - 50,
+							min = -50,
 							max = 50,
 							step = 1,
 							order = 25,
@@ -1067,12 +1074,14 @@ function ClassIcon:GetOptions()
 								end
 								local isNum = tonumber(self.newAuraName) ~= nil
 								local name = isNum and GetSpellInfo(self.newAuraName) or self.newAuraName
-								Gladius.options.args[self.name].args.auraList.args[self.newAuraName] = self:SetupAura(self.newAuraName, self.newAuraPriority, name)
+								Gladius.options.args[self.name].args.auraList.args[self.newAuraName] = self:SetupAura(self.newAuraName,
+									self.newAuraPriority, name)
 								Gladius.db.classIconAuras[self.newAuraName] = self.newAuraPriority
 								self.newAuraName = ""
 							end,
 							disabled = function()
-								return not Gladius.dbi.profile.modules[self.name] or not Gladius.db.classIconImportantAuras or not self.newAuraName or self.newAuraName == ""
+								return not Gladius.dbi.profile.modules[self.name] or not Gladius.db.classIconImportantAuras or
+										not self.newAuraName or self.newAuraName == ""
 							end,
 							order = 3,
 						},
@@ -1171,7 +1180,7 @@ function ClassIcon:SetupAura(aura, priority, name)
 					for aura, priority in pairs(Gladius.db.classIconAuras) do
 						if priority then
 							local isNum = tonumber(aura) ~= nil
-							local name = isNum and GetSpellInfo(aura) or aura
+							local name = isNum and GetSpellInfo(aura).name or aura
 							Gladius.options.args[self.name].args.auraList.args[aura] = self:SetupAura(aura, priority, name)
 						end
 					end

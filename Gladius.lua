@@ -19,10 +19,10 @@ local GetNumGroupMembers = GetNumGroupMembers
 local GetSpecializationInfoByID = GetSpecializationInfoByID
 local InCombatLockdown = InCombatLockdown
 local IsActiveBattlefieldArena = IsActiveBattlefieldArena
-local IsAddOnLoaded = IsAddOnLoaded
+local IsAddOnLoaded = C_AddOns.IsAddOnLoaded
 local IsInInstance = IsInInstance
 local IsLoggedIn = IsLoggedIn
-local UnitAura = UnitAura
+local UnitAura = C_UnitAuras.GetAuraDataByIndex
 local UnitCastingInfo = UnitCastingInfo
 local UnitClass = UnitClass
 local UnitIsDeadOrGhost = UnitIsDeadOrGhost
@@ -31,9 +31,9 @@ local UIParent = UIParent
 
 local IsWrathClassic = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC
 
-Gladius = { }
+Gladius = {}
 Gladius.eventHandler = CreateFrame("Frame")
-Gladius.eventHandler.events = { }
+Gladius.eventHandler.events = {}
 
 Gladius.eventHandler:RegisterEvent("PLAYER_LOGIN")
 if not IsWrathClassic then
@@ -53,8 +53,8 @@ Gladius.eventHandler:SetScript("OnEvent", function(self, event, ...)
 	end
 end)
 
-Gladius.modules = { }
-Gladius.defaults = { }
+Gladius.modules = {}
+Gladius.defaults = {}
 
 local L
 
@@ -98,11 +98,11 @@ function Gladius:UnregisterAllEvents()
 end
 
 function Gladius:NewModule(key, bar, attachTo, defaults, templates)
-	local module = { }
+	local module = {}
 	module.eventHandler = CreateFrame("Frame")
 	-- event handling
-	module.eventHandler.events = { }
-	module.eventHandler.messages = { }
+	module.eventHandler.events = {}
+	module.eventHandler.messages = {}
 	module.eventHandler:SetScript("OnEvent", function(self, event, ...)
 		local func = module.eventHandler.events[event]
 		if type(module[func]) == "function" then
@@ -160,7 +160,7 @@ function Gladius:NewModule(key, bar, attachTo, defaults, templates)
 	module.defaults = defaults
 	module.attachTo = attachTo
 	module.templates = templates
-	module.messages = { }
+	module.messages = {}
 	self.modules[key] = module
 	-- set db defaults
 	for k, v in pairs(defaults) do
@@ -187,8 +187,8 @@ function Gladius:GetParent(unit, module)
 				self:Call(m, "Update", unit)
 				frame = m:GetFrame(unit)
 			end
-				return frame
-			end
+			return frame
+		end
 		return nil
 	end
 end
@@ -213,7 +213,7 @@ end
 
 function Gladius:GetModules(module)
 	-- Get module list for frame anchor
-	local t = {["Frame"] = L["Frame"]}
+	local t = { ["Frame"] = L["Frame"] }
 	for moduleName, m in pairs(self.modules) do
 		if moduleName ~= module and m:GetAttachTo() ~= module and m.attachTo and m:IsEnabled() then
 			t[moduleName] = L[moduleName]
@@ -247,11 +247,12 @@ function Gladius:OnInitialize()
 
 	self.db = setmetatable(self.dbi.profile, {
 		__newindex = function(t, index, value)
-		if type(value) == "table" then
-			rawset(self.defaults.profile, index, value)
+			if type(value) == "table" then
+				rawset(self.defaults.profile, index, value)
+			end
+			rawset(t, index, value)
 		end
-		rawset(t, index, value)
-	end})
+	})
 
 	-- localization
 	L = self.L
@@ -266,19 +267,19 @@ function Gladius:OnInitialize()
 	self.test = false
 	self.testCount = 0
 	self.testing = setmetatable({
-		["arena1"] = {health = 400000, maxHealth = 400000, power = 300000, maxPower = 300000, powerType = 0, unitClass = "MAGE", unitRace = "Draenei", unitSpec = "Frost", unitSpecId = 64},
-		["arena2"] = {health = 380000, maxHealth = 400000, power = 100, maxPower = 120, powerType = 2, unitClass = "HUNTER", unitRace = "Night Elf", unitSpec = "Survival", unitSpecId = 255},
-		["arena3"] = {health = 240000, maxHealth = 400000, power = 90, maxPower = 130, powerType = 3, unitClass = "ROGUE", unitRace = "Human", unitSpec = "Combat", unitSpecId = 260},
-		["arena4"] = {health = 200000, maxHealth = 400000, power = 60, maxPower = 300000, powerType = 0, unitClass = "PRIEST", unitRace = "Dwarf", unitSpec = "Discipline", unitSpecId = 256},
-		["arena5"] = {health = 150000, maxHealth = 400000, power = 30, maxPower = 100, powerType = 1, unitClass = "WARRIOR", unitRace = "Gnome", unitSpec = "Arms", unitSpecId = 71},
-	},
-	{
-		__index = function(t, k)
-			return t["arena1"]
-		end
-	})
+			["arena1"] = { health = 400000, maxHealth = 400000, power = 300000, maxPower = 300000, powerType = 0, unitClass = "MAGE", unitRace = "Draenei", unitSpec = "Frost", unitSpecId = 64 },
+			["arena2"] = { health = 380000, maxHealth = 400000, power = 100, maxPower = 120, powerType = 2, unitClass = "HUNTER", unitRace = "Night Elf", unitSpec = "Survival", unitSpecId = 255 },
+			["arena3"] = { health = 240000, maxHealth = 400000, power = 90, maxPower = 130, powerType = 3, unitClass = "ROGUE", unitRace = "Human", unitSpec = "Combat", unitSpecId = 260 },
+			["arena4"] = { health = 200000, maxHealth = 400000, power = 60, maxPower = 300000, powerType = 0, unitClass = "PRIEST", unitRace = "Dwarf", unitSpec = "Discipline", unitSpecId = 256 },
+			["arena5"] = { health = 150000, maxHealth = 400000, power = 30, maxPower = 100, powerType = 1, unitClass = "WARRIOR", unitRace = "Gnome", unitSpec = "Arms", unitSpecId = 71 },
+		},
+		{
+			__index = function(t, k)
+				return t["arena1"]
+			end
+		})
 	-- buttons
-	self.buttons = { }
+	self.buttons = {}
 	if IsWrathClassic then
 		if not IsAddOnLoaded("Blizzard_ArenaUI") then
 			EnableAddOn("Blizzard_ArenaUI")
@@ -429,9 +430,11 @@ function Gladius:JoinedArena()
 	-- background
 	if self.db.groupButtons then
 		if not self.background then
-			local background = CreateFrame("Frame", "GladiusButtonBackground", UIParent, BackdropTemplateMixin and "BackdropTemplate")
-			background:SetBackdrop({bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", tile = true, tileSize = 16})
-			background:SetBackdropColor(self.db.backgroundColor.r, self.db.backgroundColor.g, self.db.backgroundColor.b, self.db.backgroundColor.a)
+			local background = CreateFrame("Frame", "GladiusButtonBackground", UIParent,
+				BackdropTemplateMixin and "BackdropTemplate")
+			background:SetBackdrop({ bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", tile = true, tileSize = 16 })
+			background:SetBackdropColor(self.db.backgroundColor.r, self.db.backgroundColor.g, self.db.backgroundColor.b,
+				self.db.backgroundColor.a)
 			background:SetFrameStrata("BACKGROUND")
 			self.background = background
 		end
@@ -508,13 +511,13 @@ function Gladius:ARENA_OPPONENT_UPDATE(event, unit, type)
 	-- enemy seen
 	if type == "seen" then
 		self:ShowUnit(unit, false, nil)
-	-- enemy stealth
+		-- enemy stealth
 	elseif type == "unseen" then
 		self:UpdateAlpha(unit, 0.5)
-	-- enemy left arena
+		-- enemy left arena
 	elseif type == "destroyed" then
 		self:UpdateAlpha(unit, 0.3)
-	-- arena over
+		-- arena over
 	elseif type == "cleared" then
 		self:UpdateAlpha(unit, 0)
 	end
@@ -523,7 +526,7 @@ end
 function Gladius:ARENA_PREP_OPPONENT_SPECIALIZATIONS()
 	-- Update spec from API
 	for i = 1, GetNumArenaOpponentSpecs and GetNumArenaOpponentSpecs() or 0 do
-		local unit = "arena"..i
+		local unit = "arena" .. i
 		local specID = GetArenaOpponentSpec and GetArenaOpponentSpec(i)
 		if specID and specID > 0 then
 			local id, name, description, icon, role, class = GetSpecializationInfoByID(specID)
@@ -543,7 +546,7 @@ end
 function Gladius:UpdateFrame()
 	self.db = self.dbi.profile
 	-- TODO: check why we need this
-	self.buttons = self.buttons or { }
+	self.buttons = self.buttons or {}
 	for unit, _ in pairs(self.buttons) do
 		local unitId = tonumber(string.match(unit, "^arena(.+)"))
 		if self.testCount >= unitId then
@@ -560,7 +563,8 @@ function Gladius:UpdateFrame()
 end
 
 function Gladius:UpdateColors()
-	self.background:SetBackdropColor(self.db.backgroundColor.r, self.db.backgroundColor.g, self.db.backgroundColor.b, self.db.backgroundColor.a)
+	self.background:SetBackdropColor(self.db.backgroundColor.r, self.db.backgroundColor.g, self.db.backgroundColor.b,
+		self.db.backgroundColor.a)
 end
 
 function Gladius:HideFrame()
@@ -659,20 +663,22 @@ function Gladius:UpdateUnit(unit, module)
 		end
 	else
 		local parent = string.match(unit, "^arena(.+)") - 1
-		local parentButton = self.buttons["arena"..parent]
+		local parentButton = self.buttons["arena" .. parent]
 		if parentButton then
 			if self.db.growUp then
 				self.buttons[unit]:SetPoint("BOTTOMLEFT", parentButton, "TOPLEFT", 0, self.db.bottomMargin + indicatorHeight)
 			else
-				self.buttons[unit]:SetPoint("TOPLEFT", parentButton, "BOTTOMLEFT", 0, - self.db.bottomMargin - indicatorHeight)
+				self.buttons[unit]:SetPoint("TOPLEFT", parentButton, "BOTTOMLEFT", 0, -self.db.bottomMargin - indicatorHeight)
 			end
 			if self.db.growLeft then
 				local left, right = self.buttons[unit]:GetHitRectInsets()
-				self.buttons[unit]:SetPoint("TOPLEFT", parentButton, "TOPLEFT", - self.buttons[unit]:GetWidth() - self.db.bottomMargin - abs(left), 0)
+				self.buttons[unit]:SetPoint("TOPLEFT", parentButton, "TOPLEFT",
+					-self.buttons[unit]:GetWidth() - self.db.bottomMargin - abs(left), 0)
 			end
 			if self.db.growRight then
 				local left, right = self.buttons[unit]:GetHitRectInsets()
-				self.buttons[unit]:SetPoint("TOPLEFT", parentButton, "TOPLEFT", self.buttons[unit]:GetWidth() + self.db.bottomMargin + abs(left), 0)
+				self.buttons[unit]:SetPoint("TOPLEFT", parentButton, "TOPLEFT",
+					self.buttons[unit]:GetWidth() + self.db.bottomMargin + abs(left), 0)
 			end
 		end
 	end
@@ -693,19 +699,22 @@ function Gladius:UpdateUnit(unit, module)
 	if unit == "arena1" then
 		local left, right = self.buttons[unit]:GetHitRectInsets()
 		-- background
-		self.background:SetBackdropColor(self.db.backgroundColor.r, self.db.backgroundColor.g, self.db.backgroundColor.b, self.db.backgroundColor.a)
+		self.background:SetBackdropColor(self.db.backgroundColor.r, self.db.backgroundColor.g, self.db.backgroundColor.b,
+			self.db.backgroundColor.a)
 		self.background:SetWidth(self.buttons[unit]:GetWidth() + self.db.backgroundPadding * 2 + abs(right) + abs(left))
 		self.background:ClearAllPoints()
 		if self.db.growUp then
-			self.background:SetPoint("BOTTOMLEFT", self.buttons["arena1"], "BOTTOMLEFT", - self.db.backgroundPadding + left, - self.db.backgroundPadding)
-		--[[elseif self.db.growLeft then
+			self.background:SetPoint("BOTTOMLEFT", self.buttons["arena1"], "BOTTOMLEFT", -self.db.backgroundPadding + left,
+				-self.db.backgroundPadding)
+			--[[elseif self.db.growLeft then
 			self.background:SetPoint("TOPLEFT", self.buttons["arena5"], "TOPLEFT", - self.db.backgroundPadding + left, self.db.backgroundPadding)
 			self.background:SetPoint("BOTTOMRIGHT", self.buttons["arena1"], "BOTTOMRIGHT", self.db.backgroundPadding, - self.db.backgroundPadding)
 		elseif self.db.growRight then
 			self.background:SetPoint("TOPLEFT", self.buttons["arena1"], "TOPLEFT", - self.db.backgroundPadding + left, self.db.backgroundPadding)
 			self.background:SetPoint("BOTTOMRIGHT", self.buttons["arena5"], "BOTTOMRIGHT", self.db.backgroundPadding, - self.db.backgroundPadding)]]
 		else
-			self.background:SetPoint("TOPLEFT", self.buttons["arena1"], "TOPLEFT", - self.db.backgroundPadding + left, self.db.backgroundPadding)
+			self.background:SetPoint("TOPLEFT", self.buttons["arena1"], "TOPLEFT", -self.db.backgroundPadding + left,
+				self.db.backgroundPadding)
 		end
 		self.background:SetScale(self.db.frameScale)
 		if self.db.groupButtons and not self.db.growLeft and not self.db.growRight then
@@ -734,7 +743,8 @@ function Gladius:UpdateUnit(unit, module)
 		self.anchor:SetHeight(20)
 		self.anchor:SetScale(self.db.frameScale)
 		self.anchor.text:SetPoint("CENTER", self.anchor, "CENTER")
-		self.anchor.text:SetFont(self.LSM:Fetch(self.LSM.MediaType.FONT, Gladius.db.globalFont), (Gladius.db.useGlobalFontSize and Gladius.db.globalFontSize or 11))
+		self.anchor.text:SetFont(self.LSM:Fetch(self.LSM.MediaType.FONT, Gladius.db.globalFont),
+			(Gladius.db.useGlobalFontSize and Gladius.db.globalFontSize or 11))
 		self.anchor.text:SetTextColor(1, 1, 1, 1)
 		self.anchor.text:SetShadowOffset(1, -1)
 		self.anchor.text:SetShadowColor(0, 0, 0, 1)
@@ -796,7 +806,8 @@ function Gladius:ShowUnit(unit, testing, module)
 		end
 	end
 
-	self.background:SetHeight(self.buttons[unit]:GetHeight() * maxHeight + self.db.bottomMargin * (maxHeight - 1) + self.db.backgroundPadding * 2)
+	self.background:SetHeight(self.buttons[unit]:GetHeight() * maxHeight + self.db.bottomMargin * (maxHeight - 1) +
+		self.db.backgroundPadding * 2)
 end
 
 function Gladius:TestUnit(unit, module)
@@ -854,7 +865,7 @@ function Gladius:CreateButton(unit)
 	if instanceType ~= "arena" and not Gladius.test then
 		return
 	end
-	local button = CreateFrame("Frame", "GladiusButtonFrame"..unit, UIParent)
+	local button = CreateFrame("Frame", "GladiusButtonFrame" .. unit, UIParent)
 	--[[button:SetBackdrop({bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", tile = true, tileSize = 16,})
 	button:SetBackdropColor(0, 0, 0, 0.4)]]
 	button:SetClampedToScreen(true)
@@ -879,7 +890,7 @@ function Gladius:CreateButton(unit)
 		end
 	end)
 	-- secure
-	local secure = CreateFrame("Button", "GladiusButton"..unit, button, "SecureActionButtonTemplate")
+	local secure = CreateFrame("Button", "GladiusButton" .. unit, button, "SecureActionButtonTemplate")
 	secure:EnableMouse(true)
 	secure:EnableKeyboard(true)
 	secure:RegisterForClicks("AnyDown", "AnyUp")
@@ -892,7 +903,7 @@ function Gladius:CreateButton(unit)
 	if unit == "arena1" then
 		-- anchor
 		local anchor = CreateFrame("Frame", "GladiusButtonAnchor", UIParent, BackdropTemplateMixin and "BackdropTemplate")
-		anchor:SetBackdrop({bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", tile = true, tileSize = 16})
+		anchor:SetBackdrop({ bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", tile = true, tileSize = 16 })
 		anchor:SetBackdropColor(0, 0, 0, 1)
 		anchor:SetClampedToScreen(true)
 		anchor:EnableMouse(true)
@@ -914,9 +925,11 @@ function Gladius:CreateButton(unit)
 		anchor.text = anchor:CreateFontString("GladiusButtonAnchorText", "OVERLAY")
 		self.anchor = anchor
 		-- background
-		local background = CreateFrame("Frame", "GladiusButtonBackground", UIParent, BackdropTemplateMixin and "BackdropTemplate")
-		background:SetBackdrop({bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", tile = true, tileSize = 16})
-		background:SetBackdropColor(self.db.backgroundColor.r, self.db.backgroundColor.g, self.db.backgroundColor.b, self.db.backgroundColor.a)
+		local background = CreateFrame("Frame", "GladiusButtonBackground", UIParent,
+			BackdropTemplateMixin and "BackdropTemplate")
+		background:SetBackdrop({ bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", tile = true, tileSize = 16 })
+		background:SetBackdropColor(self.db.backgroundColor.r, self.db.backgroundColor.g, self.db.backgroundColor.b,
+			self.db.backgroundColor.a)
 		background:SetFrameStrata("BACKGROUND")
 		self.background = background
 	end
