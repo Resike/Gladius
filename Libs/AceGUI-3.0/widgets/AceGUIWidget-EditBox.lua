@@ -10,7 +10,7 @@ local tostring, pairs = tostring, pairs
 
 -- WoW APIs
 local PlaySound = PlaySound
-local GetCursorInfo, ClearCursor, GetSpellInfo = GetCursorInfo, ClearCursor, GetSpellInfo
+local GetCursorInfo, ClearCursor, GetSpellInfo = GetCursorInfo, ClearCursor, C_Spell.GetSpellInfo
 local CreateFrame, UIParent = CreateFrame, UIParent
 local _G = _G
 

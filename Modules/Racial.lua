@@ -15,12 +15,12 @@ local strfind = strfind
 local string = string
 
 local CreateFrame = CreateFrame
-local GetSpellInfo = GetSpellInfo
-local GetSpellTexture = GetSpellTexture
+local GetSpellInfo = GladiusShims.GetSpellInfo
+local GetSpellTexture = GladiusShims.GetSpellTexture
 local GetTime = GetTime
 local IsInInstance = IsInInstance
 local UnitClass = UnitClass
-local UnitDebuff = UnitDebuff
+local UnitDebuff = GladiusShims.UnitDebuff
 local UnitLevel = UnitLevel
 local UnitName = UnitName
 local UnitRace = UnitRace

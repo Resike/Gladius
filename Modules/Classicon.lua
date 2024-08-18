@@ -16,9 +16,9 @@ local unpack = unpack
 
 local CreateFrame = CreateFrame
 local GetSpecializationInfoByID = GetSpecializationInfoByID
-local GetSpellInfo = GetSpellInfo
+local GetSpellInfo = GladiusShims.GetSpellInfo
 local GetTime = GetTime
-local UnitAura = UnitAura
+local UnitAura = GladiusShims.UnitAura
 
 local CLASS_BUTTONS = CLASS_ICON_TCOORDS
 

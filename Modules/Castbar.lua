@@ -12,7 +12,7 @@ local strfind = string.find
 
 local AceGUIWidgetLSMlists = AceGUIWidgetLSMlists
 local CreateFrame = CreateFrame
-local GetSpellInfo = GetSpellInfo
+local GetSpellInfo = C_Spell.GetSpellInfo
 local GetTime = GetTime
 local UnitCastingInfo = UnitCastingInfo
 local UnitChannelInfo = UnitChannelInfo

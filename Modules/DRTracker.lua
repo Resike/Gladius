@@ -15,7 +15,7 @@ local unpack = unpack
 
 local CreateFontString = CreateFontString
 local CreateFrame = CreateFrame
-local GetSpellTexture = GetSpellTexture
+local GetSpellTexture = GladiusShims.GetSpellTexture
 local GetTime = GetTime
 local UnitGUID = UnitGUID
 
@@ -24,10 +24,10 @@ local DRTracker = Gladius:NewModule("DRTracker", false, true, {
 	drTrackerAnchor = "TOPRIGHT",
 	drTrackerRelativePoint = "TOPLEFT",
 	drTrackerAdjustSize = true,
-	drTrackerMargin = 5,
+	drTrackerMargin = 0,
 	drTrackerSize = 52,
-	drTrackerOffsetX = 0,
-	drTrackerOffsetY = -5,
+	drTrackerOffsetX = -42,
+	drTrackerOffsetY = 0,
 	drTrackerFrameLevel = 1,
 	drTrackerGloss = false,
 	drTrackerGlossColor = {r = 1, g = 1, b = 1, a = 0.4},

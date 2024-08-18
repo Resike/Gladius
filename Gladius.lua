@@ -31,6 +31,57 @@ local UIParent = UIParent
 
 local IsWrathClassic = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC
 
+function _GetSpellInfo (id)
+  local sp = C_Spell.GetSpellInfo(id)
+  if sp == nil then
+    return "", "", 0, 0, 0, 0, 0
+  end
+  return sp.name, sp.rank, sp.iconID, sp.castTime, sp.minRange, sp.maxRange, sp.spellID, sp.originalIconID
+end
+
+function _GetSpellTexture (id)
+  local st = C_Spell.GetSpellTexture(id)
+  if st == nil then
+    return 0
+  end
+  return st
+end
+
+function _UnitAura (unit, index, filter)
+  local ua = C_UnitAuras.GetAuraDataByIndex(unit, index, filter)
+  if ua == nil then
+    return nil
+  end
+  return ua.name,
+    ua.icon,
+    ua.charges, -- count?
+    "", -- dispelType
+    ua.duration,
+    ua.expirationTime,
+    ua.sourceUnit,
+    ua.isStealable,
+    ua.nameplateShowPersonal,
+    ua.spellID,
+    ua.canApplyAura,
+    ua.isBossAura,
+    ua.isFromPlayerOrPlayerPet,
+    ua.nameplateShowAll,
+    ua.timeMod,
+    false
+end
+
+function _UnitDebuff(unit, index, filter)
+  return C_UnitAuras.GetDebuffDataByIndex(unit, index, filter)
+end
+
+GladiusShims = {
+  GetSpellInfo = _GetSpellInfo,
+  GetSpellTexture = _GetSpellTexture,
+  UnitAura = _UnitAura,
+  UnitDebuff = _UnitDebuff,
+}
+
+
 Gladius = { }
 Gladius.eventHandler = CreateFrame("Frame")
 Gladius.eventHandler.events = { }

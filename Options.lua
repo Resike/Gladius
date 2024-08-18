@@ -4,7 +4,7 @@ local table = table
 local tonumber = tonumber
 local type = type
 
-local GetAddOnMetadata = GetAddOnMetadata
+local GetAddOnMetadata = C_AddOns.GetAddOnMetadata
 local InCombatLockdown = InCombatLockdown
 
 local L = Gladius.L

@@ -15,8 +15,8 @@ local strfind = string.find
 
 local CreateFrame = CreateFrame
 local GameTooltip = GameTooltip
-local GetSpellInfo = GetSpellInfo
-local GetSpellTexture = GetSpellTexture
+local GetSpellInfo = C_Spell.GetSpellInfo
+local GetSpellTexture = C_Spell.GetSpellTexture
 local UnitAura = UnitAura
 
 local Auras = Gladius:NewModule("Auras", false, true, {
