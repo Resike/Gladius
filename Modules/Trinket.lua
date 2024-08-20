@@ -12,7 +12,7 @@ local strfind = string.find
 local strformat = string.format
 
 local CreateFrame = CreateFrame
-local GetSpellInfo = C_Spell.GetSpellInfo
+local GetSpellInfo = GladiusShims.GetSpellInfo
 local IsInInstance = IsInInstance
 local UnitClass = UnitClass
 local UnitFactionGroup = UnitFactionGroup
