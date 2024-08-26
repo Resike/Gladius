@@ -13,7 +13,7 @@ local GetArenaOpponentSpec = GetArenaOpponentSpec
 local GetNumArenaOpponentSpecs = GetNumArenaOpponentSpecs
 local GetNumGroupMembers = GetNumGroupMembers
 local GetSpecializationInfoByID = GetSpecializationInfoByID
-local GetSpellInfo = C_Spell.GetSpellInfo
+local GetSpellInfo = GladiusShims.GetSpellInfo
 local GetTime = GetTime
 local IsActiveBattlefieldArena = IsActiveBattlefieldArena
 local IsAddOnLoaded = IsAddOnLoaded
@@ -26,6 +26,7 @@ local UnitHealthMax = UnitHealthMax
 local UnitIsGroupAssistant = UnitIsGroupAssistant
 local UnitIsGroupLeader = UnitIsGroupLeader
 local UnitName = UnitName
+local UnitBuff = GladiusShims.UnitBuff
 
 local UNKNOWN = UNKNOWN
 local RAID_CLASS_COLORS = RAID_CLASS_COLORS

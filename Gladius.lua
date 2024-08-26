@@ -74,11 +74,39 @@ function _UnitDebuff(unit, index, filter)
   return C_UnitAuras.GetDebuffDataByIndex(unit, index, filter)
 end
 
+function _UnitBuff(unit, index, filter)
+  local ua = C_UnitAuras.GetBuffDataByIndex(unit, index, filter)
+  -- name, rank, icon, count, dispelType, duration, expires, caster, isStealable, nameplateShowPersonal, spellID, canApplyAura, isBossDebuff, _, nameplateShowAll, timeMod, value1, value2, value3
+  if ua == nil then
+    return nil
+  end
+  return ua.name,
+    nil,
+    ua.icon,
+    ua.charges,
+    ua.dispelName,
+    ua.duration,
+    ua.expirationTime,
+    ua.sourceUnit,
+    ua.isStealable,
+    ua.nameplateShowPersonal,
+    ua.spellId,
+    ua.canApplyAura,
+    ua.isBossAura,
+    nil,
+    ua.nameplateShowAll,
+    ua.timeMod,
+    nil,
+    nil,
+    nil
+end
+
 GladiusShims = {
   GetSpellInfo = _GetSpellInfo,
   GetSpellTexture = _GetSpellTexture,
   UnitAura = _UnitAura,
   UnitDebuff = _UnitDebuff,
+  UnitBuff = _UnitBuff,
 }
 
 
