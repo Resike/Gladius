@@ -15,15 +15,16 @@ local strfind = strfind
 local string = string
 
 local CreateFrame = CreateFrame
-local GetSpellInfo = GetSpellInfo
-local GetSpellTexture = GetSpellTexture
+local GetSpellInfo = C_Spell.GetSpellInfo
+local GetSpellTexture = C_Spell.GetSpellTexture
 local GetTime = GetTime
 local IsInInstance = IsInInstance
 local UnitClass = UnitClass
-local UnitDebuff = UnitDebuff
+local UnitDebuff = C_UnitAuras.GetDebuffDataByIndex
 local UnitLevel = UnitLevel
 local UnitName = UnitName
 local UnitRace = UnitRace
+
 
 local GetUnitDebuff = function(uId, spellName)
 	for i = 1, 40 do
@@ -345,7 +346,12 @@ function Racial:Show(unit)
 	local testing = Gladius.test
 	-- show frame
 	self.frame[unit]:SetAlpha(1)
-	local RacialIcon = GetSpellTexture(unitRaceCDs["SCOURGE"].spellID)
+	local RacialIcon = nil
+	if not unitRaceCDs["SCOURGE"] == nil then
+		RacialIcon = C_Spell.GetSpellTexture(unitRaceCDs["SCOURGE"].spellID)
+	else
+		RacialIcon = GetSpellTexture(237274)
+	end
 	if testing then
 		if (not self.frame[unit].race) then
 			self.frame[unit].texture:SetTexture(RacialIcon)
@@ -364,7 +370,12 @@ function Racial:Reset(unit)
 	self.frame[unit].race = nil
 	self.frame[unit].texture:SetTexture(nil)
 	-- reset frame
-	local RacialIcon = GetSpellTexture(unitRaceCDs["SCOURGE"].spellID)
+	local RacialIcon = nil
+	if not unitRaceCDs["SCOURGE"] == nil then
+		RacialIcon = GetSpellTexture(unitRaceCDs["SCOURGE"].spellID)
+	else
+		RacialIcon = GetSpellTexture(237274)
+	end
 	if (not self.frame[unit].race) then
 		self.frame[unit].texture:SetTexture(RacialIcon)
 	end

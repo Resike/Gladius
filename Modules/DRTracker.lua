@@ -15,7 +15,7 @@ local unpack = unpack
 
 local CreateFontString = CreateFontString
 local CreateFrame = CreateFrame
-local GetSpellTexture = GetSpellTexture
+local GetSpellTexture = C_Spell.GetSpellTexture
 local GetTime = GetTime
 local UnitGUID = UnitGUID
 

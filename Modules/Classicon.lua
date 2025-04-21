@@ -1,3 +1,4 @@
+local addon, ns = ...
 local Gladius = _G.Gladius
 if not Gladius then
 	DEFAULT_CHAT_FRAME:AddMessage(format("Module %s requires Gladius", "Class Icon"))
@@ -16,9 +17,26 @@ local unpack = unpack
 
 local CreateFrame = CreateFrame
 local GetSpecializationInfoByID = GetSpecializationInfoByID
-local GetSpellInfo = GetSpellInfo
+local GetSpellInfo = GetSpellInfo or function(spellID)
+  if not spellID then
+    return nil;
+  end
+
+  local spellInfo = C_Spell.GetSpellInfo(spellID);
+  if spellInfo then
+    return spellInfo.name, nil, spellInfo.iconID, spellInfo.castTime, spellInfo.minRange, spellInfo.maxRange, spellInfo.spellID, spellInfo.originalIconID;
+  end
+end
+
 local GetTime = GetTime
-local UnitAura = UnitAura
+local UnitAura = UnitAura or function(unitToken, index, filter)
+		local auraData = C_UnitAuras.GetAuraDataByIndex(unitToken, index, filter)
+		if not auraData then
+			return nil
+		end
+
+		return AuraUtil.UnpackAuraData(auraData)
+	end
 
 local CLASS_BUTTONS = CLASS_ICON_TCOORDS
 

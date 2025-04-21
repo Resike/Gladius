@@ -239,8 +239,15 @@ function Dispel:Update(unit)
 				self.frame[unit]:SetHeight(Gladius.buttons[unit].frameHeight)
 			end
 		else
-			self.frame[unit]:SetWidth(Gladius:GetModule(self:GetAttachTo()).frame[unit]:GetHeight() or 1)
-			self.frame[unit]:SetHeight(Gladius:GetModule(self:GetAttachTo()).frame[unit]:GetHeight() or 1)
+			local defaultValue = nil
+			if not Gladius:GetModule(self:GetAttachTo()).frame[unit] == nil then
+				defaultValue = Gladius:GetModule(self:GetAttachTo()).frame[unit]:GetHeight()
+			else
+				defaultValue = 1
+			end
+			
+			self.frame[unit]:SetWidth(defaultValue)
+			self.frame[unit]:SetHeight(defaultValue)
 		end
 	else
 		self.frame[unit]:SetWidth(Gladius.db.dispellSize)

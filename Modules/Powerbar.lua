@@ -129,6 +129,9 @@ function PowerBar:UpdateColors(unit)
 end
 
 function PowerBar:CreateBar(unit)
+	if not Gladius then
+		return
+	end
 	local button = Gladius.buttons[unit]
 	if not button then
 		return
@@ -229,6 +232,9 @@ end
 
 function PowerBar:Show(unit)
 	-- show frame
+	if not self.frame[unit] then
+		return
+	end
 	self.frame[unit]:SetAlpha(1)
 	self.frame[unit]:SetValue(1)
 	if not Gladius.db.powerBarDefaultColor then
@@ -245,6 +251,9 @@ function PowerBar:Show(unit)
 end
 
 function PowerBar:Reset(unit)
+	if not self.frame[unit] then
+		return
+	end
 	-- reset bar
 	self.frame[unit]:SetMinMaxValues(0, 1)
 	if not Gladius.db.powerBarDefaultColor then

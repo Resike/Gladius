@@ -12,7 +12,16 @@ local strfind = string.find
 
 local AceGUIWidgetLSMlists = AceGUIWidgetLSMlists
 local CreateFrame = CreateFrame
-local GetSpellInfo = GetSpellInfo
+local GetSpellInfo = GetSpellInfo or function(spellID)
+  if not spellID then
+    return nil;
+  end
+
+  local spellInfo = C_Spell.GetSpellInfo(spellID);
+  if spellInfo then
+    return spellInfo.name, nil, spellInfo.iconID, spellInfo.castTime, spellInfo.minRange, spellInfo.maxRange, spellInfo.spellID, spellInfo.originalIconID;
+  end
+end
 local GetTime = GetTime
 local UnitCastingInfo = UnitCastingInfo
 local UnitChannelInfo = UnitChannelInfo
@@ -93,7 +102,10 @@ function CastBar:IsDetached()
 end
 
 function CastBar:GetFrame(unit)
-	if Gladius.db.castIcon and Gladius.db.castIconPosition == "LEFT" then
+	if self.frame[unit] == nil then
+		return
+	end
+	if not Gladius.db.castIcon == nil and Gladius.db.castIconPosition == "LEFT" then
 		return self.frame[unit].icon
 	else
 		return self.frame[unit]

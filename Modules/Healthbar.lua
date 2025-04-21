@@ -244,6 +244,10 @@ function HealthBar:GetBarColor(class)
 end
 
 function HealthBar:Show(unit)
+
+	if not self.frame[unit] then
+		return
+	end
 	-- show frame
 	self.frame[unit]:SetAlpha(1)
 

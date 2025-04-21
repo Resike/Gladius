@@ -13,7 +13,7 @@ local GetArenaOpponentSpec = GetArenaOpponentSpec
 local GetNumArenaOpponentSpecs = GetNumArenaOpponentSpecs
 local GetNumGroupMembers = GetNumGroupMembers
 local GetSpecializationInfoByID = GetSpecializationInfoByID
-local GetSpellInfo = GetSpellInfo
+local GetSpellInfo = C_Spell.GetSpellInfo
 local GetTime = GetTime
 local IsActiveBattlefieldArena = IsActiveBattlefieldArena
 local IsAddOnLoaded = IsAddOnLoaded
@@ -128,7 +128,7 @@ function Announcements:UNIT_AURA(event, unit)
 	end
 	local index
 	for i = 1, 40 do
-		local _, _, _, _, _, _, _, _, _, spellID = UnitBuff(unit, i, "HELPFUL")
+		local _, _, _, _, _, _, _, _, _, spellID = C_UnitAuras.GetBuffDataByIndex(unit, i, "HELPFUL")
 		if spellID == 57073 then
 			index = i
 			break

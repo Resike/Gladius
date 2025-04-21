@@ -252,7 +252,7 @@ end
 function Gladius:SetupOptions()
 	self.options = {
 		type = "group",
-		name = "Gladius "..GetAddOnMetadata("Gladius", "Version"),
+		name = "Gladius",
 		plugins = { },
 		get = getOption,
 		set = setOption,
