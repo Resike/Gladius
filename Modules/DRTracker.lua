@@ -5,7 +5,7 @@ end
 local L = Gladius.L
 local LSM
 
-local DRData = LibStub("DRData-1.0")
+local DRList = LibStub("DRList-1.0")
 
 -- Global functions
 local _G = _G
@@ -124,7 +124,7 @@ function DRTracker:UpdateIcon(unit, drCat)
 end
 
 function DRTracker:DRFaded(unit, spellID, force)
-	local drCat = DRData:GetSpellCategory(spellID)
+	local drCat = DRList:GetCategoryBySpellID(spellID)
 	if not force and Gladius.db.drCategories[drCat] == false then
 		return
 	end
@@ -143,12 +143,12 @@ function DRTracker:DRFaded(unit, spellID, force)
 	if tracked and tracked.reset <= GetTime() then
 		tracked.diminished = 1
 	else
-		tracked.diminished = DRData:NextDR(tracked.diminished)
+		tracked.diminished = DRList:NextDR(tracked.diminished)
 	end
 	if Gladius.test and tracked.diminished == 0 then
 		tracked.diminished = 1
 	end
-	tracked.timeLeft = DRData:GetResetTime()
+	tracked.timeLeft = DRList:GetResetTime()
 	tracked.reset = tracked.timeLeft + GetTime()
 	local text, r, g, b = unpack(drTexts[tracked.diminished])
 	tracked.text:SetText(text)
@@ -199,12 +199,12 @@ function DRTracker:CombatLogEvent(event, timestamp, eventType, hideCaster, sourc
 	end
 	-- Enemy had a debuff refreshed before it faded, so fade + gain it quickly
 	if eventType == "SPELL_AURA_REFRESH" then
-		if auraType == "DEBUFF" and DRData:GetSpellCategory(spellID) then
+		if auraType == "DEBUFF" and DRList:GetCategoryBySpellID(spellID) then
 			self:DRFaded(unit, spellID)
 		end
 	-- Buff or debuff faded from an enemy
 	elseif eventType == "SPELL_AURA_REMOVED" then
-		if auraType == "DEBUFF" and DRData:GetSpellCategory(spellID) then
+		if auraType == "DEBUFF" and DRList:GetCategoryBySpellID(spellID) then
 			self:DRFaded(unit, spellID)
 		end
 	end
@@ -627,7 +627,7 @@ function DRTracker:GetOptions()
 		},
 	}
 	local index = 1
-	for key, name in pairs(DRData.categoryNames) do
+	for key, name in pairs(DRList.categoryNames.retail) do
 		t.categories.args.categories.args[key] = {
 			type = "toggle",
 			name = name,
