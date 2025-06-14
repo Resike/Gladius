@@ -99,6 +99,9 @@ function Timer:SetTimer(frame, duration, start, callback)
 	cooldown:SetSwipeColor(0, 0, 0)
 	cooldown:SetDrawEdge(false)
 	cooldown:SetDrawBling(false)
+	-- Hide Blizzard countdown numbers, we are using either our own timer or OmniCC
+	-- Without this we would see double timers
+	cooldown:SetHideCountdownNumbers(true)
 	--cooldown.currentCooldownType = COOLDOWN_TYPE_NORMAL
 
 	if not cooldown.isDisabled then
